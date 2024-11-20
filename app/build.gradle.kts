@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.clerami.universe"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.clerami.universe"
