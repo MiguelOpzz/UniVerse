@@ -13,12 +13,14 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Set the splash screen theme
         setContentView(R.layout.activity_splash)
 
+        // Delay for a few seconds before launching LandingActivity
         Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(this, LandingActivity::class.java)
             startActivity(intent)
-            finish() 
-        }, 2000)
+            finish() // Remove SplashActivity from back stack
+        }, 2000) // 2000ms = 2 seconds delay
     }
 }
