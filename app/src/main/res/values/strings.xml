@@ -17,4 +17,11 @@
     <string name="WelcomeSlogan">Where Bright Minds \nCollide</string>
     <string name="text_under_slogan">A cutting-edge discussion forum \nenhanced with AI tools</string>
     <string name="login_welcome">Welcome \nBack!</string>
+    <string name="or_continue_with">- OR Continue with -</string>
+    <string name="apple_logo">Apple Logo</string>
+    <string name="facebook_logo">Facebook Logo</string>
+    <string name="google_logo">Google Logo</string>
+    <string name="dont_have_account">Don\'t have an account? <u>Sign up</u></string>
+    <string name="username_error_warning">Please fill in your username</string>
+
 </resources>

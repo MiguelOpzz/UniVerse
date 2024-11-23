@@ -21,6 +21,7 @@
         android:text="@string/login_welcome"
         android:textColor="@color/black"
         android:textSize="28sp"
+
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="24dp"
@@ -55,6 +56,19 @@
 </com.google.android.material.textfield.TextInputLayout>
 
 
+    <TextView
+        android:id="@+id/usernameError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/username_error_warning"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/textInputLayout"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout"
+        />
+
+
+
 
 
     <!-- Box Text Input Password -->
@@ -62,14 +76,14 @@
         android:id="@+id/textInputPasswordLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:hint="@string/prompt_password"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
     app:boxBackgroundMode="outline"
     app:boxStrokeColor="@color/black"
-    app:placeholderText="********">
+    app:placeholderText="Create a Password">
 
 
     <com.google.android.material.textfield.TextInputEditText
@@ -89,13 +103,13 @@
     <!-- Tombol Login -->
     <Button
         android:id="@+id/login"
-        android:enabled="false"
+
         android:layout_width="300dp"
-        android:layout_height="60dp"
+        android:layout_height="68dp"
         android:layout_gravity="start"
         android:textSize="16sp"
         android:fontFamily="@font/montserrat_bold"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="24dp"
 
         android:textColor="@color/white"
         android:text="@string/action_sign_in"
@@ -127,5 +141,98 @@
         app:showAnimationBehavior="inward"
     />
 
+    <TextView
+        android:id="@+id/or_continue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/or_continue_with"
+        android:textSize="12sp"
+        android:fontFamily="@font/montserrat_regular"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="84dp"
+        app:layout_constraintTop_toBottomOf="@+id/login"
+
+        />
+
+    <!-- Google Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/google_button"
+        android:layout_width="60dp"
+        android:layout_height="68dp"
+
+        app:backgroundTint="@color/white"
+        app:icon="@drawable/google_icon"
+        app:iconTint="@null"
+        app:iconSize="28dp"
+        app:strokeColor="?attr/colorPrimaryVariant"
+        app:strokeWidth="1dp"
+        app:cornerRadius="30dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/or_continue"
+        app:layout_constraintEnd_toStartOf="@id/apple_button"
+        android:contentDescription="@string/google_logo"
+    />
+
+    <!-- Apple Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/apple_button"
+        android:layout_width="60dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="12dp"
+        app:backgroundTint="@color/white"
+        app:iconTint="@color/black"
+        app:icon="@drawable/apple_icon"
+        app:iconSize="28dp"
+        app:strokeColor="?attr/colorPrimaryVariant"
+        app:strokeWidth="1dp"
+        android:gravity="center_horizontal"
+        app:cornerRadius="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/or_continue"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/apple_logo"
+    />
+
+    <!-- Facebook Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/facebook_button"
+        android:layout_width="60dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="12dp"
+        app:backgroundTint="@color/white"
+        app:icon="@drawable/facebook_icon"
+        android:layout_marginStart="12dp"
+        app:iconTint="@color/blue_four"
+        app:iconSize="36dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="2dp"
+        app:strokeColor="?attr/colorPrimaryVariant"
+        app:strokeWidth="1dp"
+        android:gravity="center_horizontal"
+        app:cornerRadius="30dp"
+        app:layout_constraintStart_toEndOf="@+id/apple_button"
+        app:layout_constraintTop_toBottomOf="@+id/or_continue"
+        android:contentDescription="@string/facebook_logo"
+
+
+    />
+
+    <TextView
+        android:id="@+id/dont_have_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:textColor="?attr/colorSecondaryVariant"
+
+
+
+        app:layout_constraintTop_toBottomOf="@id/apple_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/dont_have_account"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
