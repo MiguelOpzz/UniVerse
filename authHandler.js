@@ -146,7 +146,7 @@ const oauthLoginHandler = (admin) => async (req, res) => {
   }
 };
 
-const oauthCallbackHandler = (admin) => async (_req, res) => {
+const oauthCallbackHandler = (admin) => async (req, res) => {
   try {
     const credential = await admin.auth().getRedirectResult();
 
