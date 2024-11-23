@@ -20,11 +20,11 @@
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/login_welcome"
         android:textColor="@color/black"
-        android:textSize="28sp"
+        android:textSize="32sp"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         tools:layout_editor_absoluteX="16dp" />
 

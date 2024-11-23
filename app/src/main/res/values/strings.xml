@@ -23,5 +23,10 @@
     <string name="google_logo">Google Logo</string>
     <string name="dont_have_account">Don\'t have an account? <u>Sign up</u></string>
     <string name="username_error_warning">Please fill in your username</string>
+    <string name="continue_as_guest">Continue as Guest</string>
+    <string name="create_an_account">Create an \nAccount</string>
+    <string name="action_sign_up">Register</string>
+    <string name="i_already_have_an_account">I Already have an Account <u>Login</u></string>
+    <string name="confirm_password">Confirm Password</string>
 
 </resources>

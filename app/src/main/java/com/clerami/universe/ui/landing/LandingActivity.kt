@@ -3,10 +3,12 @@ package com.clerami.universe.ui.landing
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.clerami.universe.MainActivity
 import com.clerami.universe.R
 import com.clerami.universe.databinding.ActivityLandingBinding
 import com.clerami.universe.ui.login.LoginActivity
@@ -40,6 +42,18 @@ class LandingActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.continueAsGuest.setOnClickListener{
+            AlertDialog.Builder(this)
+                .setTitle("Continue as Guest")
+                .setMessage("You won't have access to personalized features. Are you sure?")
+                .setPositiveButton("Yes") { _, _ ->
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.putExtra("isGuest", true)
+                    startActivity(intent)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
 
     }
 }

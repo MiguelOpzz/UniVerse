@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextPaint
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -78,6 +79,13 @@ class LoginActivity : AppCompatActivity() {
 
                 val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
                 startActivity(intent)
+                finish()
+            }
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.color = resources.getColor(R.color.blue_four, theme)
+                ds.isUnderlineText = true
+
             }
         }
 

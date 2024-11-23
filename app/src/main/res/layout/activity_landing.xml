@@ -8,12 +8,33 @@
     android:layout_height="match_parent"
     tools:context=".ui.landing.LandingActivity">
 
+
+    <!-- Guest -->
+    <TextView
+        android:id="@+id/continue_as_guest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/continue_as_guest"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="?attr/colorPrimaryVariant"
+
+
+
+        />
+
+
+
+
+
     <!-- Logo -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="64dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +100,7 @@
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="80dp" />
+        android:layout_marginBottom="64dp" />
 
 
 
