@@ -12,59 +12,120 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ui.login.LoginActivity">
 
-    <EditText
-        android:id="@+id/username"
+    <!-- Text Welcome Back -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/login_welcome"
+        android:textColor="@color/black"
+        android:textSize="28sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <!-- Box Text Input Email -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="96dp"
         android:hint="@string/prompt_email"
-        android:inputType="textEmailAddress"
-        android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/welcome_text"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/black"
 
-    <EditText
-        android:id="@+id/password"
+
+        app:placeholderText="example@gmail.com"
+        >
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:fontFamily="@font/montserrat_regular"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:inputType="textEmailAddress"
+        android:selectAllOnFocus="true" />
+</com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+    <!-- Box Text Input Password -->
+<com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputPasswordLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:hint="@string/prompt_password"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+    app:boxBackgroundMode="outline"
+    app:boxStrokeColor="@color/black"
+    app:placeholderText="********">
+
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
+        android:inputType="textPassword"
+        android:gravity="center_vertical"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        android:selectAllOnFocus="true" />
 
+</com.google.android.material.textfield.TextInputLayout>
+
+
+    <!-- Tombol Login -->
     <Button
         android:id="@+id/login"
         android:enabled="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
         android:layout_gravity="start"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="64dp"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:layout_marginTop="4dp"
+
+        android:textColor="@color/white"
         android:text="@string/action_sign_in"
+        android:backgroundTint="?attr/colorPrimaryVariant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@id/textInputPasswordLayout"
         app:layout_constraintVertical_bias="0.2" />
 
-    <ProgressBar
+
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/loading"
         android:visibility="gone"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="64dp"
         android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="@+id/textInputPasswordLayout"
+        app:layout_constraintStart_toStartOf="@+id/textInputPasswordLayout"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.3"
+        app:indicatorColor="?attr/colorSecondary"
+        app:trackColor="?attr/colorSecondary"
+        app:indicatorSize="4dp"
+        app:showAnimationBehavior="inward"
+    />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

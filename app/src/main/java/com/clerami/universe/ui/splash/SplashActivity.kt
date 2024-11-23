@@ -21,6 +21,6 @@ class SplashActivity : AppCompatActivity() {
             val intent = Intent(this, LandingActivity::class.java)
             startActivity(intent)
             finish() // Remove SplashActivity from back stack
-        }, 2000) // 2000ms = 2 seconds delay
+        }, 1000) // 2000ms = 2 seconds delay
     }
 }
