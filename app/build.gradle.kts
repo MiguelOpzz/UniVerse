@@ -17,15 +17,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
+            debug {
+                buildConfigField ("String", "BASE_URL", "\"https://myproject-441712.et.r.appspot.com/\"") // Development environment
+            }
+            release {
+                buildConfigField ("String", "BASE_URL", "\"https://myproject-441712.et.r.appspot.com/\"") // Production environment
+                isMinifyEnabled = true
+                proguardFiles (
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    ("proguard-rules.pro")
+                )
+            }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -35,6 +41,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -53,6 +60,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.logging.interceptor)
+
 
 
 }
