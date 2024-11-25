@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Universe</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Put your email here or Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="WelcomeSlogan">Where Bright Minds \nCollide</string>
+    <string name="text_under_slogan">A cutting-edge discussion forum \nenhanced with AI tools</string>
+    <string name="login_welcome">Welcome \nBack!</string>
+    <string name="or_continue_with">- OR Continue with -</string>
+    <string name="apple_logo">Apple Logo</string>
+    <string name="facebook_logo">Facebook Logo</string>
+    <string name="google_logo">Google Logo</string>
+    <string name="dont_have_account">Don\'t have an account? <u>Sign up</u></string>
+    <string name="username_error_warning">Please fill in your Username or Email</string>
+    <string name="continue_as_guest">Continue as Guest</string>
+    <string name="create_an_account">Create an \nAccount</string>
+    <string name="action_sign_up">Register</string>
+    <string name="i_already_have_an_account">I Already have an Account <u>Login</u></string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="username">Username</string>
+    <string name="put_your_email_here">Put your Email here</string>
+    <string name="please_fill_in_your_password">Please fill in your Password</string>
+
+</resources>
