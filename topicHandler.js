@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 const addTopicsHandler = (db, admin) => async (req, res) => {
   try {
     const {
@@ -5,16 +7,38 @@ const addTopicsHandler = (db, admin) => async (req, res) => {
       description,
       createdBy,
       tags,
-      isNSFW,
       attachmentUrls = [],
     } = req.body;
 
+    // Check moderation first
+    try {
+      const moderationResponse = await axios.post('http://127.0.0.1:5000/api', { text: title, description });
+
+      // If content is unsafe, return error
+      if (!moderationResponse.data.is_safe) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Content contains offensive language',
+          reason: moderationResponse.data.reason,
+        });
+      }
+
+      // Proceed with topic creation if content is safe
+    } catch (error) {
+      console.error('Moderation API Error:', error.message);
+      return res.status(500).json({
+        status: 'fail',
+        message: 'Error with moderation API',
+        error: error.message,
+      });
+    }
+
+    // Create new topic after successful moderation
     const newTopic = {
       title,
-      description: description || null,
+      description,
       createdBy,
       tags: tags || [],
-      isNSFW,
       attachmentUrls,
       postCount: 0,
       createdAt: admin.firestore.Timestamp.now(),
