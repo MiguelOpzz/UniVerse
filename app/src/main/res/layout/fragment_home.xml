@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,414 +7,234 @@
     android:background="#ffffff"
     tools:context=".ui.home.HomeFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <!-- Header Section -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
-
-            <!-- Logo at the Top -->
-            <ImageView
-                android:id="@+id/headerLogo"
-                android:layout_width="55dp"
-                android:layout_height="66dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/logodark" />
-
-            <!-- Title Text -->
-            <TextView
-                android:id="@+id/headerTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/headerLogo"
-                android:text="Hi User"
-                android:textColor="@color/blue_four"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/headerSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/headerTitle"
-                android:text="Lorem Ipsum is simply dummy text"
-                android:textColor="@color/blue_four"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/profilePicture"
-                android:layout_width="63dp"
-                android:layout_height="66dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/image" />
-        </RelativeLayout>
-
-        <!-- Navigation Tabs -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/btnTrending"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".10"
-                android:background="#9AB2D2"
-                android:text="Trending"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF" />
-
-            <Button
-                android:id="@+id/btnNew"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".1"
-                android:background="@color/blue_four"
-                android:text="New"
-                android:textColor="#3b5998"
-                android:textStyle="bold"
-                android:layout_marginStart="8dp" />
-
-            <ImageButton
-                android:id="@+id/btnSearch"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_weight=".001"
-                android:src="@drawable/search"
-                android:background="@color/blue_three"
-                android:layout_marginStart="8dp"
-                app:tint="#FFFFFF" />
-        </LinearLayout>
-
-        <!-- Trending Topics -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/topic1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Machine Learning"
-                    android:background="@color/blue_one"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginEnd="8dp" />
-
-                <Button
-                    android:id="@+id/topic2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Cloud Computing"
-                    android:background="@color/blue_one"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginEnd="8dp" />
-
-                <Button
-                    android:id="@+id/topic3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Mobile Development"
-                    android:background="@color/blue_one"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <!-- Discussions -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="16dp">
 
-            <!-- Individual Discussion -->
+            <!-- Header Section -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <!-- Logo at the Top -->
+                <ImageView
+                    android:id="@+id/headerLogo"
+                    android:layout_width="55dp"
+                    android:layout_height="66dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/logodark" />
+
+                <!-- Title Text -->
+                <TextView
+                    android:id="@+id/headerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/headerLogo"
+                    android:text="Hi User"
+                    android:textColor="@color/blue_four"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/headerSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/headerTitle"
+                    android:text="Lorem Ipsum is simply dummy text"
+                    android:textColor="@color/blue_four"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="63dp"
+                    android:layout_height="66dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/image" />
+            </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="#339AB2D2"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:gravity="center">
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/image2"
-                    android:layout_marginEnd="16dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <Button
+                    android:id="@+id/btnTrending"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_weight=".10"
+                    android:background="#9AB2D2"
+                    android:text="Trending"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TITLE"
-                        android:textSize="18sp"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
+                <Button
+                    android:id="@+id/btnNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@color/blue_four"
+                    android:text="New"
+                    android:textColor="#3b5998"
+                    android:textStyle="bold"
+                    android:layout_marginStart="8dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lorem Ipsum is simply dummy text"
-                        android:textSize="14sp"
-                        android:textColor="#555555" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="112"
-                            android:drawableLeft="@drawable/thumbs_up"
-                            android:drawablePadding="4dp"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="47 replies"
-                            android:drawableLeft="@drawable/reply"
-                            android:drawablePadding="4dp"
-                            android:textColor="#000000"
-                            android:layout_marginStart="16dp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/fav_outline" />
+                <ImageButton
+                    android:id="@+id/btnSearch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_weight=".001"
+                    android:src="@drawable/search"
+                    android:background="@color/blue_three"
+                    android:layout_marginStart="8dp"
+                    app:tint="#FFFFFF" />
             </LinearLayout>
+
+            <!-- Trending Topics -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/topic1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Machine Learning"
+                        android:background="@color/blue_one"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginEnd="8dp" />
+
+                    <Button
+                        android:id="@+id/topic2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Cloud Computing"
+                        android:background="@color/blue_one"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginEnd="8dp" />
+
+                    <Button
+                        android:id="@+id/topic3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Mobile Development"
+                        android:background="@color/blue_one"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="#339AB2D2"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/image2"
-                    android:layout_marginEnd="16dp" />
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:background="#339AB2D2"
+                    android:padding="16dp"
+                    android:layout_marginBottom="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="NEW TITLE"
-                        android:textSize="18sp"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New discussion content goes here"
-                        android:textSize="14sp"
-                        android:textColor="#555555" />
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/image2"
+                        android:layout_marginEnd="16dp" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/discussionTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="58"
-                            android:drawableLeft="@drawable/thumbs_up"
-                            android:drawablePadding="4dp"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20 replies"
-                            android:drawableLeft="@drawable/reply"
-                            android:drawablePadding="4dp"
+                            android:text="Discussion Title"
+                            android:textSize="18sp"
                             android:textColor="#000000"
-                            android:layout_marginStart="16dp" />
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/discussionSubtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lorem Ipsum content goes here"
+                            android:textSize="14sp"
+                            android:textColor="#555555" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="8dp">
+
+                            <TextView
+                                android:id="@+id/likesCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="112"
+                                android:drawableLeft="@drawable/thumbs_up"
+                                android:drawablePadding="4dp"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/commentsCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="47 replies"
+                                android:drawableLeft="@drawable/reply"
+                                android:drawablePadding="4dp"
+                                android:textColor="#000000"
+                                android:layout_marginStart="16dp" />
+                        </LinearLayout>
                     </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/heartIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/fav_outline" />
                 </LinearLayout>
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/fav" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="#339AB2D2"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/image2"
-                    android:layout_marginEnd="16dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="NEW TITLE"
-                        android:textSize="18sp"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New discussion content goes here"
-                        android:textSize="14sp"
-                        android:textColor="#555555" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="58"
-                            android:drawableLeft="@drawable/thumbs_up"
-                            android:drawablePadding="4dp"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20 replies"
-                            android:drawableLeft="@drawable/reply"
-                            android:drawablePadding="4dp"
-                            android:textColor="#000000"
-                            android:layout_marginStart="16dp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/fav_outline" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="#339AB2D2"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/image2"
-                    android:layout_marginEnd="16dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/discussionTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="NEW TITLE"
-                        android:textSize="18sp"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/discussionSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New discussion content goes here"
-                        android:textSize="14sp"
-                        android:textColor="#555555" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-
-                        <TextView
-                            android:id="@+id/likesCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="58"
-                            android:drawableLeft="@drawable/thumbs_up"
-                            android:drawablePadding="4dp"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:id="@+id/commentsCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20 replies"
-                            android:drawableLeft="@drawable/reply"
-                            android:drawablePadding="4dp"
-                            android:textColor="#000000"
-                            android:layout_marginStart="16dp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/heartIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/fav_outline" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddDiscussion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="70dp"
+        android:src="@drawable/add"
+    app:tint="#FFFFFF"
+    android:backgroundTint="@color/blue_one" />
+</RelativeLayout>
