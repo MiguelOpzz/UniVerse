@@ -22,6 +22,7 @@ import com.clerami.universe.ui.viewmodel.RegisterViewModel
 import com.clerami.universe.ui.viewmodel.RegisterViewModelFactory
 import com.clerami.universe.utils.Resource
 
+
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
@@ -45,14 +46,15 @@ class RegisterActivity : AppCompatActivity() {
         val apiService = ApiConfig.getApiService()
         registerViewModel = ViewModelProvider(this, RegisterViewModelFactory(apiService)).get(RegisterViewModel::class.java)
 
-        // Set up clickable span for Login
         setUpClickableSpan()
 
         // Handle Register Button Click
         binding.register.setOnClickListener {
             handleRegister()
         }
+
     }
+
 
     private fun handleRegister() {
         val email = binding.email.text.toString().trim()

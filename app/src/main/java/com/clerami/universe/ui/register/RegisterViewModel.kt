@@ -25,6 +25,8 @@ class RegisterViewModel(private val apiService: ApiService) : ViewModel() {
             emit(Resource.error("Network error: ${e.message}"))
         }
     }
+
+
 }
 
 class RegisterViewModelFactory(private val apiService: ApiService) : ViewModelProvider.Factory {

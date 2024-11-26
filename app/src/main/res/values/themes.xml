@@ -9,6 +9,15 @@
         <item name="colorSecondary">@color/off_white_one</item>
         <item name="colorSecondaryVariant">@color/gray_one</item>
         <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Tertiary Color -->
+        <item name="colorTertiary">@color/blue_three</item>
+        <item name="colorOnTertiaryFixedVariant">@color/blue_six</item>
+        <item name="colorOnTertiary">@color/blue_five</item>
+
+
+
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/gray_two</item>
         <!-- Customize your theme here. -->
