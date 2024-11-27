@@ -63,42 +63,59 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/trendingNewContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginTop="16dp">
 
+                <!-- Trending Button -->
                 <Button
                     android:id="@+id/btnTrending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".10"
+                    android:layout_weight=".1"
                     android:background="#9AB2D2"
                     android:text="Trending"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF" />
 
+                <!-- New Button -->
                 <Button
                     android:id="@+id/btnNew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".1"
+                    android:layout_weight=".01"
+                    android:layout_marginStart="8dp"
                     android:background="@color/blue_four"
                     android:text="New"
-                    android:textColor="#3b5998"
-                    android:textStyle="bold"
-                    android:layout_marginStart="8dp" />
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
 
+                <!-- Search Button -->
                 <ImageButton
                     android:id="@+id/btnSearch"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_weight=".001"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/search"
                     android:background="@color/blue_three"
-                    android:layout_marginStart="8dp"
                     app:tint="#FFFFFF" />
             </LinearLayout>
+
+            <!-- Expanded Search EditText -->
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Search here..."
+                android:padding="8dp"
+                android:visibility="gone"
+                android:background="@color/blue_three"
+                android:textSize="16sp" />
+
 
             <!-- Trending Topics -->
             <HorizontalScrollView
@@ -235,6 +252,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="70dp"
         android:src="@drawable/add"
-    app:tint="#FFFFFF"
-    android:backgroundTint="@color/blue_one" />
+        app:tint="#FFFFFF"
+        android:backgroundTint="@color/blue_one" />
 </RelativeLayout>

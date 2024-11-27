@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue_three"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Search here..."
+            android:padding="8dp"
+            android:background="#9AB2D2"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/search"
+            android:layout_marginStart="-40dp" />
+    </LinearLayout>
+
+    <!-- Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="#3396BAE4"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Post"
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:fontFamily="@font/montserrat_bold"
+                android:layout_gravity="start" />
+
+            <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/close"
+                android:layout_gravity="end"
+                android:contentDescription="Close Button"
+                android:layout_marginTop="-30dp" />
+
+            <EditText
+                android:id="@+id/titleInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="14sp"
+                android:hint="Title"
+                android:background="#33344159"
+                android:padding="10dp"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <!-- Content Input Field -->
+                <EditText
+                    android:id="@+id/contentInput"
+                    android:layout_width="match_parent"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textSize="14sp"
+                    android:layout_height="150dp"
+                    android:hint="Content"
+                    android:gravity="start|top"
+                    android:background="#33344159"
+                    android:padding="10dp"
+                    android:inputType="textMultiLine"
+                    android:scrollbars="vertical" />
+
+                <!-- Image Upload Icon -->
+                <ImageView
+                    android:id="@+id/imageUploadIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/addimage"
+                    android:layout_gravity="end"
+                    android:contentDescription="Upload Image"
+                    android:layout_marginTop="-35dp"
+                    android:layout_marginEnd="10dp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/tagsInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="14sp"
+                android:hint="Tags"
+                android:background="#33344159"
+                android:padding="10dp"
+                android:layout_marginTop="10dp" />
+
+            <Button
+                android:id="@+id/sendButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:layout_gravity="end"
+                android:backgroundTint="@color/blue_one"
+                android:textColor="@android:color/white"
+                android:text="Create"
+                android:textSize="12sp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

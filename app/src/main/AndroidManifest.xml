@@ -36,10 +36,8 @@
             android:name=".ui.login.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login">
-
-
-
-        </activity> <!-- MainActivity -->
+        </activity>
+        <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -47,6 +45,11 @@
         <activity
             android:name=".ui.register.RegisterActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".ui.addnewdicussion.AddNewActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

@@ -6,8 +6,17 @@ import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private val _isSearchActive = MutableLiveData(false)
+    val isSearchActive: LiveData<Boolean> get() = _isSearchActive
+
+    private val _searchQuery = MutableLiveData<String>()
+    val searchQuery: LiveData<String> get() = _searchQuery
+
+    fun toggleSearchBar(isActive: Boolean) {
+        _isSearchActive.value = isActive
     }
-    val text: LiveData<String> = _text
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+    }
 }
