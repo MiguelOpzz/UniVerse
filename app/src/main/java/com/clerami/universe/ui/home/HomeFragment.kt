@@ -26,7 +26,6 @@ class HomeFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_home, container, false)
 
-        // Initialize Views
         val searchButton = rootView.findViewById<ImageButton>(R.id.btnSearch)
         val searchEditText = rootView.findViewById<EditText>(R.id.searchEditText)
         val trendingButton = rootView.findViewById<Button>(R.id.btnTrending)
@@ -34,7 +33,6 @@ class HomeFragment : Fragment() {
         val trendingNewContainer = rootView.findViewById<LinearLayout>(R.id.trendingNewContainer)
         val addDiscussionButton = rootView.findViewById<FloatingActionButton>(R.id.btnAddDiscussion)
 
-        // Observe isSearchActive state
         homeViewModel.isSearchActive.observe(viewLifecycleOwner, Observer { isSearchActive ->
             if (isSearchActive) {
                 searchEditText.visibility = View.VISIBLE

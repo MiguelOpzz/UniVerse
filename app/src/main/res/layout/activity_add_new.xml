@@ -1,42 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#FFFFFF">
 
-    <!-- Header -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/blue_three"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:gravity="center">
-
-        <EditText
-            android:id="@+id/searchEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="Search here..."
-            android:padding="8dp"
-            android:background="#9AB2D2"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/search"
-            android:layout_marginStart="-40dp" />
-    </LinearLayout>
-
-    <!-- Content -->
+    <!-- Content Container (centered) -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,7 +48,8 @@
                 android:hint="Title"
                 android:background="#33344159"
                 android:padding="10dp"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,7 +69,8 @@
                     android:background="#33344159"
                     android:padding="10dp"
                     android:inputType="textMultiLine"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    android:layout_marginBottom="20dp"/>
 
                 <!-- Image Upload Icon -->
                 <ImageView
@@ -103,7 +80,7 @@
                     android:src="@drawable/addimage"
                     android:layout_gravity="end"
                     android:contentDescription="Upload Image"
-                    android:layout_marginTop="-35dp"
+                    android:layout_marginTop="-55dp"
                     android:layout_marginEnd="10dp" />
             </LinearLayout>
 
@@ -116,7 +93,8 @@
                 android:hint="Tags"
                 android:background="#33344159"
                 android:padding="10dp"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"/>
 
             <Button
                 android:id="@+id/sendButton"
@@ -133,4 +111,4 @@
                 android:layout_marginTop="5dp" />
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>
