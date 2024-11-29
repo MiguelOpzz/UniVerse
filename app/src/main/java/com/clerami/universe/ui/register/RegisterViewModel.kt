@@ -1,4 +1,4 @@
-package com.clerami.universe.ui.viewmodel
+package com.clerami.universe.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

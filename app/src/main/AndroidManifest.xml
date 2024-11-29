@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
+    <!-- Required Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,43 +15,77 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Universe"
-        tools:targetApi="31">
-        <activity
-            android:name=".ui.passwordrecovery.RecoveryActivity"
-            android:exported="false" />
-        <!-- SplashActivity -->
-        <activity
-            android:name=".ui.splash.SplashActivity"
-            android:exported="true"
-            android:theme="@style/Theme.SplashScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+    tools:targetApi="31">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> <!-- LandingActivity -->
-        <activity
-            android:name=".ui.landing.LandingActivity"
-            android:exported="false"/>
-        <!-- LoginActivity -->
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="false"
-            android:label="@string/title_activity_login">
-        </activity>
-        <!-- MainActivity -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            />
-        <activity
-            android:name=".ui.register.RegisterActivity"
-            android:exported="false" />
+    <!-- Firebase Metadata -->
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@mipmap/ic_launcher" />
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_channel_id"
+        android:value="default_channel" />
+    <meta-data
+        android:name="com.google.firebase.analytics.collection_enabled"
+        android:value="true" />
 
-        <activity
-            android:name=".ui.addnewdicussion.AddNewActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-    </application>
+    <!-- Required for Google Sign-In -->
+    <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-3940256099942544~3347511713" />
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
 
-</manifest>
+    <!-- SplashActivity -->
+    <activity
+        android:name=".ui.splash.SplashActivity"
+        android:exported="true"
+        android:theme="@style/Theme.SplashScreen">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+    <!-- LandingActivity -->
+    <activity
+        android:name=".ui.landing.LandingActivity"
+        android:exported="false" />
+
+    <!-- LoginActivity -->
+    <activity
+        android:name=".ui.login.LoginActivity"
+        android:exported="false"
+        android:label="@string/title_activity_login" />
+
+    <!-- RegisterActivity -->
+    <activity
+        android:name=".ui.register.RegisterActivity"
+        android:exported="true" >
+
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+
+
+    </activity>
+
+    <!-- MainActivity -->
+    <activity
+        android:name=".MainActivity"
+        android:exported="true" />
+
+    <!-- AddNewActivity -->
+    <activity
+        android:name=".ui.addnewdicussion.AddNewActivity"
+        android:exported="false"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+    <!-- RecoveryActivity -->
+    <activity
+        android:name=".ui.passwordrecovery.RecoveryActivity"
+        android:exported="false" />
+
+</application>
+    </manifest>

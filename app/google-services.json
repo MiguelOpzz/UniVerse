@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "613453504706",
+    "project_id": "myproject-441712",
+    "storage_bucket": "myproject-441712.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613453504706:android:54477ae80a3012e409db5b",
+        "android_client_info": {
+          "package_name": "com.clerami.universe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613453504706-msq605t4hcg4112pecmqgmgegr5gigb7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.clerami.universe",
+            "certificate_hash": "3c0cb25099497e7e4a8981db70775b31feda53f5"
+          }
+        },
+        {
+          "client_id": "613453504706-hs4c5b6dna4b3kcnob0g1s6mj31c0u78.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCElc9QX_2yM32B-D1K5r1JWxO4wXyLtp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613453504706-hs4c5b6dna4b3kcnob0g1s6mj31c0u78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
