@@ -43,6 +43,8 @@ class HomeFragment : Fragment() {
             }
         })
 
+        
+
         // Search Button Click Listener
         searchButton.setOnClickListener {
             val currentState = homeViewModel.isSearchActive.value ?: false
