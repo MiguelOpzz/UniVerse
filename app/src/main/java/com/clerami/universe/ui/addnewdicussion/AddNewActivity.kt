@@ -4,43 +4,45 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.*
+import android.util.Base64
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.clerami.universe.R
+import com.clerami.universe.data.remote.retrofit.CreateTopicRequest
+import com.clerami.universe.databinding.ActivityAddNewBinding
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 class AddNewActivity : AppCompatActivity() {
 
-    private lateinit var contentInput: EditText
+    private lateinit var binding: ActivityAddNewBinding
+    private val addNewViewModel: AddNewViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_new)
+        binding = ActivityAddNewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val closeButton = findViewById<ImageView>(R.id.closeButton)
-        val titleInput = findViewById<EditText>(R.id.titleInput)
-        contentInput = findViewById(R.id.contentInput)
-        val tagsInput = findViewById<EditText>(R.id.tagsInput)
-        val sendButton = findViewById<Button>(R.id.sendButton)
-        val imageUploadIcon = findViewById<ImageView>(R.id.imageUploadIcon)
+        binding.closeButton.setOnClickListener { finish() }
 
-        // Close button: Return to the homepage
-        closeButton.setOnClickListener { finish() }
-
-        // Image upload: Open the gallery
-        imageUploadIcon.setOnClickListener {
+        binding.imageUploadIcon.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, IMAGE_PICK_CODE)
         }
 
-        sendButton.setOnClickListener {
-            val title = titleInput.text.toString()
-            val content = contentInput.text.toString()
-            val tags = tagsInput.text.toString()
-
+        binding.sendButton.setOnClickListener {
+            val title = binding.titleInput.text.toString()
+            val content = binding.contentInput.text.toString()
+            val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }
+            val createdBy = "User123"
             if (title.isNotEmpty() && content.isNotEmpty()) {
+                val request = CreateTopicRequest(title, content, createdBy, "Computer Science", tags)
+
+                addNewViewModel.createNewTopic(request)
+
                 Toast.makeText(this, "New discussion created!", Toast.LENGTH_SHORT).show()
-                // Add logic for sending the post data
                 finish()
             } else {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
@@ -48,15 +50,29 @@ class AddNewActivity : AppCompatActivity() {
         }
     }
 
-    // Handle the result of image selection
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
             val selectedImageUri: Uri? = data?.data
             selectedImageUri?.let {
-                contentInput.append("\n[Image: $selectedImageUri]\n")
+                val base64Image = convertImageToBase64(it)
+                binding.contentInput.append("\n[Image: $base64Image]\n")
             }
         }
+    }
+
+    private fun convertImageToBase64(uri: Uri): String {
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        val buffer = ByteArray(1024)
+        var bytesRead: Int
+
+        while (inputStream?.read(buffer).also { bytesRead = it ?: -1 } != -1) {
+            byteArrayOutputStream.write(buffer, 0, bytesRead)
+        }
+
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
     companion object {

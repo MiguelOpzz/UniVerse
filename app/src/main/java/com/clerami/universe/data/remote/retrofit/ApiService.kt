@@ -22,27 +22,49 @@ data class LoginResponse(
     val userId: String
 )
 
-data class Topic(
-    val id: String,
+
+data class CreateTopicRequest(
     val title: String,
-    val content: String,
+    val description: String,
+    val createdBy: String,
+    val major: String,
+    val tags: List<String>
+)
+
+data class UpdateTopicRequest(
+    val title: String,
     val tags: List<String>,
-    val userId: String,
-    val createdAt: String
+    val body: String
+)
+
+data class Topic(
+    val topicId: String,
+    val attachmentUrls: Map<String, Any>,
+    val title: String,
+    val description: String,
+    val createdBy: String,
+    val tags: List<String>,
+    val isNSFW: Boolean,
+    val postCount: Int,
+    val createdAt: Long,
+    val updatedAt: Long
 )
 
 data class Comment(
-    val id: String,
-    val content: String,
+    val commentId: String,
     val userId: String,
-    val createdAt: String
+    val commentText: String,
+    val createdAt: Long,
+    val updatedAt: Long,
+    val upvotes: Int,
+    val downvotes: Int,
+    val userVotes: Map<String, String>
 )
 
 data class CommentVoteRequest(
     val userId: String,
     val voteType: String
 )
-
 interface ApiService {
 
     @POST("api/signup")
@@ -56,34 +78,31 @@ interface ApiService {
     @POST("api/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
-    // Create a new topic
     @POST("api/topics")
-    fun createTopic(@Body topic: Topic): Call<Topic>
+    fun createTopic(@Body request: CreateTopicRequest): Call<Topic>
 
-    // Get all topics
     @GET("api/topics")
     fun getAllTopics(): Call<List<Topic>>
 
-    // Get a single topic by ID
     @GET("api/topics/{topicId}")
     fun getTopicById(@Path("topicId") topicId: String): Call<Topic>
 
-    // Update an existing topic
     @PUT("api/topics/{topicId}")
-    fun updateTopic(@Path("topicId") topicId: String, @Body topic: Topic): Call<Topic>
+    fun updateTopic(
+        @Path("topicId") topicId: String,
+        @Body request: UpdateTopicRequest
+    ): Call<Topic>
 
-    // Delete a topic
     @DELETE("api/topics/{topicId}")
     fun deleteTopic(@Path("topicId") topicId: String): Call<Void>
 
-    // Get comments for a topic
     @GET("api/topics/{topicId}/comments")
     fun getComments(@Path("topicId") topicId: String): Call<List<Comment>>
 
-    // Post upvote/downvote for a comment
     @POST("api/topics/{topicId}/comments/{commentId}/upvote")
-    fun postUpvote(@Path("topicId") topicId: String, @Path("commentId") commentId: String, @Body vote: CommentVoteRequest): Call<Void>
-
-    @POST("api/topics/{topicId}/comments/{commentId}/downvote")
-    fun postDownvote(@Path("topicId") topicId: String, @Path("commentId") commentId: String, @Body vote: CommentVoteRequest): Call<Void>
+    fun postUpvote(
+        @Path("topicId") topicId: String,
+        @Path("commentId") commentId: String,
+        @Body vote: CommentVoteRequest
+    ): Call<Void>
 }

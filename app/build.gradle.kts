@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.google.services)
 }
 
 android {
@@ -21,10 +20,10 @@ android {
 
     buildTypes {
             debug {
-                buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"") // Development environment
+                buildConfigField ("String", "BASE_URL", "\"https://myproject-441712.et.r.appspot.com/\"")
             }
             release {
-                buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"") // Production environment
+                buildConfigField ("String", "BASE_URL", "\"https://myproject-441712.et.r.appspot.com/\"")
                 isMinifyEnabled = true
                 proguardFiles (
                     getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -44,10 +43,6 @@ android {
         viewBinding = true
         buildConfig = true
     }
-    composeOptions{
-        kotlinCompilerExtensionVersion = "1.5.9"
-    }
-
 }
 
 dependencies {
@@ -62,8 +57,10 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.credentials)
+    implementation(libs.googleid)
     implementation(libs.firebase.auth.ktx)
-    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.cronet.embedded)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -73,11 +70,6 @@ dependencies {
     implementation (libs.play.services.auth)
 
 
-    implementation (platform(libs.firebase.bom))
-    implementation (libs.firebase.auth)
-    implementation (libs.firebase.firestore)
-    implementation (libs.gms.play.services.auth)
-    implementation(libs.firebase.analytics)
-    implementation(libs.googleid)
+
 
 }

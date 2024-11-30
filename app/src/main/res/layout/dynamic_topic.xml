@@ -1,0 +1,84 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#339AB2D2"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <!-- Image for the topic -->
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/image2"
+            android:layout_marginEnd="16dp" />
+
+        <!-- Text content for the topic -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Topic Title -->
+            <TextView
+                android:id="@+id/discussionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Discussion Title"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <!-- Topic Description (Content) -->
+            <TextView
+                android:id="@+id/discussionSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lorem Ipsum content goes here"
+                android:textSize="14sp"
+                android:textColor="#555555" />
+
+            <!-- Likes and Comments counts -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/likesCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="112 likes"
+                    android:drawableLeft="@drawable/thumbs_up"
+                    android:drawablePadding="4dp"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/commentsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="47 replies"
+                    android:drawableLeft="@drawable/reply"
+                    android:drawablePadding="4dp"
+                    android:textColor="#000000"
+                    android:layout_marginStart="16dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Heart Icon -->
+        <ImageView
+            android:id="@+id/heartIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/fav_outline" />
+    </LinearLayout>
+</LinearLayout>
