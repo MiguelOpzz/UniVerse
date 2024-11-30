@@ -2,6 +2,7 @@ package com.clerami.universe.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,14 +75,26 @@ class HomeFragment : Fragment() {
         ApiConfig.getApiService().getComments(topicId).enqueue(object : Callback<List<Comment>> {
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if (response.isSuccessful) {
-                    // handle response
+                    val comments = response.body()
+                    if (comments != null && comments.isNotEmpty()) {
+                        val likesCount = comments.sumOf { it.upvotes }
+                        commentsCountTextView.text = "${comments.size} replies"
+                        likesCountTextView.text = "$likesCount likes"
+                    } else {
+                        commentsCountTextView.text = "No replies yet"
+                        likesCountTextView.text = "No likes yet"
+                    }
                 } else {
-                    // handle error
+                    commentsCountTextView.text = "Error loading replies"
+                    likesCountTextView.text = "Error loading likes"
+                    Log.e("API_ERROR", "Error response: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                // handle failure
+                commentsCountTextView.text = "Failed to load replies"
+                likesCountTextView.text = "Failed to load likes"
+                Log.e("API_ERROR", "Failed to fetch comments: ${t.localizedMessage}", t)
             }
         })
     }

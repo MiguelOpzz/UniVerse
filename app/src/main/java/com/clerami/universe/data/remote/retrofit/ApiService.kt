@@ -1,7 +1,6 @@
 package com.clerami.universe.data.remote.retrofit
 
 import com.clerami.universe.data.RegisterUser
-import org.w3c.dom.Comment
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -39,15 +38,15 @@ data class UpdateTopicRequest(
 
 data class Topic(
     val topicId: String,
-    val attachmentUrls: Map<String, Any>,
+    val attachmentUrls: List<Any>,
     val title: String,
-    val description: String,
+    val description: String?,
     val createdBy: String,
     val tags: List<String>,
     val isNSFW: Boolean,
     val postCount: Int,
-    val createdAt: Long,
-    val updatedAt: Long
+    val createdAt: Map<String, Any>,
+    val updatedAt: Map<String, Any>
 )
 
 data class Comment(
@@ -65,6 +64,7 @@ data class CommentVoteRequest(
     val userId: String,
     val voteType: String
 )
+
 interface ApiService {
 
     @POST("api/signup")
@@ -105,4 +105,5 @@ interface ApiService {
         @Path("commentId") commentId: String,
         @Body vote: CommentVoteRequest
     ): Call<Void>
+
 }
