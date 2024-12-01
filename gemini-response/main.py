@@ -22,8 +22,6 @@ SAFETY_SETTINGS = {
 }
 
 def gemini_response(question):
-    model = GenerativeModel(MODEL_NAME)
-    
     response = model.generate_content(
         [question],
         generation_config=GENERATION_CONFIG,
