@@ -1,0 +1,12 @@
+{
+    "type": "OBJECT",
+    "properties": {
+        "forum_id":{
+            "type": "STRING"
+        },
+        "summary":{
+            "type": "STRING"
+        }
+    }
+}
+

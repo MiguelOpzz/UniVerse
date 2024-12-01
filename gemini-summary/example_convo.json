@@ -1,0 +1,17 @@
+{
+    "forum_id": "0000",
+    "conversations": [
+    {
+      "user_id": "001",
+      "response": "Have you guys noticed how much buzz there is about Large Language Models lately? It feels like every week there's a new breakthrough."
+    },
+    {
+      "user_id": "002",
+      "response": "Totally. It’s crazy how versatile they are now. Writing essays, coding, even diagnosing medical conditions—it’s like they can do everything."
+    },
+    {
+      "user_id": "003",
+      "response": "True, but don’t you think we’re getting a little too reliant on them? I mean, they’re great, but they’re not perfect. The potential for misuse is pretty concerning."
+    }
+  ]
+}
