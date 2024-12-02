@@ -3,32 +3,33 @@ const {
   addCommentHandler,
   getCommentsHandler,
   upvoteCommentHandler,
-} = require('./commentHandler');
+} = require('./handlers/commentHandler');
 const {
   addTopicsHandler,
   getAllTopicsHandler,
   getTopicsByIdHandler,
   editTopicsByIdHandler,
   deleteTopicsByIdHandler,
-} = require('./topicHandler');
+} = require('./handlers/topicHandler');
 const {
   signUpHandler,
   loginHandler,
   oauthLoginHandler,
   oauthCallbackHandler,
   guestHandler,
-} = require('./authHandler');
+} = require('./handlers/authHandler');
+const { authenticateToken } = require('./middleware/authmiddleware'); // Import the middleware
 
 module.exports = ({ db, admin }) => {
   const router = express.Router();
-  router.post('/topics', addTopicsHandler(db, admin));
+  router.post('/topics', authenticateToken, addTopicsHandler(db, admin));
   router.get('/topics', getAllTopicsHandler(db));
   router.get('/topics/:topicId', getTopicsByIdHandler(db));
-  router.put('/topics/:topicId', editTopicsByIdHandler(db, admin));
-  router.delete('/topics/:topicId', deleteTopicsByIdHandler(db));
+  router.put('/topics/:topicId', authenticateToken, editTopicsByIdHandler(db, admin));
+  router.delete('/topics/:topicId', authenticateToken, deleteTopicsByIdHandler(db));
 
-  router.post('/topics/:topicId/comments', addCommentHandler(db, admin))
-  router.post('/topics/:topicId/comments/:commentId/upvote', upvoteCommentHandler(db, admin));
+  router.post('/topics/:topicId/comments', authenticateToken, addCommentHandler(db, admin))
+  router.post('/topics/:topicId/comments/:commentId/upvote',authenticateToken, upvoteCommentHandler(db, admin));
   router.get('/topics/:topicId/comments', getCommentsHandler(db));
 
   router.post('/signup', signUpHandler(db, admin));

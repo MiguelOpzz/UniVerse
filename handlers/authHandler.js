@@ -1,14 +1,29 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const generateToken = (user) => {
+  return jwt.sign(
+    { userId: user.id, username: user.username },
+    process.env.JWT_SECRET,  // Use the secret from .env
+    { expiresIn: '1h' }
+  );
+};
 
 const signUpHandler = (db, admin) => async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
-  if (!username || !email || !password || !confirmPassword) {
+  if (!username || !email || !password ) {
     return res.status(400).json({ message: 'All fields are required.' });
   }
+  const userExists = await db.collection('users')
+  .where('email', '==', email)
+  .get();
 
-  if (password !== confirmPassword) {
-    return res.status(400).json({ message: 'Passwords do not match.' });
+  if (!userExists.empty) {
+    return res.status(400).json({ message: 'Email already in use.' });
   }
 
   try {
@@ -22,11 +37,14 @@ const signUpHandler = (db, admin) => async (req, res) => {
     };
 
     const docRef = await db.collection('users').add(newUser);
+    const token = generateToken({ id: docRef.id, username });
 
     res.status(201).json({
       message: 'User registered successfully!',
       userId: docRef.id,
+      token,  // Send the token back to the client
     });
+
   } catch (error) {
     console.error('Error creating user:', error.message);
     res.status(500).json({
@@ -77,41 +95,38 @@ const loginHandler = (db) => async (req, res) => {
   }
 
   try {
-    // Query Firestore for the user using email or username
-    const userSnapshot = await db
+    let userSnapshot = await db
       .collection('users')
       .where('email', '==', usernameOrEmail)
       .get();
 
     // If no user is found using email, search by username
     if (userSnapshot.empty) {
-      const usernameSnapshot = await db
+      userSnapshot = await db
         .collection('users')
         .where('username', '==', usernameOrEmail)
         .get();
 
-      if (usernameSnapshot.empty) {
+      if (userSnapshot.empty) {
         return res.status(401).json({ message: 'Invalid username/email or password.' });
       }
-
-      // Use the user from the username query
-      const user = usernameSnapshot.docs[0].data();
-
-      if (!bcrypt.compareSync(password, user.password)) {
-        return res.status(401).json({ message: 'Invalid username/email or password.' });
-      }
-
-      return res.status(200).json({ message: `Welcome back, ${user.username}!` });
     }
 
-    // Use the user from the email query
-    const user = userSnapshot.docs[0].data();
+    // Extract the user data and document ID
+    const userDoc = userSnapshot.docs[0];
+    const user = userDoc.data();
 
+    // Verify the password
     if (!bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ message: 'Invalid username/email or password.' });
     }
 
-    res.status(200).json({ message: `Welcome back, ${user.username}!` });
+    // Generate a token using the Firestore document ID
+    const token = generateToken({ id: userDoc.id, username: user.username });
+    res.status(200).json({
+      message: `Welcome back, ${user.username}!`,
+      token,
+    });
   } catch (error) {
     console.error('Error logging in:', error.message);
     res.status(500).json({
@@ -120,6 +135,7 @@ const loginHandler = (db) => async (req, res) => {
     });
   }
 };
+
 
 
 const oauthLoginHandler = (admin) => async (req, res) => {

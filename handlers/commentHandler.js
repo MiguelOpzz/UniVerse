@@ -1,14 +1,15 @@
 const addCommentHandler = (db, admin) => async (req, res) => {
   try {
     const { topicId } = req.params; // Get topicId from URL
-    const { userId, commentText } = req.body;
+    const { commentText } = req.body; // Removed userId from body for security
+    const { username } = req.user; // Extracted from the token middleware
 
-    if (!userId || !commentText) {
-      return res.status(400).json({ message: 'UserId and commentText are required.' });
+    if (!commentText) {
+      return res.status(400).json({ message: 'Comment text is required.' });
     }
 
     const newComment = {
-      userId,
+      username,  // Use username from token
       commentText,
       upvotes: 0,
       downvotes: 0,
@@ -18,24 +19,27 @@ const addCommentHandler = (db, admin) => async (req, res) => {
     };
 
     const topicRef = db.collection('topic').doc(topicId);
-    const topic = await topicRef.get();
+    const topicSnapshot = await topicRef.get();
 
-    if (!topic.exists) {
+    if (!topicSnapshot.exists) {
       return res.status(404).json({ message: 'Topic not found.' });
     }
 
-    // Add comment to a subcollection
+    // Add comment to the 'comments' subcollection
     const commentRef = await topicRef.collection('comments').add(newComment);
+
     res.status(201).json({
       status: 'success',
       message: 'Comment added successfully',
       commentId: commentRef.id,
+      comment: newComment,  // Optionally return the comment data
     });
   } catch (error) {
     console.error('Error adding comment:', error.message);
     res.status(500).json({ status: 'fail', message: 'Error adding comment', error: error.message });
   }
 };
+
 
 const getCommentsHandler = (db) => async (req, res) => {
   try {
@@ -68,62 +72,51 @@ const getCommentsHandler = (db) => async (req, res) => {
 
 const upvoteCommentHandler = (db, admin) => async (req, res) => {
   try {
-    const { topicId, commentId } = req.params;
-    const { userId, voteType } = req.body;  // voteType: 'upvote' or 'downvote'
+    const { topicId, commentId } = req.params; // Extract from the token middleware
+    const { username, id: userId } = req.user; 
+    const { voteType } = req.body;
 
-    if (!userId || !['upvote', 'downvote'].includes(voteType)) {
-      return res.status(400).json({ message: 'Invalid vote request.' });
+    const validVoteTypes = ['upvote', 'downvote'];
+    if (!validVoteTypes.includes(voteType)) {
+      return res.status(400).json({ message: 'Invalid vote type.' });
     }
 
     const commentRef = db.collection('topic').doc(topicId).collection('comments').doc(commentId);
-    const commentSnapshot = await commentRef.get();
-
-    if (!commentSnapshot.exists) {
-      return res.status(404).json({ message: 'Comment not found.' });
-    }
-
-    const commentData = commentSnapshot.data();
-
-    // Ensure userVotes exists and is an object
-    const userVotes = commentData.userVotes || {};
-
-    const previousVote = userVotes[userId];
-
-    // Update vote counts based on previous and current votes
-    if (previousVote === voteType) {
-      // Remove the vote if the user clicks the same vote again
-      if (voteType === 'upvote') commentData.upvotes--;
-      else commentData.downvotes--;
-      delete userVotes[userId];
-    } else {
-      // Adjust vote counts
-      if (previousVote === 'upvote') commentData.upvotes--;
-      if (previousVote === 'downvote') commentData.downvotes--;
-
-      if (voteType === 'upvote') commentData.upvotes++;
-      else commentData.downvotes++;
-
-      userVotes[userId] = voteType;
-    }
-
-    // Update the Firestore document
-    await commentRef.update({
-      upvotes: commentData.upvotes,
-      downvotes: commentData.downvotes,
-      userVotes: userVotes,
-      updatedAt: admin.firestore.Timestamp.now(),
+    
+    await db.runTransaction(async (transaction) => {
+      const commentSnapshot = await transaction.get(commentRef);
+      if (!commentSnapshot.exists) throw new Error('Comment not found.');
+    
+      const commentData = commentSnapshot.data();
+      const userVotes = commentData.userVotes || {};
+    
+      // Determine the new vote state
+      if (userVotes[userId] && userVotes[userId].voteType === voteType) {
+        delete userVotes[userId];  // Remove the vote if user clicks again
+      } else {
+        userVotes[userId] = { voteType, username };  // Store voteType and username
+      }
+    
+      // Recalculate upvotes and downvotes
+      const updatedUpvotes = Object.values(userVotes).filter(v => v.voteType === 'upvote').length;
+      const updatedDownvotes = Object.values(userVotes).filter(v => v.voteType === 'downvote').length;
+    
+      // Update Firestore document
+      transaction.update(commentRef, {
+        upvotes: updatedUpvotes,
+        downvotes: updatedDownvotes,
+        userVotes,
+        updatedAt: admin.firestore.Timestamp.now(),
+      });
     });
-
-    res.status(200).json({ 
-      message: 'Vote updated successfully!', 
-      upvotes: commentData.upvotes, 
-      downvotes: commentData.downvotes 
-    });
+    
+    res.status(200).json({ message: 'Vote updated successfully!' });
   } catch (error) {
     console.error('Error voting on comment:', error.message);
     res.status(500).json({ message: 'Failed to vote on comment.', error: error.message });
   }
 };
+
 
 module.exports = {
   addCommentHandler,

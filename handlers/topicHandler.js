@@ -5,14 +5,14 @@ const addTopicsHandler = (db, admin) => async (req, res) => {
     const {
       title,
       description,
-      createdBy,
       tags,
       attachmentUrls = [],
     } = req.body;
+    const createdBy = req.user.username;
 
     // Check moderation first
     try {
-      const moderationResponse = await axios.post('http://127.0.0.1:5000/api', { text: title, description });
+      const moderationResponse = await axios.post('http://127.0.0.1:5000/api', { text: `${title} ${description}` });
 
       // If content is unsafe, return error
       if (!moderationResponse.data.is_safe) {
