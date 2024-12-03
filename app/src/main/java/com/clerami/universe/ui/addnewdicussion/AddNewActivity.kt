@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -50,13 +52,35 @@ class AddNewActivity : AppCompatActivity() {
         }
     }
 
+    private var imageCount = 0
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
             val selectedImageUri: Uri? = data?.data
             selectedImageUri?.let {
-                val base64Image = convertImageToBase64(it)
-                binding.contentInput.append("\n[Image: $base64Image]\n")
+                imageCount++
+
+                when (imageCount) {
+                    1 -> {
+                        binding.imagePreview1.setImageURI(it)
+                        binding.imagePreview1.visibility = ImageView.VISIBLE
+                    }
+                    2 -> {
+                        binding.imagePreview2.setImageURI(it)
+                        binding.imagePreview2.visibility = ImageView.VISIBLE
+                    }
+                    else -> {
+                        binding.extraImagesText.visibility = TextView.VISIBLE
+                    }
+                }
+
+                // Optionally append an indicator in the content input
+                if (imageCount <= 2) {
+                    binding.contentInput.append("")
+                } else {
+                    binding.contentInput.append("")
+                }
             }
         }
     }
