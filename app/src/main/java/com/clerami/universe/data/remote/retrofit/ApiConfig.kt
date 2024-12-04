@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit
 
 object ApiConfig {
 
-    // Provide a method to get ApiService
     fun getApiService(context: Context): ApiService {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
@@ -22,13 +21,10 @@ object ApiConfig {
             }
         }
 
-        // Interceptor to add the token in the request header dynamically
         val tokenInterceptor = Interceptor { chain ->
-            // Retrieve the token from SharedPreferences
             val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             val token = sharedPreferences.getString("auth_token", "") ?: ""
 
-            // Add the token to the request header
             val request: Request = chain.request().newBuilder()
                 .addHeader("Authorization", "Bearer $token")
                 .build()
@@ -38,7 +34,7 @@ object ApiConfig {
 
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(tokenInterceptor) // Add tokenInterceptor
+            .addInterceptor(tokenInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
