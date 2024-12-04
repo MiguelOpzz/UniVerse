@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import com.clerami.universe.data.remote.retrofit.ApiService
-import com.clerami.universe.data.remote.retrofit.LoginRequest
+import com.clerami.universe.data.remote.response.LoginRequest
 import com.clerami.universe.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONObject

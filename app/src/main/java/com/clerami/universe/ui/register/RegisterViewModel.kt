@@ -3,8 +3,8 @@ package com.clerami.universe.ui.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
-import com.clerami.universe.data.RegisterUser
 import com.clerami.universe.data.remote.retrofit.ApiService
+import com.clerami.universe.data.remote.response.RegisterRequest
 
 import com.clerami.universe.utils.Resource
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +15,7 @@ class RegisterViewModel(private val apiService: ApiService) : ViewModel() {
     fun register(email: String, password: String, username: String) = liveData(Dispatchers.IO) {
         emit(Resource.loading())
         try {
-            val response = apiService.signUp(RegisterUser(email, username, password)).execute()
+            val response = apiService.signUp(RegisterRequest(email, username, password)).execute()
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
             } else {

@@ -20,7 +20,6 @@ import com.clerami.universe.R
 import com.clerami.universe.databinding.ActivityRegisterBinding
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.ui.login.LoginActivity
-
 import com.clerami.universe.utils.Resource
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount

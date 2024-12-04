@@ -8,22 +8,30 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.clerami.universe.MainActivity
-import com.clerami.universe.R
 import com.clerami.universe.databinding.ActivityLandingBinding
 import com.clerami.universe.ui.login.LoginActivity
 import com.clerami.universe.ui.register.RegisterActivity
+import com.clerami.universe.utils.SessionManager
 
 class LandingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLandingBinding
-
+    private lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
 
+
         binding = ActivityLandingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sessionManager = SessionManager(this)
+        if (sessionManager.isLoggedIn()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

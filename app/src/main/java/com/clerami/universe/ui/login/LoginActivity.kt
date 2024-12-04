@@ -14,23 +14,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.clerami.universe.MainActivity
 import com.clerami.universe.R
+import com.clerami.universe.data.remote.response.LoginResponse
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.databinding.ActivityLoginBinding
 import com.clerami.universe.ui.register.RegisterActivity
 import com.clerami.universe.utils.Resource
+import com.clerami.universe.utils.SessionManager
 
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var loginViewModel: LoginViewModel
-
+    private lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        sessionManager = SessionManager(this)
         val apiService = ApiConfig.getApiService(this)
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(apiService)).get(LoginViewModel::class.java)
 
@@ -103,6 +105,13 @@ class LoginActivity : AppCompatActivity() {
                 Resource.Status.SUCCESS -> {
                     binding.loading.visibility = View.GONE
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+
+
+                    val loginResponse = resource.data
+                    if (loginResponse != null) {
+                        sessionManager.saveSession(loginResponse.token, usernameOrEmail)
+                    }
+
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
