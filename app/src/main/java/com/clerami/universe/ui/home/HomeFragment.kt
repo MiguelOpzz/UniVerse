@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.clerami.universe.R
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.retrofit.Comment
 import com.clerami.universe.data.remote.retrofit.Topic
@@ -32,15 +31,20 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        homeViewModel.fetchTopics()
+        // Fetch topics
+        homeViewModel.fetchTopics(requireContext())
 
+        // Observe topics LiveData
         homeViewModel.topics.observe(viewLifecycleOwner) { topics ->
+            Log.d("HomeFragment", "Observed topics: $topics")
             binding.dynamicTopicsContainer.removeAllViews()
             if (topics.isNotEmpty()) {
                 topics.forEach { topic ->
                     val discussionView = createDiscussionView(topic, inflater)
                     binding.dynamicTopicsContainer.addView(discussionView)
                 }
+            } else {
+                Log.d("HomeFragment", "No topics found to display.")
             }
         }
 
@@ -53,12 +57,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun createDiscussionView(topic: Topic, inflater: LayoutInflater): View {
-        val topicBinding =
-            DynamicTopicBinding.inflate(inflater, binding.dynamicTopicsContainer, false)
+        val topicBinding = DynamicTopicBinding.inflate(inflater, binding.dynamicTopicsContainer, false)
 
         topicBinding.discussionTitle.text = topic.title
-        topicBinding.discussionSubtitle.text = topic.description
-
+        topicBinding.discussionSubtitle.text = topic.description ?: "No description available"
         topicBinding.likesCount.text = "Loading likes..."
         topicBinding.commentsCount.text = "Loading replies..."
 
@@ -72,7 +74,7 @@ class HomeFragment : Fragment() {
         commentsCountTextView: TextView,
         likesCountTextView: TextView
     ) {
-        ApiConfig.getApiService().getComments(topicId).enqueue(object : Callback<List<Comment>> {
+        ApiConfig.getApiService(requireContext()).getComments(topicId).enqueue(object : Callback<List<Comment>> {
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if (response.isSuccessful) {
                     val comments = response.body()
@@ -87,15 +89,16 @@ class HomeFragment : Fragment() {
                 } else {
                     commentsCountTextView.text = "Error loading replies"
                     likesCountTextView.text = "Error loading likes"
-                    Log.e("API_ERROR", "Error response: ${response.errorBody()?.string()}")
+                    Log.e("HomeFragment", "Error fetching comments: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
                 commentsCountTextView.text = "Failed to load replies"
                 likesCountTextView.text = "Failed to load likes"
-                Log.e("API_ERROR", "Failed to fetch comments: ${t.localizedMessage}", t)
+                Log.e("HomeFragment", "Failed to fetch comments: ${t.localizedMessage}", t)
             }
         })
     }
 }
+

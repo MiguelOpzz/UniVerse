@@ -1,14 +1,19 @@
 package com.clerami.universe.data.remote.retrofit
 
+import android.content.Context
 import com.clerami.universe.BuildConfig
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object ApiConfig {
 
-    fun getApiService(): ApiService {
+    // Provide a method to get ApiService
+    fun getApiService(context: Context): ApiService {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
@@ -17,11 +22,26 @@ object ApiConfig {
             }
         }
 
+        // Interceptor to add the token in the request header dynamically
+        val tokenInterceptor = Interceptor { chain ->
+            // Retrieve the token from SharedPreferences
+            val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            val token = sharedPreferences.getString("auth_token", "") ?: ""
+
+            // Add the token to the request header
+            val request: Request = chain.request().newBuilder()
+                .addHeader("Authorization", "Bearer $token")
+                .build()
+
+            chain.proceed(request)
+        }
+
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .addInterceptor(tokenInterceptor) // Add tokenInterceptor
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
         val retrofit = Retrofit.Builder()

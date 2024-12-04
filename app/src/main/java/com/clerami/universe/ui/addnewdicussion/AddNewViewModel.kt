@@ -1,5 +1,6 @@
 package com.clerami.universe.ui.addnewdicussion
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,8 +16,9 @@ class AddNewViewModel : ViewModel() {
     private val _createTopicStatus = MutableLiveData<String>()
     val createTopicStatus: LiveData<String> get() = _createTopicStatus
 
-    fun createNewTopic(request: CreateTopicRequest) {
-        ApiConfig.getApiService().createTopic(request).enqueue(object : Callback<Topic> {
+    fun createNewTopic(request: CreateTopicRequest, context: Context) {
+        // Use ApiConfig with context to dynamically add the token
+        ApiConfig.getApiService(context).createTopic(request).enqueue(object : Callback<Topic> {
             override fun onResponse(call: Call<Topic>, response: Response<Topic>) {
                 if (response.isSuccessful) {
                     _createTopicStatus.value = "Discussion created successfully!"
@@ -34,4 +36,3 @@ class AddNewViewModel : ViewModel() {
         })
     }
 }
-

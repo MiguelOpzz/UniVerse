@@ -1,5 +1,6 @@
 package com.clerami.universe.ui.home
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,11 +17,16 @@ class HomeViewModel : ViewModel() {
     private val _topics = MutableLiveData<List<Topic>>()
     val topics: LiveData<List<Topic>> get() = _topics
 
-    fun fetchTopics() {
-        ApiConfig.getApiService().getAllTopics().enqueue(object : Callback<List<Topic>> {
+    fun fetchTopics(context: Context) {
+        fetchTopicsFromApi(context)
+    }
+
+    private fun fetchTopicsFromApi(context: Context) {
+        ApiConfig.getApiService(context).getAllTopics().enqueue(object : Callback<List<Topic>> {
             override fun onResponse(call: Call<List<Topic>>, response: Response<List<Topic>>) {
                 if (response.isSuccessful) {
                     _topics.value = response.body()
+                    Log.d("HomeViewModel", "Fetched topics: ${response.body()}")
                 } else {
                     Log.e("HomeViewModel", "Error fetching topics: ${response.errorBody()?.string()}")
                 }
@@ -28,24 +34,6 @@ class HomeViewModel : ViewModel() {
 
             override fun onFailure(call: Call<List<Topic>>, t: Throwable) {
                 Log.e("HomeViewModel", "Failed to fetch topics: ${t.message}")
-            }
-        })
-    }
-
-    fun fetchComments(topicId: String, callback: (List<Comment>) -> Unit) {
-        ApiConfig.getApiService().getComments(topicId).enqueue(object : Callback<List<Comment>> {
-            override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
-                if (response.isSuccessful) {
-                    callback(response.body() ?: emptyList())
-                } else {
-                    Log.e("HomeViewModel", "Error fetching comments: ${response.errorBody()?.string()}")
-                    callback(emptyList())
-                }
-            }
-
-            override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                Log.e("HomeViewModel", "Failed to fetch comments: ${t.message}")
-                callback(emptyList())
             }
         })
     }
