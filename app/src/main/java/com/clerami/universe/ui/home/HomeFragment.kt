@@ -64,10 +64,22 @@ class HomeFragment : Fragment() {
         topicBinding.likesCount.text = "Loading likes..."
         topicBinding.commentsCount.text = "Loading replies..."
 
+        // Fetch comments and likes
         fetchCommentsForTopic(topic.topicId, topicBinding.commentsCount, topicBinding.likesCount)
+
+        // Set click listener to open TopicDetailActivity
+        topicBinding.root.setOnClickListener {
+            val intent = Intent(requireContext(), TopicDetailActivity::class.java).apply {
+                putExtra("topicId", topic.topicId)
+                putExtra("title", topic.title)
+                putExtra("description", topic.description)
+            }
+            startActivity(intent)
+        }
 
         return topicBinding.root
     }
+
 
     private fun fetchCommentsForTopic(
         topicId: String,
