@@ -20,6 +20,7 @@ import com.clerami.universe.R
 import com.clerami.universe.databinding.ActivityRegisterBinding
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.ui.login.LoginActivity
+
 import com.clerami.universe.utils.Resource
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -51,13 +52,15 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         // Initialize ViewModel with ApiConfig
-        val apiService = ApiConfig.getApiService()
+        val apiService = ApiConfig.getApiService(this)
         registerViewModel = ViewModelProvider(
             this,
             RegisterViewModelFactory(apiService)
         ).get(RegisterViewModel::class.java)
 
         setUpClickableSpan()
+
+
 
         // Handle Register Button Click
         binding.register.setOnClickListener {

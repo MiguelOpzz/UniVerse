@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -17,18 +18,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
-        debug {
-            buildConfigField("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
-        }
-        release {
-            buildConfigField("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
+            debug {
+                buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
+            }
+            release {
+                buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
+                isMinifyEnabled = true
+                proguardFiles (
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    ("proguard-rules.pro")
+                )
+            }
     }
 
     compileOptions {
@@ -45,6 +47,7 @@ android {
 }
 
 dependencies {
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -62,8 +65,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
-    implementation(libs.play.services.auth)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.logging.interceptor)
+    implementation (libs.play.services.auth)
+    implementation (platform(libs.firebase.bom))
+
+
+
 }
