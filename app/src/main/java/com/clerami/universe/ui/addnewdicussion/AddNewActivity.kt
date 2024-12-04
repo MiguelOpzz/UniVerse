@@ -2,27 +2,30 @@ package com.clerami.universe.ui.addnewdicussion
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.clerami.universe.R
 import com.clerami.universe.data.remote.retrofit.CreateTopicRequest
 import com.clerami.universe.databinding.ActivityAddNewBinding
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
 
 class AddNewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddNewBinding
     private val addNewViewModel: AddNewViewModel by viewModels()
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("auth_prefs", MODE_PRIVATE)
 
         binding.closeButton.setOnClickListener { finish() }
 
@@ -37,10 +40,13 @@ class AddNewActivity : AppCompatActivity() {
             val content = binding.contentInput.text.toString()
             val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }
             val createdBy = "User123"
+            val token = getAuthToken() // Retrieve the token dynamically
+
             if (title.isNotEmpty() && content.isNotEmpty()) {
                 val request = CreateTopicRequest(title, content, createdBy, "Computer Science", tags)
 
-                addNewViewModel.createNewTopic(request)
+                // Pass the request to the ViewModel and also the token
+                addNewViewModel.createNewTopic(request, this)
 
                 Toast.makeText(this, "New discussion created!", Toast.LENGTH_SHORT).show()
                 finish()
@@ -50,29 +56,35 @@ class AddNewActivity : AppCompatActivity() {
         }
     }
 
+    private var imageCount = 0
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
             val selectedImageUri: Uri? = data?.data
             selectedImageUri?.let {
-                val base64Image = convertImageToBase64(it)
-                binding.contentInput.append("\n[Image: $base64Image]\n")
+                imageCount++
+
+                when (imageCount) {
+                    1 -> {
+                        binding.imagePreview1.setImageURI(it)
+                        binding.imagePreview1.visibility = ImageView.VISIBLE
+                    }
+                    2 -> {
+                        binding.imagePreview2.setImageURI(it)
+                        binding.imagePreview2.visibility = ImageView.VISIBLE
+                    }
+                    else -> {
+                        binding.extraImagesText.visibility = TextView.VISIBLE
+                    }
+                }
             }
         }
     }
 
-    private fun convertImageToBase64(uri: Uri): String {
-        val inputStream: InputStream? = contentResolver.openInputStream(uri)
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        val buffer = ByteArray(1024)
-        var bytesRead: Int
-
-        while (inputStream?.read(buffer).also { bytesRead = it ?: -1 } != -1) {
-            byteArrayOutputStream.write(buffer, 0, bytesRead)
-        }
-
-        val byteArray = byteArrayOutputStream.toByteArray()
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    private fun getAuthToken(): String {
+        // Retrieve token from SharedPreferences
+        return sharedPreferences.getString("auth_token", "") ?: ""
     }
 
     companion object {

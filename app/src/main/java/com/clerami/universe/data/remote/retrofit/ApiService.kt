@@ -105,5 +105,4 @@ interface ApiService {
         @Path("commentId") commentId: String,
         @Body vote: CommentVoteRequest
     ): Call<Void>
-
 }

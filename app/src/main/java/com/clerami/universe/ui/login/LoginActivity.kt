@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val apiService = ApiConfig.getApiService()
+        val apiService = ApiConfig.getApiService(this)
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(apiService)).get(LoginViewModel::class.java)
 
         setupSignUpClickableSpan()
