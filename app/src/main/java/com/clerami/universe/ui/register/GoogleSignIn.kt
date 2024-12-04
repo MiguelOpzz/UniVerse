@@ -22,16 +22,12 @@ class GoogleSignIn(
     private val credentialManager = CredentialManager.create(context)
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    /**
-     * Checks if the user is already signed in.
-     */
+
     private fun isSignedIn(): Boolean {
         return firebaseAuth.currentUser != null
     }
 
-    /**
-     * Sign in the user, returning true if successful.
-     */
+
     suspend fun signIn(): Boolean {
         if (isSignedIn()) {
             Log.d(tag, "Already signed in")
@@ -51,9 +47,7 @@ class GoogleSignIn(
         }
     }
 
-    /**
-     * Handles the Google sign-in response after obtaining credentials.
-     */
+
     private suspend fun handleSignIn(result: GetCredentialResponse): Boolean {
         val credential = result.credential
 
@@ -80,9 +74,7 @@ class GoogleSignIn(
         }
     }
 
-    /**
-     * Builds the credential request for Google Sign-In.
-     */
+
     private suspend fun buildCredentialRequest(): GetCredentialResponse {
         val request = GetCredentialRequest.Builder()
             .addCredentialOption(
@@ -97,9 +89,7 @@ class GoogleSignIn(
         return credentialManager.getCredential(request = request, context = context)
     }
 
-    /**
-     * Signs the user out by clearing credentials and Firebase session.
-     */
+
     suspend fun signOut() {
         credentialManager.clearCredentialState(
             ClearCredentialStateRequest()

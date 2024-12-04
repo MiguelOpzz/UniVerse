@@ -20,10 +20,10 @@ android {
 
     buildTypes {
             debug {
-                buildConfigField ("String", "BASE_URL", "\"https://myproject-441712.et.r.appspot.com/\"")
+                buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
             }
             release {
-                buildConfigField ("String", "BASE_URL", "\"https://myproject-441712.et.r.appspot.com/\"")
+                buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
                 isMinifyEnabled = true
                 proguardFiles (
                     getDefaultProguardFile("proguard-android-optimize.txt"),
