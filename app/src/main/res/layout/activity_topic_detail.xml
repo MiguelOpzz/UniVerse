@@ -20,13 +20,11 @@
                 android:id="@+id/closeButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/ic_close"
-                android:contentDescription="Close" />
+                android:src="@drawable/close"
+                android:contentDescription="Close Button"
+                android:layout_alignParentEnd="true" />
 
-            <!-- Title -->
-
-            <!-- Like Button -->
+            <!-- Post Title -->
             <TextView
                 android:id="@+id/postTitle"
                 android:layout_width="wrap_content"
@@ -34,59 +32,87 @@
                 android:text="View Post"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/montserrat_bold" />
         </RelativeLayout>
 
         <!-- Post Content Section -->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="8dp">
 
-            <!-- Tags -->
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <!-- Tags, Profile Picture, and Favorite Button -->
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="8dp">
 
-
-                <TextView
+                <!-- Tags -->
+                <LinearLayout
+                    android:id="@+id/tagsContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:padding="4dp"
-                    android:background="#989DA4"
-                    android:text="TAG"
-                    android:textSize="12sp"
-                    android:textColor="@color/white" />
+                    android:orientation="horizontal"
+                    android:layout_alignParentStart="true">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:padding="4dp"
-                    android:background="#989DA4"
-                    android:text="TAG"
-                    android:textSize="12sp"
-                    android:textColor="@color/white" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:padding="4dp"
+                        android:background="#989DA4"
+                        android:text="TAG"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/montserrat_regular" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:padding="4dp"
+                        android:background="#989DA4"
+                        android:text="TAG"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/montserrat_regular" />
+                </LinearLayout>
+
+                <!-- Profile Picture -->
                 <ImageView
-                    android:id="@+id/likeButton"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/fav"
-                    android:contentDescription="Like" />
-                <ImageView
+                    android:id="@+id/profilePicture"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/image"
+                    android:contentDescription="Profile Picture"
                     android:layout_marginEnd="8dp" />
-            </LinearLayout>
+
+                <!-- Favorite Button -->
+                <ImageView
+                    android:id="@+id/favButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_toStartOf="@id/profilePicture"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/fav"
+                    android:contentDescription="Favorite Button" />
+            </RelativeLayout>
 
             <!-- Post Description -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TITLE"
+                android:textSize="17sp"
+                android:lineSpacingExtra="4dp"
+                android:maxLines="4"
+                android:textColor="@color/black"
+                android:fontFamily="@font/montserrat_bold" />
+
             <TextView
                 android:id="@+id/postDescription"
                 android:layout_width="match_parent"
@@ -95,7 +121,8 @@
                 android:textSize="14sp"
                 android:lineSpacingExtra="4dp"
                 android:maxLines="4"
-                android:ellipsize="end" />
+                android:ellipsize="end"
+                android:fontFamily="@font/montserrat_regular" />
 
             <TextView
                 android:id="@+id/readMore"
@@ -103,8 +130,9 @@
                 android:layout_height="wrap_content"
                 android:text="Read More"
                 android:textColor="@color/blue_three"
-                android:textSize="14sp"
-                android:paddingTop="4dp" />
+                android:textSize="12sp"
+                android:paddingTop="4dp"
+                android:fontFamily="@font/montserrat_regular" />
 
             <!-- Media -->
             <ImageView
@@ -116,6 +144,46 @@
                 android:src="@drawable/sample_media" />
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp">
+
+            <!-- Reply Button on the Left -->
+            <TextView
+                android:id="@+id/reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reply"
+                android:textSize="13sp"
+                android:textColor="@color/blue_two"
+                android:fontFamily="@font/montserrat_regular"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
+
+            <!-- Like Button -->
+            <ImageView
+                android:id="@+id/reportIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/report"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
+                android:layout_centerVertical="true" />
+
+            <!-- Report Button -->
+            <ImageView
+                android:id="@+id/likeIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/thumbs_up_outline"
+                android:layout_toStartOf="@id/reportIcon"
+                android:layout_marginEnd="8dp"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+
         <!-- AI Answer Section -->
         <Button
             android:id="@+id/aiAnswerButton"
@@ -125,7 +193,8 @@
             android:textSize="16sp"
             android:backgroundTint="@color/blue_four"
             android:textColor="@color/white"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_bold" />
 
         <!-- Replies Section -->
         <TextView
@@ -136,7 +205,8 @@
             android:text="Replies"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_bold" />
 
         <LinearLayout
             android:id="@+id/repliesContainer"
@@ -154,7 +224,6 @@
 
                 <!-- User Avatar -->
                 <ImageView
-                    android:id="@+id/userAvatar "
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/image"
@@ -171,18 +240,20 @@
                         android:id="@+id/replyUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="USER - 1hr ago"
+                        android:text="USER"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/montserrat_bold" />
 
                     <TextView
                         android:id="@+id/replyText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Lorem Ipsum is simply dummy text..."
-                        android:textSize="14sp"
-                        android:layout_marginTop="4dp" />
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/montserrat_regular" />
 
                     <!-- Reply and Like Buttons -->
                     <LinearLayout
@@ -207,7 +278,8 @@
                             android:layout_height="wrap_content"
                             android:text="Reply"
                             android:textSize="12sp"
-                            android:textColor="@color/blue" />
+                            android:textColor="@color/blue_two"
+                            android:fontFamily="@font/montserrat_regular" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
