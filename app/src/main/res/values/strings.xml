@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_profile">Profile</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Put your email here or Username</string>
     <string name="prompt_password">Password</string>
@@ -32,9 +33,27 @@
     <string name="put_your_email_here">Put your Email here</string>
     <string name="please_fill_in_your_password">Please fill in your Password</string>
     <string name="default_web_client_id">613453504706-hs4c5b6dna4b3kcnob0g1s6mj31c0u78.apps.googleusercontent.com</string>
+    <string name="more_images">+ more images</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="posts">Posts</string>
+    <string name="replies">Replies</string>
+    <string name="user_name">User Name</string>
+    <string name="create_post">create</string>
+    <string name="text_create_post">Create Post</string>
+    <string name="votes">Votes</string>
+    <string name="asal_universitas">Asal Universitas</string>
+    <string name="settings_icon">Settings Icon</string>
+    <string name="profile_settings">Profile Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="language_header">Language</string>
+    <string name="language_settings_title">Change Language</string>
+    <string name="language_settings_summary">Open system language settings</string>
+    <string name="sign_out">Sign Out</string>
+
     <string name="loading_replies">Loading replies…</string>
     <string name="loading_likes">Loading likes…</string>
-    <string name="replies">Replies: %d</string>
     <string name="likes">Likes: %d</string>
     <string name="no_replies_yet">No replies yet</string>
     <string name="no_likes_yet">No likes yet</string>

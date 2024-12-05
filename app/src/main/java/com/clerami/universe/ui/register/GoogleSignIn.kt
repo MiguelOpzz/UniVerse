@@ -7,6 +7,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.CustomCredential
+import com.clerami.universe.R
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -80,7 +81,7 @@ class GoogleSignIn(
             .addCredentialOption(
                 GetGoogleIdOption.Builder()
                     .setFilterByAuthorizedAccounts(false)  // Disable filtering by authorized accounts
-                    .setServerClientId("613453504706-hs4c5b6dna4b3kcnob0g1s6mj31c0u78.apps.googleusercontent.com") // Your server client ID
+                    .setServerClientId(R.string.default_web_client_id.toString()) // Your server client ID
                     .setAutoSelectEnabled(false) // Disable auto-select to prompt user explicitly
                     .build()
             )

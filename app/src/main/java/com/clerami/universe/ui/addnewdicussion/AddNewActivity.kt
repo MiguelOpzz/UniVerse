@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.clerami.universe.data.remote.retrofit.CreateTopicRequest
+import com.clerami.universe.data.remote.response.CreateTopicRequest
 import com.clerami.universe.databinding.ActivityAddNewBinding
 
 class AddNewActivity : AppCompatActivity() {

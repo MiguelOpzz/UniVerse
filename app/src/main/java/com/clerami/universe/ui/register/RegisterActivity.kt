@@ -20,7 +20,6 @@ import com.clerami.universe.R
 import com.clerami.universe.databinding.ActivityRegisterBinding
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.ui.login.LoginActivity
-
 import com.clerami.universe.utils.Resource
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -127,17 +126,13 @@ class RegisterActivity : AppCompatActivity() {
         val email = binding.email.text.toString().trim()
         val username = binding.username.text.toString().trim()
         val password = binding.password.text.toString().trim()
-        val confirmPassword = binding.confirmPassword.text.toString().trim()
 
-        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || username.isEmpty()) {
+
+        if (email.isEmpty() || password.isEmpty() || username.isEmpty()) {
             Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (password != confirmPassword) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-            return
-        }
 
         registerViewModel.register(email, password, username).observe(this) { resource ->
             when (resource.status) {

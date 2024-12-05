@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.2"
+circleimageview = "3.1.0"
 firebaseBom = "32.2.0"
 kotlin = "1.9.24"
 coreKtx = "1.15.0"
@@ -23,9 +24,11 @@ credentials = "1.3.0"
 googleid = "1.1.1"
 firebaseAuthKtx = "23.1.0"
 cronetEmbedded = "119.6045.31"
+preference = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -47,6 +50,7 @@ androidx-credentials = { group = "androidx.credentials", name = "credentials", v
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 cronet-embedded = { group = "org.chromium.net", name = "cronet-embedded", version.ref = "cronetEmbedded" }
+androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 
 
 [plugins]

@@ -2,11 +2,14 @@ package com.clerami.universe.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -18,19 +21,20 @@ import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.databinding.ActivityLoginBinding
 import com.clerami.universe.ui.register.RegisterActivity
 import com.clerami.universe.utils.Resource
+import com.clerami.universe.utils.SessionManager
 
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var loginViewModel: LoginViewModel
-
+    private lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        sessionManager = SessionManager(this)
         val apiService = ApiConfig.getApiService(this)
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(apiService)).get(LoginViewModel::class.java)
 
@@ -39,6 +43,13 @@ class LoginActivity : AppCompatActivity() {
 
         attachTextWatchers()
 
+        sessionManager = SessionManager(this)
+        if (sessionManager.isLoggedIn()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
 
         binding.login.setOnClickListener {
             val usernameOrEmail = binding.username.text.toString().trim()
@@ -101,8 +112,17 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.login(usernameOrEmail, password).observe(this) { resource ->
             when (resource.status) {
                 Resource.Status.SUCCESS -> {
-                    binding.loading.visibility = View.GONE
+                    binding.loading.setProgressCompat(100, true)
+                    binding.loading.visibility = View.VISIBLE
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+
+
+                    val loginResponse = resource.data
+                    if (loginResponse != null) {
+                        sessionManager.saveSession(loginResponse.token,usernameOrEmail,loginResponse.username)
+                        Log.d("Token","Token Saved")
+                    }
+
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -113,8 +133,22 @@ class LoginActivity : AppCompatActivity() {
                 }
                 Resource.Status.LOADING -> {
                     binding.loading.visibility = View.VISIBLE
+                    binding.loading.setProgressCompat(20, true)
+                    moveProgress(50, 80)
+                    moveProgress(80, 100)
                 }
             }
+        }
+    }
+
+    private fun moveProgress(start: Int, end: Int) {
+        val delay = 1000L
+        val increment = (end - start)
+
+        for (i in start until end step increment) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.loading.setProgressCompat(i, true)
+            }, (i - start) * delay)
         }
     }
 

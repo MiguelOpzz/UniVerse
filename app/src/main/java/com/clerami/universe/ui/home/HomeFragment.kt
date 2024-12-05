@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.retrofit.ApiConfig
-import com.clerami.universe.data.remote.retrofit.Comment
-import com.clerami.universe.data.remote.retrofit.Topic
+import com.clerami.universe.data.remote.response.Comment
+import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.databinding.DynamicTopicBinding
 import com.clerami.universe.databinding.FragmentHomeBinding
 import com.clerami.universe.ui.addnewdicussion.AddNewActivity
