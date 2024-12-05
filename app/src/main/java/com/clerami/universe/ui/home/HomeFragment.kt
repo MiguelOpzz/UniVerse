@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.clerami.universe.R
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.retrofit.Comment
 import com.clerami.universe.data.remote.retrofit.Topic
@@ -62,8 +63,8 @@ class HomeFragment : Fragment() {
 
         topicBinding.discussionTitle.text = topic.title
         topicBinding.discussionSubtitle.text = topic.description ?: "No description available"
-        topicBinding.likesCount.text = "Loading likes..."
-        topicBinding.commentsCount.text = "Loading replies..."
+        topicBinding.likesCount.text = getString(R.string.loading_likes)
+        topicBinding.commentsCount.text = getString(R.string.loading_replies)
 
         // Fetch comments and likes
         fetchCommentsForTopic(topic.topicId, topicBinding.commentsCount, topicBinding.likesCount)
@@ -93,22 +94,22 @@ class HomeFragment : Fragment() {
                     val comments = response.body()
                     if (comments != null && comments.isNotEmpty()) {
                         val likesCount = comments.sumOf { it.upvotes }
-                        commentsCountTextView.text = "${comments.size} replies"
-                        likesCountTextView.text = "$likesCount likes"
+                        commentsCountTextView.text = getString(R.string.replies, comments.size)
+                        likesCountTextView.text = getString(R.string.likes, likesCount)
                     } else {
-                        commentsCountTextView.text = "No replies yet"
-                        likesCountTextView.text = "No likes yet"
+                        commentsCountTextView.text = getString(R.string.no_replies_yet)
+                        likesCountTextView.text = getString(R.string.no_likes_yet)
                     }
                 } else {
-                    commentsCountTextView.text = "Error loading replies"
-                    likesCountTextView.text = "Error loading likes"
+                    commentsCountTextView.text = getString(R.string.error_loading_replies)
+                    likesCountTextView.text = getString(R.string.error_loading_likes)
                     Log.e("HomeFragment", "Error fetching comments: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                commentsCountTextView.text = "Failed to load replies"
-                likesCountTextView.text = "Failed to load likes"
+                commentsCountTextView.text = getString(R.string.failed_to_load_replies)
+                likesCountTextView.text = getString(R.string.failed_to_load_likes)
                 Log.e("HomeFragment", "Failed to fetch comments: ${t.localizedMessage}", t)
             }
         })

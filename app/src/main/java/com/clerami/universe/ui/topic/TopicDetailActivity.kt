@@ -39,7 +39,7 @@ class TopicDetailActivity : AppCompatActivity() {
 
         // Event Listeners
         closeButton.setOnClickListener {
-            finish() // Close the activity
+            finish()
         }
 
         readMore.setOnClickListener {
@@ -59,7 +59,7 @@ class TopicDetailActivity : AppCompatActivity() {
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if (response.isSuccessful) {
                     val comments = response.body()
-                    if (comments != null && comments.isNotEmpty()) {
+                    if (!comments.isNullOrEmpty()) {
                         populateReplies(repliesContainer, comments)
                     } else {
                         showToast("No replies found.")

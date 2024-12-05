@@ -32,4 +32,14 @@
     <string name="put_your_email_here">Put your Email here</string>
     <string name="please_fill_in_your_password">Please fill in your Password</string>
     <string name="default_web_client_id">613453504706-hs4c5b6dna4b3kcnob0g1s6mj31c0u78.apps.googleusercontent.com</string>
+    <string name="loading_replies">Loading replies…</string>
+    <string name="loading_likes">Loading likes…</string>
+    <string name="replies">Replies: %d</string>
+    <string name="likes">Likes: %d</string>
+    <string name="no_replies_yet">No replies yet</string>
+    <string name="no_likes_yet">No likes yet</string>
+    <string name="error_loading_replies">Error loading replies</string>
+    <string name="error_loading_likes">Error loading likes</string>
+    <string name="failed_to_load_likes">Failed to load likes</string>
+    <string name="failed_to_load_replies">Failed to load replies</string>
 </resources>
