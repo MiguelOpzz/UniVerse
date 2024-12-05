@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Required Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,8 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Universe"
         tools:targetApi="31">
-
-        <!-- Firebase Metadata -->
+        <activity
+            android:name=".ui.profile.ProfileSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" /> <!-- Firebase Metadata -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
@@ -26,64 +30,49 @@
             android:value="default_channel" />
         <meta-data
             android:name="com.google.firebase.analytics.collection_enabled"
-            android:value="true" />
-
-        <!-- Required for Google Sign-In -->
+            android:value="true" /> <!-- Required for Google Sign-In -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <!-- SplashActivity -->
+            android:value="@integer/google_play_services_version" /> <!-- SplashActivity -->
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- LandingActivity -->
+        </activity> <!-- LandingActivity -->
         <activity
             android:name=".ui.landing.LandingActivity"
-            android:exported="false" />
-
-        <!-- LoginActivity -->
+            android:exported="false" /> <!-- LoginActivity -->
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="false"
-            android:label="@string/title_activity_login" />
-
-        <!-- RegisterActivity -->
+            android:label="@string/title_activity_login" /> <!-- RegisterActivity -->
         <activity
             android:name=".ui.register.RegisterActivity"
-            android:exported="true" >
-
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
-        </activity>
-
-        <!-- MainActivity -->
+        </activity> <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
-
-        <!-- AddNewActivity -->
+            android:exported="true" /> <!-- AddNewActivity -->
         <activity
             android:name=".ui.addnewdicussion.AddNewActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
-        <!-- RecoveryActivity -->
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- RecoveryActivity -->
         <activity
             android:name=".ui.passwordrecovery.RecoveryActivity"
             android:exported="false" />
     </application>
+
 </manifest>

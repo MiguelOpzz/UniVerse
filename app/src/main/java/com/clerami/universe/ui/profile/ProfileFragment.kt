@@ -1,10 +1,13 @@
 package com.clerami.universe.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.clerami.universe.R
 import com.clerami.universe.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -28,6 +31,16 @@ class ProfileFragment : Fragment() {
         // Example: Update the userName TextView dynamically
         val loggedInUserName = getLoggedInUserName()
         binding.userName.text = loggedInUserName
+
+        binding.toSettings.setOnClickListener {
+            val intent = Intent(requireContext(), SettingsActivity::class.java)
+            startActivity(intent)
+        }
+        binding.UserProfile.setOnClickListener{
+            val intent = Intent(requireContext(),ProfileSettingsActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     // Mock method to get the logged-in user's name

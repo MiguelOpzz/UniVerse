@@ -24,6 +24,7 @@ credentials = "1.3.0"
 googleid = "1.1.1"
 firebaseAuthKtx = "23.1.0"
 cronetEmbedded = "119.6045.31"
+preference = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +50,7 @@ androidx-credentials = { group = "androidx.credentials", name = "credentials", v
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 cronet-embedded = { group = "org.chromium.net", name = "cronet-embedded", version.ref = "cronetEmbedded" }
+androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 
 
 [plugins]

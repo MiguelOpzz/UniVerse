@@ -34,11 +34,22 @@
     <string name="please_fill_in_your_password">Please fill in your Password</string>
     <string name="default_web_client_id">613453504706-hs4c5b6dna4b3kcnob0g1s6mj31c0u78.apps.googleusercontent.com</string>
     <string name="more_images">+ more images</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="posts">Posts</string>
     <string name="replies">Replies</string>
     <string name="user_name">User Name</string>
     <string name="create_post">create</string>
     <string name="text_create_post">Create Post</string>
+    <string name="votes">Votes</string>
+    <string name="asal_universitas">Asal Universitas</string>
+    <string name="settings_icon">Settings Icon</string>
+    <string name="profile_settings">Profile Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="language_header">Language</string>
+    <string name="language_settings_title">Change Language</string>
+    <string name="language_settings_summary">Open system language settings</string>
+    <string name="sign_out">Sign Out</string>
+
 </resources>

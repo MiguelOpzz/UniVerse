@@ -43,6 +43,13 @@ class LoginActivity : AppCompatActivity() {
 
         attachTextWatchers()
 
+        sessionManager = SessionManager(this)
+        if (sessionManager.isLoggedIn()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
 
         binding.login.setOnClickListener {
             val usernameOrEmail = binding.username.text.toString().trim()
@@ -112,7 +119,7 @@ class LoginActivity : AppCompatActivity() {
 
                     val loginResponse = resource.data
                     if (loginResponse != null) {
-                        sessionManager.saveSession(loginResponse.token,usernameOrEmail,username)
+                        sessionManager.saveSession(loginResponse.token,usernameOrEmail,loginResponse.username)
                         Log.d("Token","Token Saved")
                     }
 

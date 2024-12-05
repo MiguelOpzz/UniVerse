@@ -162,8 +162,8 @@
         android:fontFamily="@font/montserrat_regular"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="84dp"
-        app:layout_constraintTop_toBottomOf="@+id/login"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@id/google_button"
 
         />
 
@@ -180,68 +180,25 @@
         app:strokeColor="?attr/colorPrimaryVariant"
         app:strokeWidth="1dp"
         app:cornerRadius="30dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@+id/or_continue"
-        app:layout_constraintEnd_toStartOf="@id/apple_button"
+        android:layout_marginBottom="44dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dont_have_account"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/google_logo"
     />
 
-    <!-- Apple Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/apple_button"
-        android:layout_width="60dp"
-        android:layout_height="68dp"
-        android:layout_marginTop="12dp"
-        app:backgroundTint="@color/white"
-        app:iconTint="@color/black"
-        app:icon="@drawable/apple_icon"
-        app:iconSize="28dp"
-        app:strokeColor="?attr/colorPrimaryVariant"
-        app:strokeWidth="1dp"
-        android:gravity="center_horizontal"
-        app:cornerRadius="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/or_continue"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/apple_logo"
-    />
-
-    <!-- Facebook Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/facebook_button"
-        android:layout_width="60dp"
-        android:layout_height="68dp"
-        android:layout_marginTop="12dp"
-        app:backgroundTint="@color/white"
-        app:icon="@drawable/facebook_icon"
-        android:layout_marginStart="12dp"
-        app:iconTint="@color/blue_four"
-        app:iconSize="36dp"
-        android:paddingStart="14dp"
-        android:paddingEnd="2dp"
-        app:strokeColor="?attr/colorPrimaryVariant"
-        app:strokeWidth="1dp"
-        android:gravity="center_horizontal"
-        app:cornerRadius="30dp"
-        app:layout_constraintStart_toEndOf="@+id/apple_button"
-        app:layout_constraintTop_toBottomOf="@+id/or_continue"
-        android:contentDescription="@string/facebook_logo"
-
-
-    />
 
     <TextView
         android:id="@+id/dont_have_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:fontFamily="@font/montserrat_regular"
         android:textColor="?attr/colorSecondaryVariant"
 
 
 
-        app:layout_constraintTop_toBottomOf="@id/apple_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/dont_have_account"
