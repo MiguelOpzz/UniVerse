@@ -5,23 +5,40 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.clerami.universe.R
-
+import com.clerami.universe.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    // Declare the binding variable
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!! // Non-nullable reference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        // Initialize the binding
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Example: Update the userName TextView dynamically
+        val loggedInUserName = getLoggedInUserName()
+        binding.userName.text = loggedInUserName
+    }
+
+    // Mock method to get the logged-in user's name
+    private fun getLoggedInUserName(): String {
+        // Replace with your actual logic to fetch the user's name
+        return "John Doe"
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Clean up binding reference
+        _binding = null
+    }
 }

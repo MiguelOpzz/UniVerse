@@ -13,12 +13,14 @@ class SessionManager(context: Context) {
         const val KEY_USER_TOKEN = "user_token"
         const val KEY_USER_EMAIL = "user_email"
         const val KEY_IS_LOGGED_IN = "is_logged_in"
+        const val KEY_USER_NAME = "user_name"
     }
 
-    fun saveSession(token: String, email: String) {
+    fun saveSession(token: String, email: String, username:String) {
         val editor = prefs.edit()
         editor.putString(KEY_USER_TOKEN, token)
         editor.putString(KEY_USER_EMAIL, email)
+        editor.putString(KEY_USER_NAME,username )
         editor.putBoolean(KEY_IS_LOGGED_IN, true)
         editor.apply()
     }
@@ -29,6 +31,10 @@ class SessionManager(context: Context) {
 
     fun getUserEmail(): String? {
         return prefs.getString(KEY_USER_EMAIL, null)
+    }
+
+    fun getUserName(): String? {
+        return prefs.getString(KEY_USER_NAME, null)
     }
 
     fun isLoggedIn(): Boolean {

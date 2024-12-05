@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.clerami.universe.MainActivity
 import com.clerami.universe.R
-import com.clerami.universe.data.remote.response.LoginResponse
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.databinding.ActivityLoginBinding
 import com.clerami.universe.ui.register.RegisterActivity
@@ -113,7 +112,7 @@ class LoginActivity : AppCompatActivity() {
 
                     val loginResponse = resource.data
                     if (loginResponse != null) {
-                        sessionManager.saveSession(loginResponse.token, usernameOrEmail)
+                        sessionManager.saveSession(loginResponse.token,usernameOrEmail,username)
                         Log.d("Token","Token Saved")
                     }
 
