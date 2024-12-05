@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_profile">Profile</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Put your email here or Username</string>
     <string name="prompt_password">Password</string>
@@ -33,4 +34,6 @@
     <string name="please_fill_in_your_password">Please fill in your Password</string>
     <string name="default_web_client_id">613453504706-hs4c5b6dna4b3kcnob0g1s6mj31c0u78.apps.googleusercontent.com</string>
     <string name="more_images">+ more images</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

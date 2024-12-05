@@ -2,11 +2,14 @@ package com.clerami.universe.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -103,13 +106,15 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.login(usernameOrEmail, password).observe(this) { resource ->
             when (resource.status) {
                 Resource.Status.SUCCESS -> {
-                    binding.loading.visibility = View.GONE
+                    binding.loading.setProgressCompat(100, true)
+                    binding.loading.visibility = View.VISIBLE
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
 
 
                     val loginResponse = resource.data
                     if (loginResponse != null) {
                         sessionManager.saveSession(loginResponse.token, usernameOrEmail)
+                        Log.d("Token","Token Saved")
                     }
 
                     val intent = Intent(this, MainActivity::class.java)
@@ -122,8 +127,22 @@ class LoginActivity : AppCompatActivity() {
                 }
                 Resource.Status.LOADING -> {
                     binding.loading.visibility = View.VISIBLE
+                    binding.loading.setProgressCompat(20, true)
+                    moveProgress(50, 80)
+                    moveProgress(80, 100)
                 }
             }
+        }
+    }
+
+    private fun moveProgress(start: Int, end: Int) {
+        val delay = 1000L
+        val increment = (end - start)
+
+        for (i in start until end step increment) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.loading.setProgressCompat(i, true)
+            }, (i - start) * delay)
         }
     }
 
