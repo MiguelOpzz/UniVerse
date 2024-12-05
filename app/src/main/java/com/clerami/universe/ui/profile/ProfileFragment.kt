@@ -9,12 +9,15 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.clerami.universe.R
 import com.clerami.universe.databinding.FragmentProfileBinding
+import com.clerami.universe.utils.SessionManager
 
 class ProfileFragment : Fragment() {
+
 
     // Declare the binding variable
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!! // Non-nullable reference
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,10 +30,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Example: Update the userName TextView dynamically
-        val loggedInUserName = getLoggedInUserName()
-        binding.userName.text = loggedInUserName
+        sessionManager = SessionManager(requireContext())
 
         binding.toSettings.setOnClickListener {
             val intent = Intent(requireContext(), SettingsActivity::class.java)
@@ -41,12 +41,15 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
+
+
+
+        binding.userName.text = getLoggedInUserName()
     }
 
-    // Mock method to get the logged-in user's name
     private fun getLoggedInUserName(): String {
-        // Replace with your actual logic to fetch the user's name
-        return "John Doe"
+
+        return sessionManager.getUserName() ?:"Guest"
     }
 
     override fun onDestroyView() {
