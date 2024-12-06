@@ -1,50 +1,56 @@
 package com.clerami.universe.ui.topic
 
-import android.content.Context
-import android.content.SharedPreferences
+import TopicDetailViewModel
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.clerami.universe.R
-import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
-import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.databinding.ActivityTopicDetailBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class TopicDetailActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityTopicDetailBinding
+
+    // Using ViewModelProvider with ViewModelFactory to inject Application context
+    private val viewModel: TopicDetailViewModel by viewModels { TopicDetailViewModelFactory(application) }
+
     private var isFavorite = false
     private var isLiked = false
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var binding: ActivityTopicDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Initialize View Binding
         binding = ActivityTopicDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPreferences = getSharedPreferences("TopicPreferences", Context.MODE_PRIVATE)
-
-        val topicId = intent.getStringExtra("topicId")
-        val title = intent.getStringExtra("title")
-        val description = intent.getStringExtra("description")
+        val topicId = intent.getStringExtra("topicId") ?: return
+        val title = intent.getStringExtra("title") ?: ""
+        val description = intent.getStringExtra("description") ?: ""
         val tags = intent.getStringArrayListExtra("tags")
 
-        // Update favorite and like status based on shared preferences
-        topicId?.let {
-            isFavorite = sharedPreferences.getBoolean("isFavorite_$it", false)
-            isLiked = sharedPreferences.getBoolean("isLiked_$it", false)
-        }
+        // Initialize ViewModel and fetch data
+        viewModel.getTopicDetails(topicId)
+        viewModel.getComments(topicId)
 
-        // Update the favorite and like icons
+        // Observe LiveData
+        viewModel.topicDetails.observe(this, Observer { topic ->
+            binding.postTitle.text = topic.title
+            binding.postDescription.text = topic.description
+            populateTags(tags, topic.tags)
+        })
+
+        viewModel.comments.observe(this, Observer { comments ->
+            populateReplies(comments)
+        })
+
+        // Handle favorite and like state
+        isFavorite = viewModel.isFavorite(topicId)
+        isLiked = viewModel.isLiked(topicId)
+
         updateFavoriteIcon()
         updateLikeIcon()
 
@@ -61,26 +67,14 @@ class TopicDetailActivity : AppCompatActivity() {
         binding.favButton.setOnClickListener {
             isFavorite = !isFavorite
             updateFavoriteIcon()
-
-            val editor = sharedPreferences.edit()
-            topicId?.let { editor.putBoolean("isFavorite_$it", isFavorite) }
-            editor.apply()
+            viewModel.setFavorite(topicId, isFavorite)
         }
 
         // Like icon click listener
         binding.likeIcon.setOnClickListener {
             isLiked = !isLiked
             updateLikeIcon()
-
-            val editor = sharedPreferences.edit()
-            topicId?.let { editor.putBoolean("isLiked_$it", isLiked) }
-            editor.apply()
-        }
-
-        // Fetch topic details and comments
-        topicId?.let {
-            fetchTopicDetails(it, tags)
-            fetchComments(it)
+            viewModel.setLiked(topicId, isLiked)
         }
     }
 
@@ -100,53 +94,10 @@ class TopicDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun fetchTopicDetails(topicId: String, tags: List<String>?) {
-        ApiConfig.getApiService(this).getTopicById(topicId).enqueue(object : Callback<Topic> {
-            override fun onResponse(call: Call<Topic>, response: Response<Topic>) {
-                if (response.isSuccessful) {
-                    val topic = response.body()
-                    topic?.let {
-                        binding.postTitle.text = it.title
-                        binding.postDescription.text = it.description
-                        populateTags(tags, it.tags)
-                    }
-                } else {
-                    showToast("Failed to load topic details")
-                }
-            }
-
-            override fun onFailure(call: Call<Topic>, t: Throwable) {
-                Log.e("TopicDetailActivity", "Error fetching topic details: ${t.message}", t)
-                showToast("Error: ${t.message}")
-            }
-        })
-    }
-
-    private fun fetchComments(topicId: String) {
-        ApiConfig.getApiService(this).getComments(topicId).enqueue(object : Callback<List<Comment>> {
-            override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
-                if (response.isSuccessful) {
-                    val comments = response.body()
-                    if (comments != null && comments.isNotEmpty()) {
-                        populateReplies(comments)
-                    }
-                } else {
-                    showToast("Failed to load comments")
-                }
-            }
-
-            override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                Log.e("Error", "Error fetching comments: ${t.message}", t)
-                showToast("Error: ${t.message}")
-            }
-        })
-    }
-
     private fun populateReplies(replies: List<Comment>) {
         binding.repliesContainer.removeAllViews()
         for (reply in replies) {
             val replyView = layoutInflater.inflate(R.layout.item_reply, binding.repliesContainer, false)
-
             val replyUsername = replyView.findViewById<TextView>(R.id.replyUsername)
             val replyText = replyView.findViewById<TextView>(R.id.replyText)
             val likeCount = replyView.findViewById<TextView>(R.id.likeCount)
