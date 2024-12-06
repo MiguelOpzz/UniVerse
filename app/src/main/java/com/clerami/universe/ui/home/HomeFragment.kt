@@ -63,11 +63,8 @@ class HomeFragment : Fragment() {
 
         topicBinding.discussionTitle.text = topic.title
         topicBinding.discussionSubtitle.text = topic.description ?: "No description available"
-        topicBinding.likesCount.text = getString(R.string.loading_likes)
-        topicBinding.commentsCount.text = getString(R.string.loading_replies)
-
-        // Fetch comments and likes
-        fetchCommentsForTopic(topic.topicId, topicBinding.commentsCount, topicBinding.likesCount)
+        topicBinding.likesCount.visibility = View.GONE // Hide likes until in detail
+        topicBinding.commentsCount.visibility = View.GONE // Hide comments count until in detail
 
         // Set click listener to open TopicDetailActivity
         topicBinding.root.setOnClickListener {
@@ -81,6 +78,7 @@ class HomeFragment : Fragment() {
 
         return topicBinding.root
     }
+
 
 
     private fun fetchCommentsForTopic(

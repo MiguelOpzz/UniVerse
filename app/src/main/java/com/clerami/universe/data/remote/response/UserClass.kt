@@ -1,5 +1,9 @@
 package com.clerami.universe.data.remote.response
 
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
 data class RegisterRequest(
     val email: String,
     val username: String,
@@ -50,15 +54,27 @@ data class Topic(
     val updatedAt: Map<String, Any>
 )
 
+data class Timestamp(
+    val _seconds: Long,
+    val _nanoseconds: Long
+) {
+    fun toReadableDate(): String {
+        val instant = Instant.ofEpochSecond(_seconds, _nanoseconds.toLong())
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            .withZone(ZoneId.systemDefault())
+            .format(instant)
+    }
+}
+
 data class Comment(
     val commentId: String,
     val userId: String,
     val commentText: String,
-    val createdAt: Long,
-    val updatedAt: Long,
-    val upvotes: Int,
-    val downvotes: Int,
-    val userVotes: Map<String, String>
+    val createdAt: Timestamp,
+    val updatedAt: Timestamp,
+    val upvotes: Int = 0,
+    val downvotes: Int = 0,
+    val userVotes: Map<String, String> = emptyMap()
 )
 
 data class CommentVoteRequest(

@@ -73,6 +73,10 @@
         <activity
             android:name=".ui.passwordrecovery.RecoveryActivity"
             android:exported="false" />
+        <!-- TopicDetailActivity (newly added) -->
+        <activity
+            android:name=".ui.topicdetail.TopicDetailActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

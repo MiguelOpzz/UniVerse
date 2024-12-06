@@ -1,6 +1,7 @@
 package com.clerami.universe.ui.topicdetail
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -9,7 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.retrofit.ApiConfig
-import com.clerami.universe.data.remote.retrofit.Comment
+import com.clerami.universe.data.remote.response.Comment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,12 +21,9 @@ class TopicDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topic_detail)
 
-        // Retrieve passed data
         val topicId = intent.getStringExtra("topicId")
         val title = intent.getStringExtra("title")
         val description = intent.getStringExtra("description")
-
-        // Find views
         val postTitle = findViewById<TextView>(R.id.postTitle)
         val postDescription = findViewById<TextView>(R.id.postDescription)
         val readMore = findViewById<TextView>(R.id.readMore)
@@ -33,11 +31,9 @@ class TopicDetailActivity : AppCompatActivity() {
         val replyButton = findViewById<Button>(R.id.aiAnswerButton)
         val repliesContainer = findViewById<LinearLayout>(R.id.repliesContainer)
 
-        // Set static data
         postTitle.text = title
         postDescription.text = description
 
-        // Event Listeners
         closeButton.setOnClickListener {
             finish()
         }
@@ -50,7 +46,6 @@ class TopicDetailActivity : AppCompatActivity() {
             Toast.makeText(this, "AI Answer Button Clicked!", Toast.LENGTH_SHORT).show()
         }
 
-        // Fetch and populate comments
         topicId?.let { fetchComments(it, repliesContainer) }
     }
 
@@ -59,17 +54,20 @@ class TopicDetailActivity : AppCompatActivity() {
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if (response.isSuccessful) {
                     val comments = response.body()
-                    if (!comments.isNullOrEmpty()) {
+                    if (comments != null && comments.isNotEmpty()) {
                         populateReplies(repliesContainer, comments)
                     } else {
-                        showToast("No replies found.")
+                        Log.d("TopicDetailActivity", "No comments available for this topic.")
+                        showToast("No comments found!")
                     }
                 } else {
-                    showToast("Failed to load replies.")
+                    Log.e("Error", "Failed to fetch comments: ${response.errorBody()?.string()}")
+                    showToast("Failed to load comments.")
                 }
             }
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
+                Log.e("Error", "Error fetching comments: ${t.message}", t)
                 showToast("Error: ${t.message}")
             }
         })
@@ -81,17 +79,15 @@ class TopicDetailActivity : AppCompatActivity() {
             val replyView = layoutInflater.inflate(R.layout.item_reply, container, false)
 
             val replyUsername = replyView.findViewById<TextView>(R.id.replyUsername)
-            val replyText = replyView.findViewById<TextView>(R.id.replyText)
+            val replyText = replyView.findViewById<TextView>(R.id.replyText)// Add in your layout if needed
             val likeCount = replyView.findViewById<TextView>(R.id.likeCount)
             val replyButton = replyView.findViewById<TextView>(R.id.replyButton)
+
+            Log.d("TopicDetailActivity", "Upvotes for ${reply.commentId}: ${reply.upvotes}")
 
             replyUsername.text = reply.userId
             replyText.text = reply.commentText
             likeCount.text = reply.upvotes.toString()
-
-            replyButton.setOnClickListener {
-                showToast("Replying to ${reply.userId}")
-            }
 
             container.addView(replyView)
         }

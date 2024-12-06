@@ -61,4 +61,12 @@
     <string name="error_loading_likes">Error loading likes</string>
     <string name="failed_to_load_likes">Failed to load likes</string>
     <string name="failed_to_load_replies">Failed to load replies</string>
+    <string name="headerTitle">Welcome back</string>
+    <string name="headerSubtitle">Learn new things today</string>
+    <string name="btnTrending">Trending</string>
+    <string name="btnNew">New</string>
+    <string name="searchEditText">Search here…</string>
+    <string name="topic1">Machine Learning</string>
+    <string name="topic2">Cloud Computing</string>
+    <string name="topic3">Mobile Development</string>
 </resources>
