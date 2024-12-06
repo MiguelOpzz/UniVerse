@@ -256,6 +256,38 @@
             android:textColor="@color/white"
             android:fontFamily="@font/montserrat_bold" />
 
+        <!-- Reply Input Section -->
+        <LinearLayout
+            android:id="@+id/replyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:visibility="gone"
+        >
+
+        <EditText
+            android:id="@+id/replyInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write a reply..."
+            android:inputType="text"
+            android:padding="12dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/replyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post Reply"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/blue_four"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold"/>
+    </LinearLayout>
+
+
         <!-- Replies Section -->
         <TextView
             android:id="@+id/repliesTitle"

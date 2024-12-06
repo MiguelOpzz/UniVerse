@@ -29,7 +29,6 @@
             }
 
 
-
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(tokenInterceptor)
