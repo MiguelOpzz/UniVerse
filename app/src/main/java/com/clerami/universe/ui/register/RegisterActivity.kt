@@ -77,9 +77,11 @@ class RegisterActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
 
         // Handle Google Sign-In Button Click
-        binding.googleButton.setOnClickListener {
+        /* binding.googleButton.setOnClickListener {
             googleSignIn() // Correct method call to start Google sign-in flow
         }
+        */
+
     }
 
     // Method to trigger Google Sign-In flow

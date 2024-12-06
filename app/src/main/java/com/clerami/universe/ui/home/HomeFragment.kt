@@ -1,5 +1,6 @@
 package com.clerami.universe.ui.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -63,8 +64,18 @@ class HomeFragment : Fragment() {
 
         topicBinding.discussionTitle.text = topic.title
         topicBinding.discussionSubtitle.text = topic.description ?: "No description available"
-        topicBinding.likesCount.visibility = View.GONE // Hide likes until in detail
-        topicBinding.commentsCount.visibility = View.GONE // Hide comments count until in detail
+
+        // Hide likes and comments count initially
+        topicBinding.likesCount.visibility = View.GONE
+        topicBinding.commentsCount.visibility = View.GONE
+
+        // Fetch and set the comments and likes count dynamically
+        fetchCommentsForTopic(
+            requireContext(),
+            topic.topicId,
+            topicBinding.commentsCount,
+            topicBinding.likesCount
+        )
 
         // Set click listener to open TopicDetailActivity
         topicBinding.root.setOnClickListener {
@@ -79,38 +90,36 @@ class HomeFragment : Fragment() {
         return topicBinding.root
     }
 
-
-
     private fun fetchCommentsForTopic(
+        context: Context,
         topicId: String,
         commentsCountTextView: TextView,
         likesCountTextView: TextView
     ) {
-        ApiConfig.getApiService(requireContext()).getComments(topicId).enqueue(object : Callback<List<Comment>> {
+        ApiConfig.getApiService(context).getComments(topicId).enqueue(object : Callback<List<Comment>> {
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if (response.isSuccessful) {
                     val comments = response.body()
                     if (comments != null && comments.isNotEmpty()) {
                         val likesCount = comments.sumOf { it.upvotes }
-                        commentsCountTextView.text = getString(R.string.replies, comments.size)
-                        likesCountTextView.text = getString(R.string.likes, likesCount)
+                        commentsCountTextView.text = context.getString(R.string.replies, comments.size)
+                        likesCountTextView.text = context.getString(R.string.likes, likesCount)
                     } else {
-                        commentsCountTextView.text = getString(R.string.no_replies_yet)
-                        likesCountTextView.text = getString(R.string.no_likes_yet)
+                        commentsCountTextView.text = context.getString(R.string.no_replies_yet)
+                        likesCountTextView.text = context.getString(R.string.no_likes_yet)
                     }
                 } else {
-                    commentsCountTextView.text = getString(R.string.error_loading_replies)
-                    likesCountTextView.text = getString(R.string.error_loading_likes)
+                    commentsCountTextView.text = context.getString(R.string.error_loading_replies)
+                    likesCountTextView.text = context.getString(R.string.error_loading_likes)
                     Log.e("HomeFragment", "Error fetching comments: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                commentsCountTextView.text = getString(R.string.failed_to_load_replies)
-                likesCountTextView.text = getString(R.string.failed_to_load_likes)
+                commentsCountTextView.text = context.getString(R.string.failed_to_load_replies)
+                likesCountTextView.text = context.getString(R.string.failed_to_load_likes)
                 Log.e("HomeFragment", "Failed to fetch comments: ${t.localizedMessage}", t)
             }
         })
     }
 }
-

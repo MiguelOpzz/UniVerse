@@ -152,7 +152,7 @@
         app:showAnimationBehavior="inward"
         />
 
-
+    <!--
     <TextView
         android:id="@+id/or_continue"
         android:layout_width="wrap_content"
@@ -167,7 +167,6 @@
 
         />
 
-    <!-- Google Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/google_button"
         android:layout_width="60dp"
@@ -186,7 +185,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/google_logo"
     />
-
+    -->
 
     <TextView
         android:id="@+id/dont_have_account"

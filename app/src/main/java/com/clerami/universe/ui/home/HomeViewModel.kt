@@ -1,10 +1,15 @@
 package com.clerami.universe.ui.home
 
 import android.content.Context
+import android.provider.Settings.Global.getString
 import android.util.Log
+import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.clerami.universe.R
+import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Topic
 import retrofit2.Call
@@ -36,4 +41,5 @@ class HomeViewModel : ViewModel() {
             }
         })
     }
+
 }
