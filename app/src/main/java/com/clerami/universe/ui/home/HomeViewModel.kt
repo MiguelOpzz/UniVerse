@@ -16,10 +16,8 @@ class HomeViewModel : ViewModel() {
     private val _topics = MutableLiveData<List<Topic>>()
     val topics: LiveData<List<Topic>> get() = _topics
 
-    // Holds the full list of topics (before filtering)
     private var allTopics = listOf<Topic>()
 
-    // Fetch topics from API
     fun fetchTopics(context: Context) {
         fetchTopicsFromApi(context)
     }

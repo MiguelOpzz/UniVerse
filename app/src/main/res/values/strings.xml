@@ -92,4 +92,5 @@
     <string name="write_comments">Write your comments here...</string>
     <string name="ai_answer">AI Answer</string>
     <string name="repliestitle">Replies</string>
+    <string name="dashboard">Dashboard</string>
 </resources>

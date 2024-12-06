@@ -92,11 +92,9 @@ class HomeFragment : Fragment() {
         topicBinding.discussionTitle.text = topic.title
         topicBinding.discussionSubtitle.text = topic.description ?: "No description available"
 
-        // Hide likes and comments count initially
         topicBinding.likesCount.visibility = View.GONE
         topicBinding.commentsCount.visibility = View.GONE
 
-        // Fetch and set the comments and likes count dynamically
         fetchCommentsForTopic(
             requireContext(),
             topic.topicId,
@@ -104,7 +102,6 @@ class HomeFragment : Fragment() {
             topicBinding.likesCount
         )
 
-        // Set click listener to open TopicDetailActivity
         topicBinding.root.setOnClickListener {
             val intent = Intent(requireContext(), TopicDetailActivity::class.java).apply {
                 putExtra("topicId", topic.topicId)
@@ -136,14 +133,11 @@ class HomeFragment : Fragment() {
                             commentsCountTextView.text =
                                 context.getString(R.string.replies, comments.size)
 
-                            // If you want to hide comments count completely, set visibility to GONE here
-                            // commentsCountTextView.visibility = View.GONE
 
-                            // Condition to hide comments count
                             commentsCountTextView.visibility = if (comments.isNotEmpty()) {
                                 View.VISIBLE
                             } else {
-                                View.GONE // Hide comments count if no comments
+                                View.GONE
                             }
 
                             // Handle likes count visibility
@@ -152,17 +146,15 @@ class HomeFragment : Fragment() {
                                     context.getString(R.string.likes, likesCount)
                                 View.VISIBLE
                             } else {
-                                View.GONE // Hide likes count if no likes
+                                View.GONE
                             }
                         } else {
                             commentsCountTextView.text = context.getString(R.string.no_replies_yet)
 
-                            // Hide the comments count if no comments
                             commentsCountTextView.visibility = View.GONE
 
                             likesCountTextView.text = context.getString(R.string.no_likes_yet)
 
-                            // Optionally hide the likes count if no likes
                             likesCountTextView.visibility = View.GONE
                         }
 
