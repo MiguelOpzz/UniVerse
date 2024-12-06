@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.cronet.embedded)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.ads.adservices)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

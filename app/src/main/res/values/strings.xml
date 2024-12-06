@@ -69,4 +69,5 @@
     <string name="topic1">Machine Learning</string>
     <string name="topic2">Cloud Computing</string>
     <string name="topic3">Mobile Development</string>
+    <string name="detailTitle">View Post</string>
 </resources>
