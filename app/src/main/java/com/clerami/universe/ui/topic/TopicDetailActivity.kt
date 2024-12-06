@@ -20,6 +20,7 @@ class TopicDetailActivity : AppCompatActivity() {
 
     private var isFavorite = false
     private var isLiked = false
+    private val savedTopics = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +62,13 @@ class TopicDetailActivity : AppCompatActivity() {
             isFavorite = !isFavorite
             updateFavoriteIcon()
             viewModel.setFavorite(topicId, isFavorite)
+
+            // Save the topic if it's marked as a favorite
+            if (isFavorite) {
+                addToSavedTopics(topicId)
+            } else {
+                removeFromSavedTopics(topicId)
+            }
         }
 
         binding.likeIcon.setOnClickListener {
@@ -121,6 +129,20 @@ class TopicDetailActivity : AppCompatActivity() {
             }
             binding.tagsContainer.addView(tagView)
         }
+    }
+
+    // Function to add the topic to saved discussions
+    private fun addToSavedTopics(topicId: String) {
+        if (!savedTopics.contains(topicId)) {
+            savedTopics.add(topicId)
+            showToast("Topic added to saved discussions!")
+        }
+    }
+
+    // Function to remove the topic from saved discussions
+    private fun removeFromSavedTopics(topicId: String) {
+        savedTopics.remove(topicId)
+        showToast("Topic removed from saved discussions!")
     }
 
     private fun showToast(message: String) {
