@@ -46,7 +46,6 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
             }
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                // Log the error or show a toast if necessary
                 Log.d("Comments","Failed to Fetch Comment")
             }
         })

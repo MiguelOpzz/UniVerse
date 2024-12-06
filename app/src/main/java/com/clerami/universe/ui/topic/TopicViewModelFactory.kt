@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 class TopicDetailViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TopicDetailViewModel::class.java)) {
-            // Create and return the TopicDetailViewModel
             return TopicDetailViewModel(application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
