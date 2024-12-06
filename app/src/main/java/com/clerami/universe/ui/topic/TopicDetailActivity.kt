@@ -2,6 +2,7 @@ package com.clerami.universe.ui.topic
 
 import TopicDetailViewModel
 import android.os.Bundle
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -39,6 +40,8 @@ class TopicDetailActivity : AppCompatActivity() {
             binding.postTitle.text = topic.title
             binding.postDescription.text = topic.description
             populateTags(tags, topic.tags)
+
+            checkDescriptionLines()
         })
 
         viewModel.comments.observe(this, Observer { comments ->
@@ -91,6 +94,20 @@ class TopicDetailActivity : AppCompatActivity() {
             binding.likeIcon.setImageResource(R.drawable.thumbs_up)
         } else {
             binding.likeIcon.setImageResource(R.drawable.thumbs_up_outline)
+        }
+    }
+
+    private fun checkDescriptionLines() {
+        // Post description TextView
+        val postDescription = binding.postDescription
+        postDescription.post {
+            // Check the height of the TextView to determine how many lines are visible
+            val lineCount = postDescription.layout.lineCount
+            if (lineCount <= 4) {
+                binding.readMore.visibility = View.GONE
+            } else {
+                binding.readMore.visibility = View.VISIBLE
+            }
         }
     }
 
