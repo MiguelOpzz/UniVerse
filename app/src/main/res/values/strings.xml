@@ -89,4 +89,5 @@
     <string name="likes_count">112 likes</string>
     <string name="replies_count">47 replies</string>
     <string name="detailTitle">View Post</string>
+    <string name="write_comments">Write your comments here...</string>
 </resources>

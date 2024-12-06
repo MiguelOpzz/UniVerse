@@ -53,6 +53,12 @@ interface ApiService {
     @GET("api/topics/{topicId}/comments")
     fun getComments(@Path("topicId") topicId: String): Call<List<Comment>>
 
+    @POST("api/topics/{topicId}/comments")
+    fun addComment(
+        @Path("topicId") topicId: String,
+        @Body comment: Comment
+    ): Call<Comment>
+
     @POST("api/topics/{topicId}/comments/{commentId}/upvote")
     fun postUpvote(
         @Path("topicId") topicId: String,

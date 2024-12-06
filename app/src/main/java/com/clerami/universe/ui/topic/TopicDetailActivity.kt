@@ -16,7 +16,6 @@ import com.clerami.universe.databinding.ActivityTopicDetailBinding
 class TopicDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTopicDetailBinding
 
-    // Using ViewModelProvider with ViewModelFactory to inject Application context
     private val viewModel: TopicDetailViewModel by viewModels { TopicDetailViewModelFactory(application) }
 
     private var isFavorite = false
@@ -51,23 +50,19 @@ class TopicDetailActivity : AppCompatActivity() {
         updateFavoriteIcon()
         updateLikeIcon()
 
-        // Set title and description from the intent
         binding.postTitle.text = title
         binding.postDescription.text = description
 
-        // Close button functionality
         binding.closeButton.setOnClickListener {
             finish()
         }
 
-        // Favorite icon click listener
         binding.favButton.setOnClickListener {
             isFavorite = !isFavorite
             updateFavoriteIcon()
             viewModel.setFavorite(topicId, isFavorite)
         }
 
-        // Like icon click listener
         binding.likeIcon.setOnClickListener {
             isLiked = !isLiked
             updateLikeIcon()
