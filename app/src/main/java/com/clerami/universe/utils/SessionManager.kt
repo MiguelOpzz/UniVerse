@@ -25,6 +25,15 @@ class SessionManager(context: Context) {
         editor.apply()
     }
 
+    fun saveUserData(token:String ,username: String, email: String) {
+        val editor = prefs.edit()
+        editor.putString(KEY_USER_TOKEN, token)
+        editor.putString(KEY_USER_NAME, username)
+        editor.putString(KEY_USER_EMAIL, email)
+        editor.putBoolean(KEY_IS_LOGGED_IN, true)
+        editor.apply()
+    }
+
     fun getUserToken(): String? {
         return prefs.getString(KEY_USER_TOKEN, null)
     }

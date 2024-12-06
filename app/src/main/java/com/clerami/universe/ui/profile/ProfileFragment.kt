@@ -54,7 +54,7 @@ class ProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Clean up binding reference
+
         _binding = null
     }
 }

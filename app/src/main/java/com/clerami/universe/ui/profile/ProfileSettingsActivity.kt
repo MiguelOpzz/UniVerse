@@ -14,7 +14,7 @@ import com.clerami.universe.utils.SessionManager
 
 class ProfileSettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileSettingsBinding
-    private lateinit var sessionManager: SessionManager // Correct the variable name to lowercase
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +22,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
         binding = ActivityProfileSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize SessionManager
+
         sessionManager = SessionManager(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -37,10 +37,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
     }
 
     private fun signOut() {
-        // Clear session
         sessionManager.clearSession()
-
-        // Navigate to LoginActivity
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
