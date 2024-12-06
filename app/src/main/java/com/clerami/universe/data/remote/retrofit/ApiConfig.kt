@@ -1,6 +1,7 @@
     package com.clerami.universe.data.remote.retrofit
 
     import android.content.Context
+    import android.util.Log
     import com.clerami.universe.BuildConfig
     import okhttp3.Interceptor
     import okhttp3.OkHttpClient
@@ -24,6 +25,7 @@
             val tokenInterceptor = Interceptor { chain ->
                 val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
                 val token = sharedPreferences.getString("auth_token", "") ?: ""
+                Log.d("ApiConfig", "Auth token: $token")
 
                 val request: Request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer $token")
