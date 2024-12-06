@@ -61,6 +61,17 @@ class TopicDetailActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.closeAiButton.setOnClickListener {
+            binding.aiAnswerLayout.visibility = View.GONE
+            binding.aiAnswerButton.visibility = View.VISIBLE // Show the AI Answer button again
+        }
+
+        binding.aiAnswerButton.setOnClickListener {
+            // Show the expanded AI answer and summary
+            binding.aiAnswerLayout.visibility = View.VISIBLE
+            binding.aiAnswerButton.visibility = View.GONE // Hide the button after showing the content
+        }
+
         binding.favButton.setOnClickListener {
             isFavorite = !isFavorite
             updateFavoriteIcon()
@@ -78,6 +89,12 @@ class TopicDetailActivity : AppCompatActivity() {
             isLiked = !isLiked
             updateLikeIcon()
             viewModel.setLiked(topicId, isLiked)
+        }
+
+        binding.aiAnswerButton.setOnClickListener {
+            // Show the expanded AI answer and summary
+            binding.aiAnswerLayout.visibility = View.VISIBLE
+            binding.aiAnswerButton.visibility = View.GONE // Hide the button after showing the content
         }
     }
 
