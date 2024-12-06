@@ -1,4 +1,4 @@
-package com.clerami.universe.ui.topicdetail
+package com.clerami.universe.ui.topic
 
 import android.os.Bundle
 import android.util.Log

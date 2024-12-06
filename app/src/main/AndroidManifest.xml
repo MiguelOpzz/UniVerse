@@ -75,7 +75,7 @@
             android:exported="false" />
         <!-- TopicDetailActivity (newly added) -->
         <activity
-            android:name=".ui.topicdetail.TopicDetailActivity"
+            android:name=".ui.topic.TopicDetailActivity"
             android:exported="true" />
     </application>
 

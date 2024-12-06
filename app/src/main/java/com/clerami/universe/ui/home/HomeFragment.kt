@@ -16,7 +16,7 @@ import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.databinding.DynamicTopicBinding
 import com.clerami.universe.databinding.FragmentHomeBinding
 import com.clerami.universe.ui.addnewdicussion.AddNewActivity
-import com.clerami.universe.ui.topicdetail.TopicDetailActivity
+import com.clerami.universe.ui.topic.TopicDetailActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
