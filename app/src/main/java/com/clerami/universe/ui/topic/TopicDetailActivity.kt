@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.databinding.ActivityTopicDetailBinding
+import com.clerami.universe.utils.SessionManager
 
 class TopicDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTopicDetailBinding
@@ -24,11 +25,14 @@ class TopicDetailActivity : AppCompatActivity() {
     private var isFavorite = false
     private var isLiked = false
     private val savedTopics = mutableListOf<String>()
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTopicDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sessionManager = SessionManager(this)
 
         val topicId = intent.getStringExtra("topicId") ?: return
         val title = intent.getStringExtra("title") ?: ""
@@ -210,8 +214,7 @@ class TopicDetailActivity : AppCompatActivity() {
     }
 
     private fun getUserName(): String {
-        val sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("user_name", "Guest") ?: "Guest"
+        return sessionManager.getUserName() ?: "Guest"
     }
 
     private fun updateRepliesUI(newReplyText: String) {
