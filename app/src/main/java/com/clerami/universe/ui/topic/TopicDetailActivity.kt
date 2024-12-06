@@ -32,11 +32,9 @@ class TopicDetailActivity : AppCompatActivity() {
         val description = intent.getStringExtra("description") ?: ""
         val tags = intent.getStringArrayListExtra("tags")
 
-        // Initialize ViewModel and fetch data
         viewModel.getTopicDetails(topicId)
         viewModel.getComments(topicId)
 
-        // Observe LiveData
         viewModel.topicDetails.observe(this, Observer { topic ->
             binding.postTitle.text = topic.title
             binding.postDescription.text = topic.description
@@ -47,7 +45,6 @@ class TopicDetailActivity : AppCompatActivity() {
             populateReplies(comments)
         })
 
-        // Handle favorite and like state
         isFavorite = viewModel.isFavorite(topicId)
         isLiked = viewModel.isLiked(topicId)
 
