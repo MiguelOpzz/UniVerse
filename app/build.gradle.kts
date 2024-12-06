@@ -73,6 +73,10 @@ dependencies {
     implementation (libs.play.services.auth)
     implementation (platform(libs.firebase.bom))
     implementation (libs.circleimageview)
+    implementation (libs.com.github.bumptech.glide.glide)
+    annotationProcessor (libs.compiler)
+
+
 
 
 

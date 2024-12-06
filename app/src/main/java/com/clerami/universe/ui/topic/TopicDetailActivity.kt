@@ -1,4 +1,4 @@
-package com.clerami.universe.ui.topicdetail
+package com.clerami.universe.ui.topic
 
 import android.content.Context
 import android.content.SharedPreferences

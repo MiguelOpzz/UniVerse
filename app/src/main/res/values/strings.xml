@@ -69,5 +69,24 @@
     <string name="topic1">Machine Learning</string>
     <string name="topic2">Cloud Computing</string>
     <string name="topic3">Mobile Development</string>
+    <string name="view_post">View Post</string>
+    <string name="tag">TAG</string>
+    <string name="tag2">TAG</string>
+    <string name="title">TITLE</string>
+    <string name="bawah_title">Lorem Ipsum is simply dummy text...</string>
+    <string name="read_more">Read More</string>
+    <string name="reply">Reply</string>
+    <string name="Button_ai_answer">AI Answer</string>
+    <string name="bagan_replies">Replies</string>
+    <string name="Pengguna">USER</string>
+    <string name="comment_pengguna">Lorem Ipsum is simply dummy text...</string>
+    <string name="jumlah_likes">10</string>
+    <string name="reply_comment">Reply</string>
+    <string name="recent_posts">Recent Posts</string>
+    <string name="saved_posts">Saved Posts</string>
+    <string name="discussion_title">Discussion Title</string>
+    <string name="content_description">Lorem Ipsum content goes here</string>
+    <string name="likes_count">112 likes</string>
+    <string name="replies_count">47 replies</string>
     <string name="detailTitle">View Post</string>
 </resources>

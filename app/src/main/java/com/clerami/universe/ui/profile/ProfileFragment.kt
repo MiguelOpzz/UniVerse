@@ -16,7 +16,7 @@ class ProfileFragment : Fragment() {
 
     // Declare the binding variable
     private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!! // Non-nullable reference
+    private val binding get() = _binding!!
     private lateinit var sessionManager: SessionManager
 
     override fun onCreateView(

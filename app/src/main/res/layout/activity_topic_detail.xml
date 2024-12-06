@@ -1,6 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:background="@color/white">
 
@@ -13,7 +14,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
             android:paddingBottom="8dp">
 
             <!-- Close Button -->
@@ -22,10 +22,12 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/close"
+                android:contentDescription="Close Button"
                 android:layout_alignParentEnd="true" />
 
             <!-- Post Title -->
             <TextView
+                android:id="@+id/postTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/detailTitle"
@@ -55,6 +57,28 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_alignParentStart="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:padding="4dp"
+                        android:background="#989DA4"
+                        android:text="@string/tag"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/montserrat_regular" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:padding="4dp"
+                        android:background="#989DA4"
+                        android:text="@string/tag2"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/montserrat_regular" />
                 </LinearLayout>
 
                 <!-- Profile Picture -->
@@ -75,12 +99,12 @@
                     android:layout_height="24dp"
                     android:layout_toStartOf="@id/profilePicture"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/fav_outline"/>
+                    android:src="@drawable/fav"
+                    android:contentDescription="Favorite Button" />
             </RelativeLayout>
 
             <!-- Post Description -->
             <TextView
-                android:id="@+id/postTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TITLE"
@@ -191,6 +215,75 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="8dp">
+
+            <!-- Each Reply Item -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+
+                <!-- User Avatar -->
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/image"
+                    android:layout_marginEnd="8dp" />
+
+                <!-- Reply Content -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/replyUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Pengguna"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/montserrat_bold" />
+
+                    <TextView
+                        android:id="@+id/replyText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comment_pengguna"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/montserrat_regular" />
+
+                    <!-- Reply and Like Buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:id="@+id/likeCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/jumlah_likes"
+                            app:drawableStartCompat="@drawable/thumbs_up"
+                            android:drawablePadding="4dp"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="16dp" />
+
+                        <TextView
+                            android:id="@+id/replyButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/reply_comment"
+                            android:textSize="12sp"
+                            android:textColor="@color/blue_two"
+                            android:fontFamily="@font/montserrat_regular" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
