@@ -38,6 +38,9 @@ interface ApiService {
     @GET("api/topics")
     fun getAllTopics(): Call<List<Topic>>
 
+    @GET("topics")
+    fun getTopics(): Call<List<Topic>>
+
     @GET("api/topics/{topicId}")
     fun getTopicById(@Path("topicId") topicId: String): Call<Topic>
 

@@ -3,6 +3,9 @@ package com.clerami.universe.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +31,12 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
 
+    private val handler = android.os.Handler(Looper.getMainLooper())
+    private val debounceRunnable = Runnable {
+        val query = binding.searchEditText.text.toString().lowercase()
+        homeViewModel.filterTopics(query)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,6 +59,23 @@ class HomeFragment : Fragment() {
                 Log.d("HomeFragment", "No topics found to display.")
             }
         }
+
+        // Implement search functionality with debounce
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // Trigger search after typing
+                handler.removeCallbacks(debounceRunnable) // Remove any pending actions
+                handler.postDelayed(debounceRunnable, 500) // Wait for 500ms before triggering
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Not needed for filtering
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Not needed for filtering, but required to override
+            }
+        })
 
         binding.btnAddDiscussion.setOnClickListener {
             val intent = Intent(requireContext(), AddNewActivity::class.java)
@@ -108,6 +134,9 @@ class HomeFragment : Fragment() {
                         commentsCountTextView.text = context.getString(R.string.no_replies_yet)
                         likesCountTextView.text = context.getString(R.string.no_likes_yet)
                     }
+                    // Make them visible after data is fetched
+                    commentsCountTextView.visibility = View.VISIBLE
+                    likesCountTextView.visibility = View.VISIBLE
                 } else {
                     commentsCountTextView.text = context.getString(R.string.error_loading_replies)
                     likesCountTextView.text = context.getString(R.string.error_loading_likes)
@@ -116,9 +145,9 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                commentsCountTextView.text = context.getString(R.string.failed_to_load_replies)
-                likesCountTextView.text = context.getString(R.string.failed_to_load_likes)
-                Log.e("HomeFragment", "Failed to fetch comments: ${t.localizedMessage}", t)
+                commentsCountTextView.text = context.getString(R.string.error_loading_replies)
+                likesCountTextView.text = context.getString(R.string.error_loading_likes)
+                Log.e("HomeFragment", "Failed to fetch comments", t)
             }
         })
     }
