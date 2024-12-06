@@ -42,11 +42,13 @@ class HomeViewModel : ViewModel() {
         })
     }
 
+    // Filter topics based on title, description, and tags
     fun filterTopics(query: String) {
         val filteredTopics = if (query.isNotEmpty()) {
             allTopics.filter { topic ->
                 topic.title.contains(query, ignoreCase = true) ||
-                        topic.description?.contains(query, ignoreCase = true) == true
+                        topic.description?.contains(query, ignoreCase = true) == true ||
+                        topic.tags?.any { it.contains(query, ignoreCase = true) } == true
             }
         } else {
             allTopics

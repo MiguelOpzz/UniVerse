@@ -86,7 +86,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun createDiscussionView(topic: Topic, inflater: LayoutInflater): View {
-        val topicBinding = DynamicTopicBinding.inflate(inflater, binding.dynamicTopicsContainer, false)
+        val topicBinding =
+            DynamicTopicBinding.inflate(inflater, binding.dynamicTopicsContainer, false)
 
         topicBinding.discussionTitle.text = topic.title
         topicBinding.discussionSubtitle.text = topic.description ?: "No description available"
@@ -122,33 +123,65 @@ class HomeFragment : Fragment() {
         commentsCountTextView: TextView,
         likesCountTextView: TextView
     ) {
-        ApiConfig.getApiService(context).getComments(topicId).enqueue(object : Callback<List<Comment>> {
-            override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
-                if (response.isSuccessful) {
-                    val comments = response.body()
-                    if (comments != null && comments.isNotEmpty()) {
-                        val likesCount = comments.sumOf { it.upvotes }
-                        commentsCountTextView.text = context.getString(R.string.replies, comments.size)
-                        likesCountTextView.text = context.getString(R.string.likes, likesCount)
+        ApiConfig.getApiService(context).getComments(topicId)
+            .enqueue(object : Callback<List<Comment>> {
+                override fun onResponse(
+                    call: Call<List<Comment>>,
+                    response: Response<List<Comment>>
+                ) {
+                    if (response.isSuccessful) {
+                        val comments = response.body()
+                        if (comments != null && comments.isNotEmpty()) {
+                            val likesCount = comments.sumOf { it.upvotes }
+                            commentsCountTextView.text =
+                                context.getString(R.string.replies, comments.size)
+
+                            // If you want to hide comments count completely, set visibility to GONE here
+                            // commentsCountTextView.visibility = View.GONE
+
+                            // Condition to hide comments count
+                            commentsCountTextView.visibility = if (comments.isNotEmpty()) {
+                                View.VISIBLE
+                            } else {
+                                View.GONE // Hide comments count if no comments
+                            }
+
+                            // Handle likes count visibility
+                            likesCountTextView.visibility = if (likesCount > 0) {
+                                likesCountTextView.text =
+                                    context.getString(R.string.likes, likesCount)
+                                View.VISIBLE
+                            } else {
+                                View.GONE // Hide likes count if no likes
+                            }
+                        } else {
+                            commentsCountTextView.text = context.getString(R.string.no_replies_yet)
+
+                            // Hide the comments count if no comments
+                            commentsCountTextView.visibility = View.GONE
+
+                            likesCountTextView.text = context.getString(R.string.no_likes_yet)
+
+                            // Optionally hide the likes count if no likes
+                            likesCountTextView.visibility = View.GONE
+                        }
+
                     } else {
-                        commentsCountTextView.text = context.getString(R.string.no_replies_yet)
-                        likesCountTextView.text = context.getString(R.string.no_likes_yet)
+                        commentsCountTextView.text =
+                            context.getString(R.string.error_loading_replies)
+                        likesCountTextView.text = context.getString(R.string.error_loading_likes)
+                        Log.e(
+                            "HomeFragment",
+                            "Error fetching comments: ${response.errorBody()?.string()}"
+                        )
                     }
-                    // Make them visible after data is fetched
-                    commentsCountTextView.visibility = View.VISIBLE
-                    likesCountTextView.visibility = View.VISIBLE
-                } else {
+                }
+
+                override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
                     commentsCountTextView.text = context.getString(R.string.error_loading_replies)
                     likesCountTextView.text = context.getString(R.string.error_loading_likes)
-                    Log.e("HomeFragment", "Error fetching comments: ${response.errorBody()?.string()}")
+                    Log.e("HomeFragment", "Failed to fetch comments", t)
                 }
-            }
-
-            override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                commentsCountTextView.text = context.getString(R.string.error_loading_replies)
-                likesCountTextView.text = context.getString(R.string.error_loading_likes)
-                Log.e("HomeFragment", "Failed to fetch comments", t)
-            }
-        })
+            })
     }
 }
