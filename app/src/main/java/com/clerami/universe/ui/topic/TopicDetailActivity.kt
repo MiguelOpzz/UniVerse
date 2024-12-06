@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +13,7 @@ import com.clerami.universe.R
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.data.remote.response.Topic
+import com.clerami.universe.databinding.ActivityTopicDetailBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,87 +22,93 @@ class TopicDetailActivity : AppCompatActivity() {
     private var isFavorite = false
     private var isLiked = false
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var binding: ActivityTopicDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_topic_detail)
+
+        // Initialize View Binding
+        binding = ActivityTopicDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         sharedPreferences = getSharedPreferences("TopicPreferences", Context.MODE_PRIVATE)
 
         val topicId = intent.getStringExtra("topicId")
         val title = intent.getStringExtra("title")
         val description = intent.getStringExtra("description")
-        val postTitle = findViewById<TextView>(R.id.postTitle)
-        val postDescription = findViewById<TextView>(R.id.postDescription)
-        val readMore = findViewById<TextView>(R.id.readMore)
-        val closeButton = findViewById<ImageView>(R.id.closeButton)
-        val replyButton = findViewById<Button>(R.id.aiAnswerButton)
-        val repliesContainer = findViewById<LinearLayout>(R.id.repliesContainer)
-        val tagsContainer = findViewById<LinearLayout>(R.id.tagsContainer)
         val tags = intent.getStringArrayListExtra("tags")
-        val favoriteIcon = findViewById<ImageView>(R.id.favButton)
-        val likeIcon = findViewById<ImageView>(R.id.likeIcon)
 
-        isFavorite = sharedPreferences.getBoolean("isFavorite_$topicId", false)
-        isLiked = sharedPreferences.getBoolean("isLiked_$topicId", false)
-
-        updateFavoriteIcon(favoriteIcon)
-        updateLikeIcon(likeIcon)
-
-        favoriteIcon.setOnClickListener {
-            isFavorite = !isFavorite
-            updateFavoriteIcon(favoriteIcon)
-
-            val editor = sharedPreferences.edit()
-            editor.putBoolean("isFavorite_$topicId", isFavorite)
-            editor.apply()
+        // Update favorite and like status based on shared preferences
+        topicId?.let {
+            isFavorite = sharedPreferences.getBoolean("isFavorite_$it", false)
+            isLiked = sharedPreferences.getBoolean("isLiked_$it", false)
         }
 
-        likeIcon.setOnClickListener {
-            isLiked = !isLiked
-            updateLikeIcon(likeIcon)
+        // Update the favorite and like icons
+        updateFavoriteIcon()
+        updateLikeIcon()
 
-            val editor = sharedPreferences.edit()
-            editor.putBoolean("isLiked_$topicId", isLiked)
-            editor.apply()
-        }
+        // Set title and description from the intent
+        binding.postTitle.text = title
+        binding.postDescription.text = description
 
-        postTitle.text = title
-        postDescription.text = description
-
-        closeButton.setOnClickListener {
+        // Close button functionality
+        binding.closeButton.setOnClickListener {
             finish()
         }
 
-        topicId?.let { fetchTopicDetails(it, postTitle, postDescription, tagsContainer) }
-        topicId?.let { fetchComments(it, repliesContainer) }
+        // Favorite icon click listener
+        binding.favButton.setOnClickListener {
+            isFavorite = !isFavorite
+            updateFavoriteIcon()
+
+            val editor = sharedPreferences.edit()
+            topicId?.let { editor.putBoolean("isFavorite_$it", isFavorite) }
+            editor.apply()
+        }
+
+        // Like icon click listener
+        binding.likeIcon.setOnClickListener {
+            isLiked = !isLiked
+            updateLikeIcon()
+
+            val editor = sharedPreferences.edit()
+            topicId?.let { editor.putBoolean("isLiked_$it", isLiked) }
+            editor.apply()
+        }
+
+        // Fetch topic details and comments
+        topicId?.let {
+            fetchTopicDetails(it, tags)
+            fetchComments(it)
+        }
     }
 
-    private fun updateFavoriteIcon(favoriteIcon: ImageView) {
+    private fun updateFavoriteIcon() {
         if (isFavorite) {
-            favoriteIcon.setImageResource(R.drawable.fav)
+            binding.favButton.setImageResource(R.drawable.fav)
         } else {
-            favoriteIcon.setImageResource(R.drawable.fav_outline)
+            binding.favButton.setImageResource(R.drawable.fav_outline)
         }
     }
 
-    private fun updateLikeIcon(likeIcon: ImageView) {
+    private fun updateLikeIcon() {
         if (isLiked) {
-            likeIcon.setImageResource(R.drawable.thumbs_up)
+            binding.likeIcon.setImageResource(R.drawable.thumbs_up)
         } else {
-            likeIcon.setImageResource(R.drawable.thumbs_up_outline)
+            binding.likeIcon.setImageResource(R.drawable.thumbs_up_outline)
         }
     }
 
-    private fun fetchTopicDetails(topicId: String, postTitle: TextView, postDescription: TextView, tagsContainer: LinearLayout) {
+    private fun fetchTopicDetails(topicId: String, tags: List<String>?) {
         ApiConfig.getApiService(this).getTopicById(topicId).enqueue(object : Callback<Topic> {
             override fun onResponse(call: Call<Topic>, response: Response<Topic>) {
                 if (response.isSuccessful) {
                     val topic = response.body()
                     topic?.let {
-                        postTitle.text = it.title
-                        postDescription.text = it.description
-                        // Fetch and display tags dynamically
-                        populateTags(tagsContainer, it.tags)
+                        binding.postTitle.text = it.title
+                        binding.postDescription.text = it.description
+                        populateTags(tags, it.tags)
                     }
                 } else {
                     showToast("Failed to load topic details")
@@ -117,16 +122,16 @@ class TopicDetailActivity : AppCompatActivity() {
         })
     }
 
-    private fun fetchComments(topicId: String, repliesContainer: LinearLayout) {
+    private fun fetchComments(topicId: String) {
         ApiConfig.getApiService(this).getComments(topicId).enqueue(object : Callback<List<Comment>> {
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if (response.isSuccessful) {
                     val comments = response.body()
                     if (comments != null && comments.isNotEmpty()) {
-                        populateReplies(repliesContainer, comments)
-                    } else {
+                        populateReplies(comments)
                     }
                 } else {
+                    showToast("Failed to load comments")
                 }
             }
 
@@ -137,29 +142,27 @@ class TopicDetailActivity : AppCompatActivity() {
         })
     }
 
-    private fun populateReplies(container: LinearLayout, replies: List<Comment>) {
-        container.removeAllViews()
+    private fun populateReplies(replies: List<Comment>) {
+        binding.repliesContainer.removeAllViews()
         for (reply in replies) {
-            val replyView = layoutInflater.inflate(R.layout.item_reply, container, false)
+            val replyView = layoutInflater.inflate(R.layout.item_reply, binding.repliesContainer, false)
 
             val replyUsername = replyView.findViewById<TextView>(R.id.replyUsername)
-            val replyText = replyView.findViewById<TextView>(R.id.replyText)// Add in your layout if needed
+            val replyText = replyView.findViewById<TextView>(R.id.replyText)
             val likeCount = replyView.findViewById<TextView>(R.id.likeCount)
-            val replyButton = replyView.findViewById<TextView>(R.id.replyButton)
-
-            Log.d("TopicDetailActivity", "Upvotes for ${reply.commentId}: ${reply.upvotes}")
 
             replyUsername.text = reply.userId
             replyText.text = reply.commentText
             likeCount.text = reply.upvotes.toString()
 
-            container.addView(replyView)
+            binding.repliesContainer.addView(replyView)
         }
     }
 
-    private fun populateTags(container: LinearLayout, tags: List<String>) {
-        container.removeAllViews()
-        for (tag in tags) {
+    private fun populateTags(tags: List<String>?, topicTags: List<String>) {
+        binding.tagsContainer.removeAllViews()
+        val combinedTags = tags.orEmpty() + topicTags
+        for (tag in combinedTags) {
             val tagView = TextView(this).apply {
                 text = tag
                 setPadding(8, 4, 8, 4)
@@ -173,10 +176,9 @@ class TopicDetailActivity : AppCompatActivity() {
                     marginEnd = 8
                 }
             }
-            container.addView(tagView)
+            binding.tagsContainer.addView(tagView)
         }
     }
-
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
