@@ -17,7 +17,6 @@ class AddNewViewModel : ViewModel() {
     val createTopicStatus: LiveData<String> get() = _createTopicStatus
 
     fun createNewTopic(request: CreateTopicRequest, context: Context) {
-        // Use ApiConfig with context to dynamically add the token
         ApiConfig.getApiService(context).createTopic(request).enqueue(object : Callback<Topic> {
             override fun onResponse(call: Call<Topic>, response: Response<Topic>) {
                 if (response.isSuccessful) {

@@ -24,7 +24,6 @@ class AddNewActivity : AppCompatActivity() {
         binding = ActivityAddNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("auth_prefs", MODE_PRIVATE)
 
         binding.closeButton.setOnClickListener { finish() }
@@ -40,12 +39,11 @@ class AddNewActivity : AppCompatActivity() {
             val content = binding.contentInput.text.toString()
             val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }
             val createdBy = "User123"
-            val token = getAuthToken() // Retrieve the token dynamically
+            val token = getAuthToken()
 
             if (title.isNotEmpty() && content.isNotEmpty()) {
                 val request = CreateTopicRequest(title, content, createdBy, "Computer Science", tags)
 
-                // Pass the request to the ViewModel and also the token
                 addNewViewModel.createNewTopic(request, this)
 
                 Toast.makeText(this, "New discussion created!", Toast.LENGTH_SHORT).show()
@@ -83,7 +81,6 @@ class AddNewActivity : AppCompatActivity() {
     }
 
     private fun getAuthToken(): String {
-        // Retrieve token from SharedPreferences
         return sharedPreferences.getString("auth_token", "") ?: ""
     }
 
