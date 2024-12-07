@@ -75,8 +75,7 @@ dependencies {
     implementation (libs.circleimageview)
     implementation (libs.com.github.bumptech.glide.glide)
     annotationProcessor (libs.compiler)
-
-
+    implementation (libs.retrofit2.kotlin.coroutines.adapter)
 
 
 }

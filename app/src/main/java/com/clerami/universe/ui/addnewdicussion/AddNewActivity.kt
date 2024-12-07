@@ -2,59 +2,115 @@ package com.clerami.universe.ui.addnewdicussion
 
 import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.clerami.universe.data.remote.response.CreateTopicRequest
+import com.clerami.universe.data.remote.response.CreateTopicResponse
+import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.databinding.ActivityAddNewBinding
+import com.clerami.universe.utils.SessionManager
+import com.google.gson.Gson
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class AddNewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddNewBinding
     private val addNewViewModel: AddNewViewModel by viewModels()
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sessionManager: SessionManager
+
+    private var imageCount = 0
+    private val attachmentUrls = mutableListOf<String>() // Store URLs for uploaded images
+    private val maxImages = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPreferences = getSharedPreferences("auth_prefs", MODE_PRIVATE)
+        sessionManager = SessionManager(this)
 
+        setupListeners()
+        observeViewModel()
+
+        Log.d("AddNewActivity", "Token: ${sessionManager.getUserToken()}")
+    }
+
+    private fun setupListeners() {
         binding.closeButton.setOnClickListener { finish() }
 
         binding.imageUploadIcon.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, IMAGE_PICK_CODE)
+            if (imageCount < maxImages) {
+                val intent = Intent(Intent.ACTION_PICK).apply { type = "image/*" }
+                startActivityForResult(intent, IMAGE_PICK_CODE)
+            } else {
+                Toast.makeText(this, "You can only upload up to $maxImages images.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.sendButton.setOnClickListener {
             val title = binding.titleInput.text.toString()
-            val content = binding.contentInput.text.toString()
-            val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }
-            val createdBy = "User123"
-            val token = getAuthToken()
+            val description = binding.descriptionInput.text.toString()
+            val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
-            if (title.isNotEmpty() && content.isNotEmpty()) {
-                val request = CreateTopicRequest(title, content, createdBy, "Computer Science", tags)
-
-                addNewViewModel.createNewTopic(request, this)
-
-                Toast.makeText(this, "New discussion created!", Toast.LENGTH_SHORT).show()
-                finish()
-            } else {
-                Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
+            if (title.isEmpty() || description.isEmpty()) {
+                Toast.makeText(this, "Title and description cannot be empty.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            val token = sessionManager.getUserToken()
+            val createdBy = sessionManager.getUserName() ?: "Unknown User"
+
+            if (token.isNullOrEmpty()) {
+                Toast.makeText(this, "Authentication token is missing. Please log in again.", Toast.LENGTH_SHORT).show()
+                finish()
+                return@setOnClickListener
+            }
+
+            // Format date to ISO 8601
+            val formattedDate = Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT)
+
+            val request = CreateTopicRequest(
+                title = title,
+                description = description,
+                createdBy = createdBy,
+                tags = if (tags.isEmpty()) listOf("general") else tags,
+                attachmentUrls = listOf(),
+                postCount = 0,
+                likeCount = 0,
+                createdAt = formattedDate,
+                updatedAt = formattedDate
+            )
+
+            Log.d("AddNewActivity", "Request Payload: ${Gson().toJson(request)}")
+            Log.d("AuthorizationHeader", "Bearer $token")
+
+            val apiService = ApiConfig.getApiService(this)
+            addNewViewModel.createTopic(apiService, token, request)
         }
     }
 
-    private var imageCount = 0
+    private fun observeViewModel() {
+        addNewViewModel.responseLiveData.observe(this) { response ->
+            handleSuccess(response)
+        }
+
+        addNewViewModel.errorMessage.observe(this) { error ->
+            Log.e("AddNewActivity", "Error: $error")
+            Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun handleSuccess(response: CreateTopicResponse) {
+        Toast.makeText(this, "New discussion created: ${response.message}", Toast.LENGTH_SHORT).show()
+        finish()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -62,7 +118,6 @@ class AddNewActivity : AppCompatActivity() {
             val selectedImageUri: Uri? = data?.data
             selectedImageUri?.let {
                 imageCount++
-
                 when (imageCount) {
                     1 -> {
                         binding.imagePreview1.setImageURI(it)
@@ -72,16 +127,10 @@ class AddNewActivity : AppCompatActivity() {
                         binding.imagePreview2.setImageURI(it)
                         binding.imagePreview2.visibility = ImageView.VISIBLE
                     }
-                    else -> {
-                        binding.extraImagesText.visibility = TextView.VISIBLE
-                    }
                 }
+                attachmentUrls.add(it.toString())
             }
         }
-    }
-
-    private fun getAuthToken(): String {
-        return sharedPreferences.getString("auth_token", "") ?: ""
     }
 
     companion object {

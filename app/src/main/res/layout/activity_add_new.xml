@@ -52,21 +52,11 @@
                 android:padding="10dp"
                 android:layout_marginTop="20dp" />
 
-            <!-- Description Input -->
-            <EditText
-                android:id="@+id/descriptionInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Description"
-                android:fontFamily="@font/montserrat_regular"
-                android:textSize="14sp"
-                android:background="#FFF"
-                android:padding="10dp"
-                android:layout_marginTop="10dp" />
+
 
             <!-- Content Input -->
             <EditText
-                android:id="@+id/contentInput"
+                android:id="@+id/descriptionInput"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:hint="Content"

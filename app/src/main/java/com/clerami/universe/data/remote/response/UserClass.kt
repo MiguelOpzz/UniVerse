@@ -31,8 +31,19 @@ data class CreateTopicRequest(
     val title: String,
     val description: String,
     val createdBy: String,
-    val major: String,
-    val tags: List<String>
+    val tags: List<String>,
+    val attachmentUrls: List<String>,
+    val postCount: Int,
+    val likeCount: Int,
+    val createdAt: String,
+    val updatedAt: String,
+
+    )
+
+data class CreateTopicResponse(
+    val status: String,
+    val message: String,
+
 )
 
 data class UpdateTopicRequest(

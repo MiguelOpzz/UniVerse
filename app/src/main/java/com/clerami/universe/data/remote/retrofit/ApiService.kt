@@ -3,6 +3,7 @@ package com.clerami.universe.data.remote.retrofit
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.data.remote.response.CommentVoteRequest
 import com.clerami.universe.data.remote.response.CreateTopicRequest
+import com.clerami.universe.data.remote.response.CreateTopicResponse
 import com.clerami.universe.data.remote.response.GuestResponse
 import com.clerami.universe.data.remote.response.LoginRequest
 import com.clerami.universe.data.remote.response.LoginResponse
@@ -10,11 +11,15 @@ import com.clerami.universe.data.remote.response.RegisterRequest
 import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.data.remote.response.UpdateTopicRequest
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
+
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 
@@ -32,8 +37,14 @@ interface ApiService {
     @POST("api/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
+
     @POST("api/topics")
-    fun createTopic(@Body request: CreateTopicRequest): Call<Topic>
+    suspend fun createTopic(
+        @Header("Authorization") token: String,
+        @Body request: CreateTopicRequest
+    ): Response<CreateTopicResponse>
+
+
 
     @GET("api/topics")
     fun getAllTopics(): Call<List<Topic>>

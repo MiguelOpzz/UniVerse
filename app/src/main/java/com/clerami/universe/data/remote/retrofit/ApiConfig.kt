@@ -1,16 +1,17 @@
-    package com.clerami.universe.data.remote.retrofit
+package com.clerami.universe.data.remote.retrofit
 
-    import android.content.Context
-    import com.clerami.universe.BuildConfig
-    import okhttp3.Interceptor
-    import okhttp3.OkHttpClient
-    import okhttp3.Request
-    import okhttp3.logging.HttpLoggingInterceptor
-    import retrofit2.Retrofit
-    import retrofit2.converter.gson.GsonConverterFactory
-    import java.util.concurrent.TimeUnit
+import android.content.Context
+import com.clerami.universe.BuildConfig
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import java.util.concurrent.TimeUnit
 
-    object ApiConfig {
+object ApiConfig {
 
         fun getApiService(context: Context): ApiService {
             val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -28,8 +29,6 @@
                 chain.proceed(request)
             }
 
-
-
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(tokenInterceptor)
@@ -46,4 +45,4 @@
 
             return retrofit.create(ApiService::class.java)
         }
-    }
+}
