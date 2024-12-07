@@ -49,6 +49,9 @@ interface ApiService {
     @GET("api/topics")
     fun getAllTopics(): Call<List<Topic>>
 
+    @GET("topics")
+    fun getTopics(): Call<List<Topic>>
+
     @GET("api/topics/{topicId}")
     fun getTopicById(@Path("topicId") topicId: String): Call<Topic>
 
@@ -64,10 +67,10 @@ interface ApiService {
     @GET("api/topics/{topicId}/comments")
     fun getComments(@Path("topicId") topicId: String): Call<List<Comment>>
 
-    @POST("api/topics/{topicId}/comments")
-    fun addComment(
+    @POST("topics/{topicId}/comments")
+    fun postComment(
         @Path("topicId") topicId: String,
-        @Body comment: Comment
+        @Body commentText: String
     ): Call<Comment>
 
     @POST("api/topics/{topicId}/comments/{commentId}/upvote")

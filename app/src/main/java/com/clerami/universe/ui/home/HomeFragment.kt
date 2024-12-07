@@ -4,6 +4,9 @@ package com.clerami.universe.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +32,12 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
 
+    private val handler = android.os.Handler(Looper.getMainLooper())
+    private val debounceRunnable = Runnable {
+        val query = binding.searchEditText.text.toString().lowercase()
+        homeViewModel.filterTopics(query)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +61,23 @@ class HomeFragment : Fragment() {
             }
         }
 
+        // Implement search functionality with debounce
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // Trigger search after typing
+                handler.removeCallbacks(debounceRunnable) // Remove any pending actions
+                handler.postDelayed(debounceRunnable, 500) // Wait for 500ms before triggering
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Not needed for filtering
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Not needed for filtering, but required to override
+            }
+        })
+
         binding.btnAddDiscussion.setOnClickListener {
             val intent = Intent(requireContext(), AddNewActivity::class.java)
             startActivity(intent)
@@ -61,16 +87,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun createDiscussionView(topic: Topic, inflater: LayoutInflater): View {
-        val topicBinding = DynamicTopicBinding.inflate(inflater, binding.dynamicTopicsContainer, false)
+        val topicBinding =
+            DynamicTopicBinding.inflate(inflater, binding.dynamicTopicsContainer, false)
 
         topicBinding.discussionTitle.text = topic.title
         topicBinding.discussionSubtitle.text = topic.description ?: "No description available"
 
-        // Hide likes and comments count initially
         topicBinding.likesCount.visibility = View.GONE
         topicBinding.commentsCount.visibility = View.GONE
 
-        // Fetch and set the comments and likes count dynamically
         fetchCommentsForTopic(
             requireContext(),
             topic.topicId,
@@ -78,7 +103,6 @@ class HomeFragment : Fragment() {
             topicBinding.likesCount
         )
 
-        // Set click listener to open TopicDetailActivity
         topicBinding.root.setOnClickListener {
             val intent = Intent(requireContext(), TopicDetailActivity::class.java).apply {
                 putExtra("topicId", topic.topicId)
@@ -97,30 +121,60 @@ class HomeFragment : Fragment() {
         commentsCountTextView: TextView,
         likesCountTextView: TextView
     ) {
-        ApiConfig.getApiService(context).getComments(topicId).enqueue(object : Callback<List<Comment>> {
-            override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
-                if (response.isSuccessful) {
-                    val comments = response.body()
-                    if (comments != null && comments.isNotEmpty()) {
-                        val likesCount = comments.sumOf { it.upvotes }
-                        commentsCountTextView.text = context.getString(R.string.replies, comments.size)
-                        likesCountTextView.text = context.getString(R.string.likes, likesCount)
+        ApiConfig.getApiService(context).getComments(topicId)
+            .enqueue(object : Callback<List<Comment>> {
+                override fun onResponse(
+                    call: Call<List<Comment>>,
+                    response: Response<List<Comment>>
+                ) {
+                    if (response.isSuccessful) {
+                        val comments = response.body()
+                        if (comments != null && comments.isNotEmpty()) {
+                            val likesCount = comments.sumOf { it.upvotes }
+                            commentsCountTextView.text =
+                                context.getString(R.string.replies, comments.size)
+
+
+                            commentsCountTextView.visibility = if (comments.isNotEmpty()) {
+                                View.VISIBLE
+                            } else {
+                                View.GONE
+                            }
+
+                            // Handle likes count visibility
+                            likesCountTextView.visibility = if (likesCount > 0) {
+                                likesCountTextView.text =
+                                    context.getString(R.string.likes, likesCount)
+                                View.VISIBLE
+                            } else {
+                                View.GONE
+                            }
+                        } else {
+                            commentsCountTextView.text = context.getString(R.string.no_replies_yet)
+
+                            commentsCountTextView.visibility = View.GONE
+
+                            likesCountTextView.text = context.getString(R.string.no_likes_yet)
+
+                            likesCountTextView.visibility = View.GONE
+                        }
+
                     } else {
-                        commentsCountTextView.text = context.getString(R.string.no_replies_yet)
-                        likesCountTextView.text = context.getString(R.string.no_likes_yet)
+                        commentsCountTextView.text =
+                            context.getString(R.string.error_loading_replies)
+                        likesCountTextView.text = context.getString(R.string.error_loading_likes)
+                        Log.e(
+                            "HomeFragment",
+                            "Error fetching comments: ${response.errorBody()?.string()}"
+                        )
                     }
-                } else {
+                }
+
+                override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
                     commentsCountTextView.text = context.getString(R.string.error_loading_replies)
                     likesCountTextView.text = context.getString(R.string.error_loading_likes)
-                    Log.e("HomeFragment", "Error fetching comments: ${response.errorBody()?.string()}")
+                    Log.e("HomeFragment", "Failed to fetch comments", t)
                 }
-            }
-
-            override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                commentsCountTextView.text = context.getString(R.string.failed_to_load_replies)
-                likesCountTextView.text = context.getString(R.string.failed_to_load_likes)
-                Log.e("HomeFragment", "Failed to fetch comments: ${t.localizedMessage}", t)
-            }
-        })
+            })
     }
 }

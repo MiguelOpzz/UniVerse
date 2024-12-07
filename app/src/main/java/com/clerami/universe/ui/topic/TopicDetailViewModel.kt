@@ -20,19 +20,27 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
     private val _comments = MutableLiveData<List<Comment>>()
     val comments: LiveData<List<Comment>> get() = _comments
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> get() = _errorMessage
+
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("TopicPreferences", Context.MODE_PRIVATE)
+
+    private val apiService = ApiConfig.getApiService(application)
 
     fun getTopicDetails(topicId: String) {
         ApiConfig.getApiService(getApplication()).getTopicById(topicId).enqueue(object : Callback<Topic> {
             override fun onResponse(call: Call<Topic>, response: Response<Topic>) {
                 if (response.isSuccessful) {
                     _topicDetails.value = response.body()
+                } else {
+                    _errorMessage.value = "Failed to fetch topic details."
                 }
             }
 
             override fun onFailure(call: Call<Topic>, t: Throwable) {
-                Log.d("Topic","Failed to Fetch Topic")
+                Log.d("Topic", "Failed to Fetch Topic")
+                _errorMessage.value = "Network error: ${t.message}"
             }
         })
     }
@@ -41,15 +49,38 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
         ApiConfig.getApiService(getApplication()).getComments(topicId).enqueue(object : Callback<List<Comment>> {
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if (response.isSuccessful) {
-                    _comments.value = response.body()
+                    _comments.value = response.body() ?: emptyList()
+                } else {
+                    _errorMessage.value = "Failed to fetch comments."
                 }
             }
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                Log.d("Comments","Failed to Fetch Comment")
+                Log.d("Comments", "Failed to Fetch Comment")
+                _errorMessage.value = "Network error: ${t.message}"
             }
         })
     }
+
+    fun createComment(topicId: String, replyText: String) {
+        apiService.postComment(topicId, replyText).enqueue(object : Callback<Comment> {
+            override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
+                if (response.isSuccessful) {
+                    // If the comment is posted successfully, fetch the updated comments
+                    getComments(topicId)
+                } else {
+                    // Handle failure (e.g., show a toast)
+                    Log.e("TopicDetailViewModel", "Error posting comment")
+                }
+            }
+
+            override fun onFailure(call: Call<Comment>, t: Throwable) {
+                // Handle network failure
+                Log.e("TopicDetailViewModel", "Network error: ${t.message}")
+            }
+        })
+    }
+
 
     fun isFavorite(topicId: String): Boolean {
         return sharedPreferences.getBoolean("isFavorite_$topicId", false)
