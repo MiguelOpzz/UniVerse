@@ -2,20 +2,26 @@ package com.clerami.universe.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.clerami.universe.data.remote.response.LoginResponse
+import com.google.gson.Gson
 
 class SessionManager(context: Context) {
 
     private var prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
+
     companion object {
         const val PREFS_NAME = "user_session"
         const val KEY_USER_ID = "user_id"
+        private const val KEY_LOGIN_RESULT = "login_response"
         const val KEY_USER_TOKEN = "user_token"
         const val KEY_USER_EMAIL = "user_email"
         const val KEY_IS_LOGGED_IN = "is_logged_in"
         const val KEY_USER_NAME = "user_name"
     }
-
+    private fun getPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
     fun saveSession(token: String, email: String, username:String) {
         val editor = prefs.edit()
         editor.putString(KEY_USER_TOKEN, token)
@@ -33,6 +39,7 @@ class SessionManager(context: Context) {
         editor.putBoolean(KEY_IS_LOGGED_IN, true)
         editor.apply()
     }
+
 
     fun getUserToken(): String? {
         return prefs.getString(KEY_USER_TOKEN, null)

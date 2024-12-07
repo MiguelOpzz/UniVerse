@@ -1,5 +1,6 @@
 package com.clerami.universe.data.remote.response
 
+import java.sql.Time
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -30,14 +31,8 @@ data class LoginResponse(
 data class CreateTopicRequest(
     val title: String,
     val description: String,
-    val createdBy: String,
     val tags: List<String>,
     val attachmentUrls: List<String>,
-    val postCount: Int,
-    val likeCount: Int,
-    val createdAt: String,
-    val updatedAt: String,
-
     )
 
 data class CreateTopicResponse(
@@ -61,9 +56,10 @@ data class Topic(
     val tags: List<String>,
     val isNSFW: Boolean,
     val postCount: Int,
-    val createdAt: Map<String, Any>,
-    val updatedAt: Map<String, Any>
+    val createdAt: Timestamp,
+    val updatedAt:  Timestamp
 )
+
 
 data class Timestamp(
     val _seconds: Long,

@@ -63,9 +63,7 @@ class AddNewActivity : AppCompatActivity() {
                 Toast.makeText(this, "Title and description cannot be empty.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             val token = sessionManager.getUserToken()
-            val createdBy = sessionManager.getUserName() ?: "Unknown User"
 
             if (token.isNullOrEmpty()) {
                 Toast.makeText(this, "Authentication token is missing. Please log in again.", Toast.LENGTH_SHORT).show()
@@ -79,13 +77,9 @@ class AddNewActivity : AppCompatActivity() {
             val request = CreateTopicRequest(
                 title = title,
                 description = description,
-                createdBy = createdBy,
                 tags = if (tags.isEmpty()) listOf("general") else tags,
                 attachmentUrls = listOf(),
-                postCount = 0,
-                likeCount = 0,
-                createdAt = formattedDate,
-                updatedAt = formattedDate
+
             )
 
             Log.d("AddNewActivity", "Request Payload: ${Gson().toJson(request)}")

@@ -1,5 +1,6 @@
 package com.clerami.universe.ui.addnewdicussion
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.clerami.universe.data.remote.response.CreateTopicRequest
 import com.clerami.universe.data.remote.response.CreateTopicResponse
 import com.clerami.universe.data.remote.retrofit.ApiService
+import com.clerami.universe.utils.SessionManager
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
@@ -69,4 +71,5 @@ class AddNewViewModel : ViewModel() {
             "Failed to parse server error."
         }
     }
+
 }

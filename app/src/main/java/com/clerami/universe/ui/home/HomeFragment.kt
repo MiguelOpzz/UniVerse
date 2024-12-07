@@ -132,7 +132,7 @@ class HomeFragment : Fragment() {
                         if (comments != null && comments.isNotEmpty()) {
                             val likesCount = comments.sumOf { it.upvotes }
                             commentsCountTextView.text =
-                                context.getString(R.string.replies, comments.size)
+                                context.getString(R.string.error_loading_replies)
 
 
                             commentsCountTextView.visibility = if (comments.isNotEmpty()) {
