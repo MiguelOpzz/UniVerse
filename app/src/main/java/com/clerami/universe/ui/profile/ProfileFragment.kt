@@ -38,6 +38,11 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.UserProfile.setOnClickListener{
+            val intent = Intent(requireContext(), ProfileSettingsActivity::class.java)
+            startActivity(intent)
+        }
+
         // Handle saved posts
         val savedPosts = getSavedPosts()
         if (savedPosts.isEmpty()) {
