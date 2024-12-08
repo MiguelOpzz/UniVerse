@@ -2,9 +2,11 @@ package com.clerami.universe.ui.register
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
@@ -60,7 +62,8 @@ class RegisterActivity : AppCompatActivity() {
         setUpClickableSpan()
 
 
-
+        addEmailTextWatcher()
+        addPasswordTextWatcher()
         // Handle Register Button Click
         binding.register.setOnClickListener {
             handleRegister()
@@ -181,5 +184,48 @@ class RegisterActivity : AppCompatActivity() {
         binding.alreadyHaveAccount.movementMethod = LinkMovementMethod.getInstance()
     }
 
+    private fun addEmailTextWatcher() {
+        binding.email.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
 
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val email = charSequence.toString()
+
+                if (email.isEmpty()) {
+                    binding.email.error = "Email cannot be empty"
+                } else if (!isValidEmail(email)) {
+                    binding.email.error = "Invalid email format"
+                } else {
+                    binding.email.error = null
+                }
+            }
+
+            override fun afterTextChanged(editable: Editable?) {}
+        })
+    }
+
+    private fun addPasswordTextWatcher() {
+        binding.password.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val password = charSequence.toString()
+
+                if (password.isEmpty()) {
+                    binding.password.error = "Password cant be empty"
+                } else if (password.length <= 8) {
+                    binding.password.error = "Password needs to be at least 8 character"
+                } else {
+                    binding.email.error = null
+                }
+            }
+
+            override fun afterTextChanged(editable: Editable?) {}
+        })
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+        return email.matches(emailPattern.toRegex())
+    }
 }

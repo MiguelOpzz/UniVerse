@@ -194,4 +194,6 @@ class LoginActivity : AppCompatActivity() {
                 view.visibility = View.GONE
             }
     }
+
+
 }
