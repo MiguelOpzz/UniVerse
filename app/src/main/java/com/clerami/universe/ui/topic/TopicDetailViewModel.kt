@@ -68,6 +68,7 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
                 if (response.isSuccessful) {
                     // If the comment is posted successfully, fetch the updated comments
                     getComments(topicId)
+
                 } else {
                     // Handle failure (e.g., show a toast)
                     Log.e("TopicDetailViewModel", "Error posting comment")

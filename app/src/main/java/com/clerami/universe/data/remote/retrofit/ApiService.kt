@@ -44,13 +44,13 @@ interface ApiService {
     suspend fun createTopic(
         @Header("Authorization") token: String,
         @Body request: CreateTopicRequest
-    ): Response<CreateTopicResponse>
+    ):Call<CreateTopicResponse>
 
     @POST("api/topics")
-    suspend fun createTopics(
+    fun createTopics(
         @Header("Authorization") token: String,
         @Body request: CreateTopicsRequest
-    ): Response<CreateTopicsResponse>
+    ): Call<CreateTopicsResponse>
 
 
     @GET("api/topics")

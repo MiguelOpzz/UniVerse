@@ -120,7 +120,7 @@ class LoginActivity : AppCompatActivity() {
                     val loginResponse = resource.data
                     if (loginResponse != null) {
                         sessionManager.saveSession(loginResponse.token,usernameOrEmail,loginResponse.username)
-                        Log.d("Token","Token Saved")
+                        Log.d("Token","Token ${loginResponse.token}")
                     }
 
                     val intent = Intent(this, MainActivity::class.java)

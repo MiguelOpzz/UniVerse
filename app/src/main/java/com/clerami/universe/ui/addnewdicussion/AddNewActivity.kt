@@ -1,5 +1,6 @@
 package com.clerami.universe.ui.addnewdicussion
 
+import AddNewViewModelFactory
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -9,8 +10,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.clerami.universe.data.remote.response.CreateTopicRequest
-import com.clerami.universe.data.remote.response.CreateTopicResponse
 import com.clerami.universe.data.remote.response.CreateTopicsRequest
 import com.clerami.universe.data.remote.response.CreateTopicsResponse
 import com.clerami.universe.data.remote.retrofit.ApiConfig
@@ -21,14 +20,15 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+
 class AddNewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddNewBinding
-    private val addNewViewModel: AddNewViewModel by viewModels()
+    private val addNewViewModel: AddNewViewModel by viewModels { AddNewViewModelFactory(application) }
     private lateinit var sessionManager: SessionManager
 
     private var imageCount = 0
-    private val attachmentUrls = mutableListOf<String>() // Store URLs for uploaded images
+    private val attachmentUrls = mutableListOf<String>()
     private val maxImages = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,14 +79,14 @@ class AddNewActivity : AppCompatActivity() {
             val request = CreateTopicsRequest(
                 title = title,
                 description = description,
-
+                // Include additional fields if necessary
             )
 
             Log.d("AddNewActivity", "Request Payload: ${Gson().toJson(request)}")
-            Log.d("AuthorizationHeader", "Bearer $token")
+            Log.d("Authorization", "Bearer $token")
 
-            val apiService = ApiConfig.getApiService(this)
-            addNewViewModel.createTopics(apiService, token, request)
+            // Call the ViewModel to make the API request
+            addNewViewModel.createTopics(token, request)
         }
     }
 
@@ -98,6 +98,10 @@ class AddNewActivity : AppCompatActivity() {
         addNewViewModel.errorMessage.observe(this) { error ->
             Log.e("AddNewActivity", "Error: $error")
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        }
+
+        addNewViewModel.isLoading.observe(this) { isLoading ->
+            // Handle loading state if necessary
         }
     }
 
@@ -131,3 +135,4 @@ class AddNewActivity : AppCompatActivity() {
         private const val IMAGE_PICK_CODE = 1000
     }
 }
+
