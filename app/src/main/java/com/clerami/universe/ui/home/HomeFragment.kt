@@ -3,15 +3,20 @@ package com.clerami.universe.ui.home
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.clerami.universe.R
@@ -65,8 +70,8 @@ class HomeFragment : Fragment() {
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // Trigger search after typing
-                handler.removeCallbacks(debounceRunnable) // Remove any pending actions
-                handler.postDelayed(debounceRunnable, 500) // Wait for 500ms before triggering
+                handler.removeCallbacks(debounceRunnable)
+                handler.postDelayed(debounceRunnable, 500)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -81,6 +86,40 @@ class HomeFragment : Fragment() {
         binding.btnAddDiscussion.setOnClickListener {
             val intent = Intent(requireContext(), AddNewActivity::class.java)
             startActivity(intent)
+        }
+
+        fun Int.dpToPx(context: Context): Int {
+            return (this * context.resources.displayMetrics.density).toInt()
+        }
+        fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+
+
+        homeViewModel.tags.observe(viewLifecycleOwner) { tags ->
+            binding.topicContainer.removeAllViews()
+            val inflater = LayoutInflater.from(requireContext())
+
+            tags.forEach { tag ->
+                val tagView = TextView(requireContext()).apply {
+                    text = tag
+                    setPadding(32, 8, 32, 8)
+                    background = ContextCompat.getDrawable(requireContext(), R.drawable.topic_background)
+                    textSize = 14f
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                    minimumWidth = (100 * resources.displayMetrics.density).toInt()
+                    gravity = Gravity.CENTER
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        marginEnd = 8
+                    }
+
+                    setOnClickListener {
+                        homeViewModel.filterTopicsByTag(tag)
+                    }
+                }
+                binding.topicContainer.addView(tagView)
+            }
         }
 
         return binding.root
@@ -114,6 +153,7 @@ class HomeFragment : Fragment() {
 
         return topicBinding.root
     }
+
 
     private fun fetchCommentsForTopic(
         context: Context,

@@ -80,41 +80,10 @@
                 android:paddingTop="10dp">
 
                 <LinearLayout
+                    android:id="@+id/topicContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/topic1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/topic1"
-                        android:background="@color/blue_one"
-                        android:textStyle="bold"
-                        android:textSize="12sp"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginEnd="8dp" />
-
-                    <Button
-                        android:id="@+id/topic2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/topic2"
-                        android:background="@color/blue_one"
-                        android:textStyle="bold"
-                        android:textSize="12sp"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginEnd="8dp" />
-
-                    <Button
-                        android:id="@+id/topic3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/topic3"
-                        android:background="@color/blue_one"
-                        android:textStyle="bold"
-                        android:textSize="12sp"
-                        android:textColor="#FFFFFF" />
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -126,7 +95,19 @@
                 android:orientation="vertical"
                 android:padding="10dp">
 
-                <!-- Dynamic content will be added here -->
+                <Button
+                    android:id="@+id/btnClearFilter"
+                    android:layout_width="wrap_content"
+                    android:text="@string/clear_filter"
+                    android:background="@color/blue_one"
+                    android:layout_marginTop="8dp"
+                    android:layout_gravity="end"
+                    android:visibility="gone"
+                    android:layout_height="40dp"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="8dp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
