@@ -10,6 +10,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.clerami.universe.data.remote.response.CreateTopicRequest
+import com.clerami.universe.data.remote.response.CreateTopicResponse
 import com.clerami.universe.data.remote.response.CreateTopicsRequest
 import com.clerami.universe.data.remote.response.CreateTopicsResponse
 import com.clerami.universe.data.remote.retrofit.ApiConfig
@@ -76,9 +78,11 @@ class AddNewActivity : AppCompatActivity() {
             // Format date to ISO 8601
             val formattedDate = Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT)
 
-            val request = CreateTopicsRequest(
+            val request = CreateTopicRequest(
                 title = title,
                 description = description,
+                tags = tags,
+                attachmentUrls = attachmentUrls
                 // Include additional fields if necessary
             )
 
@@ -86,8 +90,9 @@ class AddNewActivity : AppCompatActivity() {
             Log.d("Authorization", "Bearer $token")
 
             // Call the ViewModel to make the API request
-            addNewViewModel.createTopics(token, request)
+            addNewViewModel.createTopic(token, request)
         }
+
     }
 
     private fun observeViewModel() {
@@ -105,7 +110,7 @@ class AddNewActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleSuccess(response: CreateTopicsResponse) {
+    private fun handleSuccess(response: CreateTopicResponse) {
         Toast.makeText(this, "New discussion created: ${response.message}", Toast.LENGTH_SHORT).show()
         finish()
     }

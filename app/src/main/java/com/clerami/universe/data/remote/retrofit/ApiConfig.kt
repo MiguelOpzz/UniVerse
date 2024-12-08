@@ -22,8 +22,6 @@ object ApiConfig {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-
-
         // Create a custom Gson instance with the TimestampDeserializer
         val gson = GsonBuilder()
             .registerTypeAdapter(Timestamp::class.java, TimestampDeserializer())  // Register the TimestampDeserializer
@@ -32,7 +30,6 @@ object ApiConfig {
         // Build the OkHttpClient with interceptors
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
