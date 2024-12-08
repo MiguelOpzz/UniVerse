@@ -18,12 +18,10 @@ import java.util.concurrent.TimeUnit
 object ApiConfig {
 
     fun getApiService(context: Context): ApiService {
-        // Create a logging interceptor
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-        // Create an interceptor for the Authorization header
         val tokenInterceptor = Interceptor { chain ->
             val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
             val token = sharedPreferences.getString("auth_token", "") ?: ""
@@ -35,12 +33,10 @@ object ApiConfig {
             chain.proceed(request)
         }
 
-        // Create a custom Gson instance with the TimestampDeserializer
         val gson = GsonBuilder()
-            .registerTypeAdapter(Timestamp::class.java, TimestampDeserializer())  // Register the TimestampDeserializer
+            .registerTypeAdapter(Timestamp::class.java, TimestampDeserializer())
             .create()
 
-        // Build the OkHttpClient with interceptors
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(tokenInterceptor)
@@ -49,11 +45,10 @@ object ApiConfig {
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
-        // Build the Retrofit instance using the custom Gson
         val retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create(gson))  // Use the custom Gson instance
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
         return retrofit.create(ApiService::class.java)

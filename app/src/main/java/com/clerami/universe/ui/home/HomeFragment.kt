@@ -176,7 +176,7 @@ class HomeFragment : Fragment() {
 
 
                             commentsCountTextView.visibility = if (comments.isNotEmpty()) {
-                                View.VISIBLE
+                                View.GONE
                             } else {
                                 View.GONE
                             }

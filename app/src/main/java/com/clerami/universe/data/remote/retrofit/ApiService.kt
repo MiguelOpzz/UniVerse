@@ -21,10 +21,8 @@ import retrofit2.http.Header
 
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Part
 import retrofit2.http.Path
-
-
+import retrofit2.http.Query
 
 
 interface ApiService {
@@ -74,11 +72,13 @@ interface ApiService {
     @GET("api/topics/{topicId}/comments")
     fun getComments(@Path("topicId") topicId: String): Call<List<Comment>>
 
-    @POST("topics/{topicId}/comments")
+    @POST("comments")
     fun postComment(
-        @Path("topicId") topicId: String,
+        @Header("Authorization") token: String,
+        @Query("topicId") topicId: String,
         @Body commentText: String
     ): Call<Comment>
+
 
     @POST("api/topics/{topicId}/comments/{commentId}/upvote")
     fun postUpvote(
