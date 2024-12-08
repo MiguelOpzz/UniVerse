@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.clerami.universe.data.remote.response.CreateTopicRequest
 import com.clerami.universe.data.remote.response.CreateTopicResponse
+import com.clerami.universe.data.remote.response.CreateTopicsRequest
+import com.clerami.universe.data.remote.response.CreateTopicsResponse
 import com.clerami.universe.data.remote.retrofit.ApiService
 import com.clerami.universe.utils.SessionManager
 import kotlinx.coroutines.launch
@@ -18,8 +20,8 @@ import java.io.IOException
 
 class AddNewViewModel : ViewModel() {
 
-    private val _responseLiveData = MutableLiveData<CreateTopicResponse>()
-    val responseLiveData: LiveData<CreateTopicResponse> get() = _responseLiveData
+    private val _responseLiveData = MutableLiveData<CreateTopicsResponse>()
+    val responseLiveData: LiveData<CreateTopicsResponse> get() = _responseLiveData
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -27,11 +29,11 @@ class AddNewViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    fun createTopic(apiService: ApiService, token: String, request: CreateTopicRequest) {
+    fun createTopics(apiService: ApiService, token: String, request: CreateTopicsRequest) {
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {
-                val response = apiService.createTopic("Bearer $token", request)
+                val response = apiService.createTopics("Bearer $token", request)
                 handleResponse(response)
             } catch (e: IOException) {
                 Log.e("AddNewViewModel", "Network Error: ${e.localizedMessage}")
@@ -45,7 +47,7 @@ class AddNewViewModel : ViewModel() {
         }
     }
 
-    private fun handleResponse(response: Response<CreateTopicResponse>) {
+    private fun handleResponse(response: Response<CreateTopicsResponse>) {
         if (response.isSuccessful) {
             response.body()?.let {
                 _responseLiveData.postValue(it)

@@ -41,6 +41,25 @@ data class CreateTopicResponse(
 
 )
 
+data class CreateTopicsRequest(
+    val title: String,
+    val description: String,
+)
+
+data class CreateTopicsResponse(
+    val message: String,
+    val topic : Topics
+    )
+
+data class Topics(
+    val topicId: String,
+    val title: String,
+    val description: String?,
+    val createdBy: String,
+    val createdAt: Timestamp,
+    val likes :Int
+)
+
 data class UpdateTopicRequest(
     val title: String,
     val tags: List<String>,

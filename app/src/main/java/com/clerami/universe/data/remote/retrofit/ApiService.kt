@@ -4,6 +4,8 @@ import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.data.remote.response.CommentVoteRequest
 import com.clerami.universe.data.remote.response.CreateTopicRequest
 import com.clerami.universe.data.remote.response.CreateTopicResponse
+import com.clerami.universe.data.remote.response.CreateTopicsRequest
+import com.clerami.universe.data.remote.response.CreateTopicsResponse
 import com.clerami.universe.data.remote.response.GuestResponse
 import com.clerami.universe.data.remote.response.LoginRequest
 import com.clerami.universe.data.remote.response.LoginResponse
@@ -44,6 +46,11 @@ interface ApiService {
         @Body request: CreateTopicRequest
     ): Response<CreateTopicResponse>
 
+    @POST("api/topics")
+    suspend fun createTopics(
+        @Header("Authorization") token: String,
+        @Body request: CreateTopicsRequest
+    ): Response<CreateTopicsResponse>
 
 
     @GET("api/topics")
