@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.data.remote.response.Topic
+import com.clerami.universe.utils.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -63,21 +64,21 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun createComment(topicId: String, replyText: String) {
-        apiService.postComment(topicId, replyText).enqueue(object : Callback<Comment> {
+        val token = SessionManager(getApplication()).getUserToken() ?: return
+        val authorizationHeader = "Bearer $token"
+
+        apiService.postComment(authorizationHeader, topicId, replyText).enqueue(object : Callback<Comment> {
             override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
                 if (response.isSuccessful) {
-                    // If the comment is posted successfully, fetch the updated comments
                     getComments(topicId)
 
                 } else {
-                    // Handle failure (e.g., show a toast)
-                    Log.e("TopicDetailViewModel", "Error posting comment")
+                    _errorMessage.value = "Failed to post comment: ${response.message()}"
                 }
             }
 
             override fun onFailure(call: Call<Comment>, t: Throwable) {
-                // Handle network failure
-                Log.e("TopicDetailViewModel", "Network error: ${t.message}")
+                _errorMessage.value = "Network error: ${t.message}"
             }
         })
     }
