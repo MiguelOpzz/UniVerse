@@ -1,0 +1,7 @@
+runtime: python39  # Or python38 based on your environment
+entrypoint: flask run --host=0.0.0.0 --port=$PORT
+
+
+instance_class: F2  # Choose an instance type; F1 is the smallest
+env_variables:
+  FLASK_APP: main.py 

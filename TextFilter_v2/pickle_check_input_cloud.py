@@ -1,10 +1,14 @@
 import requests
 import pickle
 import re
+import os
+
+# Ensure the path is relative to the current script
+
 
 class TextModerator:
     def __init__(self, 
-                 offensive_words_url='https://storage.googleapis.com/universe-storage-bucket/ml/offensive_words.txt'):
+                 offensive_words_url='https://storage.googleapis.com/universe-storage-bucket/ml/textfilter/offensive_words.txt'):
         self.offensive_words_url = offensive_words_url
         self.offensive_words = set()
         self.load_offensive_words()
@@ -50,7 +54,7 @@ class TextModerator:
 
 def main():
     # Load the pickle file
-    model_path = r'C:/Users/MiguelW/OneDrive/Desktop/api-UniVerse-comment-topic/TextFilter_v2/model_v3.pkl'
+    model_path = os.path.join(os.path.dirname(__file__), 'model_v3.pkl')
     with open(model_path, 'rb') as file:
         loaded_model = pickle.load(file)
     

@@ -2,11 +2,12 @@ from flask import Flask, request, jsonify
 import pickle
 from pickle_check_input_cloud import TextModerator  # Assuming your class is in text_moderator.py
 import numpy as np
+import os
 
 app = Flask(__name__)
 
 # Load the model once when the server starts
-model_path = 'C:/Users/MiguelW/OneDrive/Desktop/api-UniVerse-comment-topic/TextFilter_v2/model_v3.pkl'
+model_path = os.path.join(os.path.dirname(__file__), 'model_v3.pkl')
 with open(model_path, 'rb') as file:
     loaded_model = pickle.load(file)
 
@@ -25,4 +26,4 @@ def check_text_route():
     return jsonify(clean_result)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))

@@ -8,12 +8,11 @@ const generateToken = (user) => {
   return jwt.sign(
     { userId: user.id, username: user.username },
     process.env.JWT_SECRET,  // Use the secret from .env
-    { expiresIn: '1h' }
   );
 };
 
 const signUpHandler = (db, admin) => async (req, res) => {
-  const { username, email, password, confirmPassword } = req.body;
+  const { username, email, password } = req.body;
 
   if (!username || !email || !password ) {
     return res.status(400).json({ message: 'All fields are required.' });
@@ -33,16 +32,15 @@ const signUpHandler = (db, admin) => async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      topicCount: 0,
+      commentCount: 0,
       createdAt: admin.firestore.Timestamp.now(),
     };
 
     const docRef = await db.collection('users').add(newUser);
-    const token = generateToken({ id: docRef.id, username });
 
     res.status(201).json({
-      message: 'User registered successfully!',
-      userId: docRef.id,
-      token,  // Send the token back to the client
+      message: 'User registered successfully!'
     });
 
   } catch (error) {
@@ -125,6 +123,7 @@ const loginHandler = (db) => async (req, res) => {
     const token = generateToken({ id: userDoc.id, username: user.username });
     res.status(200).json({
       message: `Welcome back, ${user.username}!`,
+      username: user.username,
       token,
     });
   } catch (error) {
