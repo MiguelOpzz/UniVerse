@@ -1,8 +1,10 @@
 package com.clerami.universe.ui.home
 
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -43,13 +45,24 @@ class HomeFragment : Fragment() {
         homeViewModel.filterTopics(query)
     }
 
+    // Declare the BroadcastReceiver
+    private val refreshReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            // Trigger topics refresh when the broadcast is received
+            homeViewModel.fetchTopics(requireContext())
+        }
+    }
+
+    // Boolean flag to track if receiver is registered
+    private var isReceiverRegistered = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        // Fetch topics
+        // Fetch topics initially
         homeViewModel.fetchTopics(requireContext())
 
         // Observe topics LiveData
@@ -73,14 +86,8 @@ class HomeFragment : Fragment() {
                 handler.removeCallbacks(debounceRunnable)
                 handler.postDelayed(debounceRunnable, 500)
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Not needed for filtering
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Not needed for filtering, but required to override
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
         binding.btnAddDiscussion.setOnClickListener {
@@ -88,41 +95,30 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
-        fun Int.dpToPx(context: Context): Int {
-            return (this * context.resources.displayMetrics.density).toInt()
-        }
-        fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
-
-
-        homeViewModel.tags.observe(viewLifecycleOwner) { tags ->
-            binding.topicContainer.removeAllViews()
-            val inflater = LayoutInflater.from(requireContext())
-
-            tags.forEach { tag ->
-                val tagView = TextView(requireContext()).apply {
-                    text = tag
-                    setPadding(32, 8, 32, 8)
-                    background = ContextCompat.getDrawable(requireContext(), R.drawable.topic_background)
-                    textSize = 14f
-                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                    minimumWidth = (100 * resources.displayMetrics.density).toInt()
-                    gravity = Gravity.CENTER
-                    layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    ).apply {
-                        marginEnd = 8
-                    }
-
-                    setOnClickListener {
-                        homeViewModel.filterTopicsByTag(tag)
-                    }
-                }
-                binding.topicContainer.addView(tagView)
-            }
+        // Register the BroadcastReceiver with the RECEIVER_NOT_EXPORTED flag, if not already registered
+        if (!isReceiverRegistered) {
+            val intentFilter = IntentFilter("com.clerami.universe.ACTION_REFRESH_TOPICS")
+            ContextCompat.registerReceiver(requireContext(), refreshReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED)
+            isReceiverRegistered = true
         }
 
         return binding.root
+    }
+
+    // Manually trigger the data fetch when the fragment is resumed
+    override fun onResume() {
+        super.onResume()
+        // Ensure data is fetched immediately when returning to this fragment
+        homeViewModel.fetchTopics(requireContext())
+    }
+
+    // Unregister the receiver safely in onStop
+    override fun onStop() {
+        super.onStop()
+        if (isReceiverRegistered) {
+            requireContext().unregisterReceiver(refreshReceiver)
+            isReceiverRegistered = false
+        }
     }
 
     private fun createDiscussionView(topic: Topic, inflater: LayoutInflater): View {
@@ -154,7 +150,6 @@ class HomeFragment : Fragment() {
         return topicBinding.root
     }
 
-
     private fun fetchCommentsForTopic(
         context: Context,
         topicId: String,
@@ -173,8 +168,6 @@ class HomeFragment : Fragment() {
                             val likesCount = comments.sumOf { it.upvotes }
                             commentsCountTextView.text =
                                 context.getString(R.string.error_loading_replies)
-
-
                             commentsCountTextView.visibility = if (comments.isNotEmpty()) {
                                 View.GONE
                             } else {
@@ -191,11 +184,8 @@ class HomeFragment : Fragment() {
                             }
                         } else {
                             commentsCountTextView.text = context.getString(R.string.no_replies_yet)
-
                             commentsCountTextView.visibility = View.GONE
-
                             likesCountTextView.text = context.getString(R.string.no_likes_yet)
-
                             likesCountTextView.visibility = View.GONE
                         }
 

@@ -70,6 +70,7 @@ class AddNewActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            binding.loading.visibility = View.VISIBLE
 
             val request = CreateTopicRequest(
                 title = title,
@@ -90,20 +91,42 @@ class AddNewActivity : AppCompatActivity() {
             handleSuccess(response)
         }
 
-        addNewViewModel.errorMessage.observe(this) { error ->
-            Log.e("AddNewActivity", "Error: $error")
-            Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        addNewViewModel.errorMessage.observe(this) { errorResponse ->
+            handleError(errorResponse) // Now, it's a CreateTopicResponse
         }
 
         addNewViewModel.isLoading.observe(this) { isLoading ->
             // Handle loading state if necessary
+            if (isLoading) {
+                binding.loading.visibility = View.VISIBLE // Show progress bar
+            } else {
+                binding.loading.visibility = View.GONE // Hide progress bar when done
+            }
         }
     }
 
+
     private fun handleSuccess(response: CreateTopicResponse) {
         Toast.makeText(this, "New discussion created: ${response.message}", Toast.LENGTH_SHORT).show()
+        binding.loading.visibility = View.GONE // Hide the progress bar after success
+        val intent = Intent("com.clerami.universe.ACTION_REFRESH_TOPICS")
+        sendBroadcast(intent)
         finish()
     }
+
+
+    private fun handleError(errorResponse: CreateTopicResponse) {
+        // Display the error message from the server (from the response object)
+        val errorMessage = errorResponse.message ?: "Unknown error"
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+
+        // Optionally, you can log the reason or status if you need more details
+        Log.e("AddNewActivity", "Error status: ${errorResponse.status}, Reason: ${errorResponse.message}")
+
+        // Hide the progress bar
+        binding.loading.visibility = View.GONE
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
