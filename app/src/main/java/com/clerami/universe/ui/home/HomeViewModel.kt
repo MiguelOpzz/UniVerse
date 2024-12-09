@@ -59,6 +59,22 @@ class HomeViewModel : ViewModel() {
         _topics.value = filteredTopics
     }
 
+    fun fetchTopicById(context: Context, topicId: String) {
+        ApiConfig.getApiService(context).getTopicById(topicId).enqueue(object : Callback<Topic> {
+            override fun onResponse(call: Call<Topic>, response: Response<Topic>) {
+                if (response.isSuccessful) {
+                    _topics.value = listOf(response.body() ?: return)  // Display the single topic
+                } else {
+                    Log.e("HomeViewModel", "Error fetching topic by ID: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Topic>, t: Throwable) {
+                Log.e("HomeViewModel", "Failed to fetch topic by ID: ${t.message}")
+            }
+        })
+    }
+
 
     fun clearFilters() {
         _topics.value = allTopics

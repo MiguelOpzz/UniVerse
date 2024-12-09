@@ -38,6 +38,7 @@ data class CreateTopicRequest(
 data class CreateTopicResponse(
     val status: String,
     val message: String,
+    val reason: String,
 
 )
 

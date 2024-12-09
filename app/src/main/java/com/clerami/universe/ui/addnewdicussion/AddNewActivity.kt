@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.clerami.universe.data.remote.response.CreateTopicRequest
 import com.clerami.universe.data.remote.response.CreateTopicResponse
@@ -116,17 +117,26 @@ class AddNewActivity : AppCompatActivity() {
 
 
     private fun handleError(errorResponse: CreateTopicResponse) {
-        // Display the error message from the server (from the response object)
+        // Extract the error message from the response or fallback to a generic message
         val errorMessage = errorResponse.message ?: "Unknown error"
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        val errorReason = errorResponse.reason ?: "No reason provided"
 
-        // Optionally, you can log the reason or status if you need more details
-        Log.e("AddNewActivity", "Error status: ${errorResponse.status}, Reason: ${errorResponse.message}")
+        // Log the error details (for debugging purposes)
+        Log.e("AddNewActivity", "Error status: ${errorResponse.status}, Reason: $errorReason")
+
+        // Create and show an AlertDialog with the error message and reason
+        AlertDialog.Builder(this)
+            .setTitle("Error")
+            .setMessage("Message: $errorMessage\nReason: $errorReason")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog on click
+            }
+            .setCancelable(false) // Prevent closing the dialog by tapping outside
+            .show()
 
         // Hide the progress bar
         binding.loading.visibility = View.GONE
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

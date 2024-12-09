@@ -21,6 +21,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
@@ -61,6 +62,7 @@ class HomeFragment : Fragment() {
 
         // Fetch topics
         homeViewModel.fetchTopics(requireContext())
+
 
         // Observe topics LiveData
         homeViewModel.topics.observe(viewLifecycleOwner) { topics ->

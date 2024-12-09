@@ -9,6 +9,8 @@ import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.data.remote.response.DeleteResponse
 import com.clerami.universe.data.remote.response.Topic
+import com.clerami.universe.data.remote.response.UpdateResponse
+import com.clerami.universe.data.remote.response.UpdateTopicRequest
 import com.clerami.universe.utils.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,9 +27,18 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
+    private val _updateResponse = MutableLiveData<Boolean>()
+    val updateResponse: LiveData<Boolean> get() = _updateResponse
 
-    private val _deleteResponse = MutableLiveData<Boolean>()  // New LiveData for delete response
+    private val _deleteResponse = MutableLiveData<Boolean>()
     val deleteResponse: LiveData<Boolean> get() = _deleteResponse
+
+    private val _tags = MutableLiveData<List<String>>()
+    val tags: LiveData<List<String>> get() = _tags
+
+    private val _attachmentsUrls = MutableLiveData<List<String>>()
+    val attachmentsUrls: LiveData<List<String>> get() = _tags
+
 
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("TopicPreferences", Context.MODE_PRIVATE)
@@ -35,17 +46,18 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
     private val apiService = ApiConfig.getApiService(application)
 
     fun getTopicDetails(topicId: String) {
-        ApiConfig.getApiService(getApplication()).getTopicById(topicId).enqueue(object : Callback<Topic> {
+        apiService.getTopicById(topicId).enqueue(object : Callback<Topic> {
             override fun onResponse(call: Call<Topic>, response: Response<Topic>) {
                 if (response.isSuccessful) {
                     _topicDetails.value = response.body()
+                    _tags.value = response.body()?.tags ?: emptyList()
+                    _attachmentsUrls.value = response.body()?.tags?: emptyList()
                 } else {
                     _errorMessage.value = "Failed to fetch topic details."
                 }
             }
 
             override fun onFailure(call: Call<Topic>, t: Throwable) {
-                Log.d("Topic", "Failed to Fetch Topic")
                 _errorMessage.value = "Network error: ${t.message}"
             }
         })
@@ -127,4 +139,5 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
             }
         })
     }
+
 }

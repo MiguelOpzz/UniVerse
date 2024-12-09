@@ -49,14 +49,18 @@ class AddNewViewModel(application: Application) : ViewModel() {
                     val errorResponse = response.errorBody()?.string()
                     if (!errorResponse.isNullOrEmpty()) {
                         try {
+
                             val serverError = Gson().fromJson(errorResponse, CreateTopicResponse::class.java)
-                            _errorMessage.value = serverError // Set the entire response as the error
+
+
+                            _errorMessage.value = serverError
                         } catch (e: Exception) {
-                            // Handle JSON parsing error if the error response is malformed
-                            _errorMessage.value = CreateTopicResponse("fail", "Unexpected error occurred.")
+
+                            _errorMessage.value = CreateTopicResponse("fail", "Unexpected error occurred.", "Unknown reason")
                         }
                     } else {
-                        _errorMessage.value = CreateTopicResponse("fail", "Error: ${response.message()}")
+
+                        _errorMessage.value = CreateTopicResponse("fail", "Error: ${response.message()}", "No reason provided")
                     }
                 }
                 isRequestInProgress = false
@@ -64,12 +68,14 @@ class AddNewViewModel(application: Application) : ViewModel() {
             }
 
             override fun onFailure(call: Call<CreateTopicResponse>, t: Throwable) {
-                _errorMessage.value = CreateTopicResponse("fail", "Network error: ${t.message}")
+
+                _errorMessage.value = CreateTopicResponse("fail", "Network error: ${t.message}", "Network failure")
                 isRequestInProgress = false
                 _isLoading.value = false
             }
         })
     }
+
 }
 
 

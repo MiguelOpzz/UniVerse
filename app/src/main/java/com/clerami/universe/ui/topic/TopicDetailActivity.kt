@@ -1,9 +1,13 @@
 package com.clerami.universe.ui.topic
 
 import TopicDetailViewModel
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.LinearLayout
@@ -14,11 +18,14 @@ import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.databinding.ActivityTopicDetailBinding
+import com.clerami.universe.ui.editTopic.EditTopicActivity
 
 import com.clerami.universe.utils.SessionManager
 
@@ -31,6 +38,8 @@ class TopicDetailActivity : AppCompatActivity() {
     private var isLiked = false
     private val savedTopics = mutableListOf<String>()
     private lateinit var sessionManager: SessionManager
+    private lateinit var refreshReceiver: BroadcastReceiver
+    private var isReceiverRegistered = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +49,25 @@ class TopicDetailActivity : AppCompatActivity() {
 
         sessionManager = SessionManager(this)
 
+
+
+
+
+
         val topicId = intent.getStringExtra("topicId") ?: return
         val title = intent.getStringExtra("title") ?: ""
         val description = intent.getStringExtra("description") ?: ""
-        val tags = intent.getStringArrayListExtra("tags")
+
+        refreshReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                // Trigger the data refresh when the broadcast is received
+                // Assuming you have a method to fetch topic details in your ViewModel
+                viewModel.getTopicDetails(topicId)
+            }
+        }
+        val filter = IntentFilter("com.clerami.universe.ACTION_REFRESH_TOPIC")
+        ContextCompat.registerReceiver(this, refreshReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+
 
         viewModel.getTopicDetails(topicId)
         viewModel.getComments(topicId)
@@ -51,8 +75,15 @@ class TopicDetailActivity : AppCompatActivity() {
         viewModel.topicDetails.observe(this, Observer { topic ->
             binding.postTitle.text = topic.title
             binding.postDescription.text = topic.description
-            populateTags(tags, topic.tags)
+            populateTags(topic.tags)
+            val attachmentUrls = topic.attachmentUrls as? List<String> ?: emptyList()
 
+            Glide.with(this)
+                .load(topic.attachmentUrls.firstOrNull())
+                .into(binding.postMedia)
+            binding.threeDots.setOnClickListener {
+                showPopupMenu(it, topicId, topic.title, description, topic.tags, attachmentUrls)
+            }
             checkDescriptionLines()
         })
 
@@ -148,13 +179,10 @@ class TopicDetailActivity : AppCompatActivity() {
             }
         }
 
-        // Handle the threeDots ImageView click
-        binding.threeDots.setOnClickListener {
-            showPopupMenu(it, topicId)
-        }
-
-
     }
+
+
+
 
     private fun updateFavoriteIcon() {
         if (isFavorite) {
@@ -184,10 +212,32 @@ class TopicDetailActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val topicId = intent.getStringExtra("topicId") ?: return
+        viewModel.getTopicDetails(topicId)  // Refresh the topic data
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Unregister the receiver when the Activity is stopped
+        if (isReceiverRegistered) {
+            unregisterReceiver(refreshReceiver)
+            isReceiverRegistered = false
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Ensure receiver is unregistered when the activity is destroyed to avoid memory leaks
+        if (isReceiverRegistered) {
+            unregisterReceiver(refreshReceiver)
+            isReceiverRegistered = false
+        }
+    }
 
 
-
-    private fun showPopupMenu(view: View, topicId: String) {
+    private fun showPopupMenu(view: View, topicId: String,title:String,description:String,tags: List<String>?,attachmentUrls:List<String>) {
         // Create a PopupMenu
         val popupMenu = PopupMenu(this, view)
         val menu = popupMenu.menu
@@ -205,7 +255,23 @@ class TopicDetailActivity : AppCompatActivity() {
                 }
                 R.id.menu_edit -> {
                     // Handle edit logic here (e.g., open edit screen)
-                    openEditTopicScreen(topicId)
+                    val intent = Intent(this, EditTopicActivity::class.java)
+                    intent.putExtra("topicId", topicId)
+                    intent.putExtra("title", title)
+                    intent.putExtra("description", description)
+
+                    if (tags != null && tags.isNotEmpty()) {
+                        Log.d("TopicDetailActivity", "Tags being passed: $tags")  // Check tags before passing
+                        intent.putStringArrayListExtra("tags", ArrayList(tags)) // Pass as ArrayList
+                    } else {
+                        Log.d("TopicDetailActivity", "Tags are null or empty")
+                    }
+
+                    // Pass attachmentsUrls as ArrayList if available
+                    if (attachmentUrls != null && attachmentUrls.isNotEmpty()) {
+                        intent.putStringArrayListExtra("attachments", ArrayList(attachmentUrls))
+                    }
+                    startActivity(intent)
                     true
                 }
                 else -> false
@@ -215,6 +281,8 @@ class TopicDetailActivity : AppCompatActivity() {
         // Show the menu
         popupMenu.show()
     }
+
+
 
     // Show confirmation dialog before deletion
     private fun showDeleteConfirmationDialog(topicId: String) {
@@ -232,16 +300,7 @@ class TopicDetailActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun openEditTopicScreen(topicId: String) {
-        // Create an Intent to open the EditTopicActivity
 
-
-        // Pass the topicId to the EditTopicActivity
-        intent.putExtra("TOPIC_ID", topicId)
-
-        // Start the activity
-        startActivity(intent)
-    }
 
     private fun populateReplies(replies: List<Comment>) {
         binding.repliesContainer.removeAllViews()
@@ -259,10 +318,9 @@ class TopicDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun populateTags(tags: List<String>?, topicTags: List<String>) {
+    private fun populateTags(tags: List<String>) {
         binding.tagsContainer.removeAllViews()
-        val combinedTags = tags.orEmpty() + topicTags
-        for (tag in combinedTags) {
+        for (tag in tags) {
             val tagView = TextView(this).apply {
                 text = tag
                 setPadding(8, 4, 8, 4)
@@ -279,6 +337,7 @@ class TopicDetailActivity : AppCompatActivity() {
             binding.tagsContainer.addView(tagView)
         }
     }
+
 
     private fun addToSavedTopics(topicId: String) {
         if (!savedTopics.contains(topicId)) {
