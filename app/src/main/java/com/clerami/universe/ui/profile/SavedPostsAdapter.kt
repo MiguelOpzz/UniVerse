@@ -22,7 +22,7 @@ class SavedPostsAdapter(private val posts: List<String>) : RecyclerView.Adapter<
 
     inner class PostViewHolder(private val binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(post: String) {
-            binding.userName.text = post
+            binding.savedTitle.text = post
         }
     }
 }

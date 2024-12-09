@@ -31,9 +31,13 @@ cronetEmbedded = "119.6045.31"
 preference = "1.2.1"
 adsAdservices = "1.1.0-beta11"
 retrofit2KotlinCoroutinesAdapter = "0.9.2"
+roomCommon = "2.6.1"
+roomCompiler = "2.5.1"
+roomKtx = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 com-github-bumptech-glide-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
@@ -64,6 +68,8 @@ cronet-embedded = { group = "org.chromium.net", name = "cronet-embedded", versio
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 androidx-ads-adservices = { group = "androidx.privacysandbox.ads", name = "ads-adservices", version.ref = "adsAdservices" }
 retrofit2-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "retrofit2KotlinCoroutinesAdapter" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

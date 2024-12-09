@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
+import com.clerami.universe.data.remote.response.DeleteResponse
 import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.utils.SessionManager
 import retrofit2.Call
@@ -23,6 +24,10 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
+
+
+    private val _deleteResponse = MutableLiveData<Boolean>()  // New LiveData for delete response
+    val deleteResponse: LiveData<Boolean> get() = _deleteResponse
 
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("TopicPreferences", Context.MODE_PRIVATE)
@@ -102,5 +107,24 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
         val editor = sharedPreferences.edit()
         editor.putBoolean("isLiked_$topicId", isLiked)
         editor.apply()
+    }
+
+    fun deleteTopic(topicId: String) {
+        val token = SessionManager(getApplication()).getUserToken() ?: return
+        val authorizationHeader = "Bearer $token"
+
+        apiService.deleteTopic(authorizationHeader,topicId).enqueue(object : Callback<DeleteResponse> {
+            override fun onResponse(call: Call<DeleteResponse>, response: Response<DeleteResponse>) {
+                if (response.isSuccessful) {
+                    _deleteResponse.value = true  // Indicate success
+                } else {
+                    _deleteResponse.value = false  // Indicate failure
+                }
+            }
+
+            override fun onFailure(call: Call<DeleteResponse>, t: Throwable) {
+                _deleteResponse.value = false  // Indicate failure due to network error
+            }
+        })
     }
 }

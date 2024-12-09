@@ -64,6 +64,8 @@ dependencies {
     implementation(libs.cronet.embedded)
     implementation(libs.androidx.preference)
     implementation(libs.androidx.ads.adservices)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -78,7 +80,7 @@ dependencies {
     implementation (libs.retrofit2.kotlin.coroutines.adapter)
     implementation (libs.material.v180)
     implementation (libs.google.firebase.firestore)
-
+    annotationProcessor (libs.androidx.room.compiler)
 
 
 }

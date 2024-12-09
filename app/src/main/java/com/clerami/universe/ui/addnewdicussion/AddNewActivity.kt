@@ -80,7 +80,7 @@ class AddNewActivity : AppCompatActivity() {
             )
 
             addNewViewModel.createTopic(token, request)
-            binding.loading.visibility= View.VISIBLE
+
         }
 
     }

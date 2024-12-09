@@ -98,4 +98,5 @@
     <string name="post_count_format">%1$d</string>
     <string name="replies_count_format">%1$d</string>
     <string name="hint_title">Title</string>
+    <string name="delete_topic">Delete Topic</string>
 </resources>

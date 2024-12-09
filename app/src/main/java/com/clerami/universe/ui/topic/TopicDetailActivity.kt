@@ -3,12 +3,15 @@ package com.clerami.universe.ui.topic
 import TopicDetailViewModel
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.view.inputmethod.InputMethodManager
+import android.widget.PopupMenu
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -62,6 +65,17 @@ class TopicDetailActivity : AppCompatActivity() {
 
         binding.postTitle.text = title
         binding.postDescription.text = description
+
+        viewModel.deleteResponse.observe(this, Observer { success ->
+            if (success) {
+                // Handle success
+                Toast.makeText(this, "Topic deleted successfully", Toast.LENGTH_SHORT).show()
+                finish()  // Close the activity or navigate back
+            } else {
+                // Handle failure (e.g., show error message)
+                Toast.makeText(this, "Failed to delete topic", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         binding.reply.setOnClickListener {
             binding.replyLayout.visibility = View.VISIBLE
@@ -130,6 +144,13 @@ class TopicDetailActivity : AppCompatActivity() {
                 showToast("Please write a reply.")
             }
         }
+
+        // Handle the threeDots ImageView click
+        binding.threeDots.setOnClickListener {
+            showPopupMenu(it, topicId)
+        }
+
+
     }
 
     private fun updateFavoriteIcon() {
@@ -158,6 +179,54 @@ class TopicDetailActivity : AppCompatActivity() {
                 binding.readMore.visibility = View.VISIBLE
             }
         }
+    }
+
+
+
+
+    private fun showPopupMenu(view: View, topicId: String) {
+        // Create a PopupMenu
+        val popupMenu = PopupMenu(this, view)
+        val menu = popupMenu.menu
+
+        // Add menu items (Delete and Edit)
+        menu.add(Menu.NONE, R.id.menu_delete, Menu.NONE, "Delete Topic")
+        menu.add(Menu.NONE, R.id.menu_edit, Menu.NONE, "Edit Topic")
+
+        // Set item click listeners
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_delete -> {
+                    showDeleteConfirmationDialog(topicId)
+                    true
+                }
+                R.id.menu_edit -> {
+                    // Handle edit logic here (e.g., open edit screen)
+                    Toast.makeText(this, "Edit topic functionality", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        // Show the menu
+        popupMenu.show()
+    }
+
+    // Show confirmation dialog before deletion
+    private fun showDeleteConfirmationDialog(topicId: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Topic")
+            .setMessage("Are you sure you want to delete this topic?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                viewModel.deleteTopic(topicId)  // Call delete method in ViewModel
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()  // Close the dialog
+            }
+            .create()
+            .show()
     }
 
     private fun populateReplies(replies: List<Comment>) {
