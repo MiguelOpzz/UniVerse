@@ -10,6 +10,7 @@ import com.clerami.universe.data.remote.response.LoginRequest
 import com.clerami.universe.data.remote.response.LoginResponse
 import com.clerami.universe.data.remote.response.RegisterRequest
 import com.clerami.universe.data.remote.response.Topic
+import com.clerami.universe.data.remote.response.UpdateResponse
 import com.clerami.universe.data.remote.response.UpdateTopicRequest
 import retrofit2.Call
 import retrofit2.Response
@@ -57,9 +58,10 @@ interface ApiService {
 
     @PUT("api/topics/{topicId}")
     fun updateTopic(
+        @Header("Authorization") token: String,
         @Path("topicId") topicId: String,
         @Body request: UpdateTopicRequest
-    ): Call<Topic>
+    ): Call<UpdateResponse>
 
     @DELETE("api/topics/{topicId}")
     fun deleteTopic(

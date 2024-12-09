@@ -45,10 +45,16 @@ data class DeleteResponse(
     val message: String
 )
 
+data class UpdateResponse(
+    val message: String
+)
+
 data class UpdateTopicRequest(
     val title: String,
+    val description: String,
     val tags: List<String>,
-    val body: String
+    val attachmentUrls: List<String>
+
 )
 
 data class Topic(

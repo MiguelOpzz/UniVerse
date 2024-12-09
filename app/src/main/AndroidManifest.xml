@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Universe"
         tools:targetApi="31">
         <activity
+            android:name=".ui.editTopic.EditTopicActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.profilesettings.ProfileSettingsActivity"
             android:exported="false" />
         <activity
@@ -72,8 +75,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- RecoveryActivity -->
         <activity
             android:name=".ui.passwordrecovery.RecoveryActivity"
-            android:exported="false" />
-        <!-- TopicDetailActivity (newly added) -->
+            android:exported="false" /> <!-- TopicDetailActivity (newly added) -->
         <activity
             android:name=".ui.topic.TopicDetailActivity"
             android:exported="true" />

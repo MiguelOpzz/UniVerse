@@ -2,6 +2,7 @@ package com.clerami.universe.ui.topic
 
 import TopicDetailViewModel
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -18,6 +19,7 @@ import androidx.lifecycle.Observer
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.databinding.ActivityTopicDetailBinding
+
 import com.clerami.universe.utils.SessionManager
 
 class TopicDetailActivity : AppCompatActivity() {
@@ -29,6 +31,7 @@ class TopicDetailActivity : AppCompatActivity() {
     private var isLiked = false
     private val savedTopics = mutableListOf<String>()
     private lateinit var sessionManager: SessionManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -202,7 +205,7 @@ class TopicDetailActivity : AppCompatActivity() {
                 }
                 R.id.menu_edit -> {
                     // Handle edit logic here (e.g., open edit screen)
-                    Toast.makeText(this, "Edit topic functionality", Toast.LENGTH_SHORT).show()
+                    openEditTopicScreen(topicId)
                     true
                 }
                 else -> false
@@ -227,6 +230,17 @@ class TopicDetailActivity : AppCompatActivity() {
             }
             .create()
             .show()
+    }
+
+    private fun openEditTopicScreen(topicId: String) {
+        // Create an Intent to open the EditTopicActivity
+
+
+        // Pass the topicId to the EditTopicActivity
+        intent.putExtra("TOPIC_ID", topicId)
+
+        // Start the activity
+        startActivity(intent)
     }
 
     private fun populateReplies(replies: List<Comment>) {
