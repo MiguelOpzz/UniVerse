@@ -1,4 +1,4 @@
-package com.clerami.universe.ui.profile
+package com.clerami.universe.ui.settings
 
 import android.content.Intent
 import android.os.Bundle

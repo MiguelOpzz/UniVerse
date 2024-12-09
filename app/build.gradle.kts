@@ -72,10 +72,14 @@ dependencies {
     implementation (libs.logging.interceptor)
     implementation (libs.play.services.auth)
     implementation (platform(libs.firebase.bom))
+
     implementation (libs.circleimageview)
     implementation (libs.com.github.bumptech.glide.glide)
     annotationProcessor (libs.compiler)
     implementation (libs.retrofit2.kotlin.coroutines.adapter)
+
+    implementation (libs.google.firebase.firestore)
+
 
 
 }

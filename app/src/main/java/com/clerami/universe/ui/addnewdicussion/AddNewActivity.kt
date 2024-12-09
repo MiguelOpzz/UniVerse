@@ -12,15 +12,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.clerami.universe.data.remote.response.CreateTopicRequest
 import com.clerami.universe.data.remote.response.CreateTopicResponse
-import com.clerami.universe.data.remote.response.CreateTopicsRequest
-import com.clerami.universe.data.remote.response.CreateTopicsResponse
-import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.databinding.ActivityAddNewBinding
 import com.clerami.universe.utils.SessionManager
 import com.google.gson.Gson
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 
 class AddNewActivity : AppCompatActivity() {
@@ -75,8 +69,6 @@ class AddNewActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Format date to ISO 8601
-            val formattedDate = Instant.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT)
 
             val request = CreateTopicRequest(
                 title = title,

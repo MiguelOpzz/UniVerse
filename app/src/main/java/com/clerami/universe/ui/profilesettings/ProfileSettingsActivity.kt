@@ -1,4 +1,4 @@
-package com.clerami.universe.ui.profile
+package com.clerami.universe.ui.profilesettings
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.clerami.universe.R
-import com.clerami.universe.databinding.ActivityLoginBinding
 import com.clerami.universe.databinding.ActivityProfileSettingsBinding
 import com.clerami.universe.ui.login.LoginActivity
 import com.clerami.universe.utils.SessionManager

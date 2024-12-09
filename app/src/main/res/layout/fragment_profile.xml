@@ -73,8 +73,8 @@
             <!-- Settings Icon -->
             <ImageView
                 android:id="@+id/to_settings"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/baseline_settings_24"
                 app:tint="?colorOnSecondary"
                 android:contentDescription="@string/settings_icon"
@@ -97,6 +97,50 @@
                 android:layout_marginTop="24dp"
                 android:orientation="horizontal">
 
+                <!--Votes Number  -->
+                <TextView
+                    android:id="@+id/votesNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:layout_constraintStart_toStartOf="@id/postsVotes"
+                    app:layout_constraintEnd_toEndOf="@id/postsVotes"
+                    app:layout_constraintBottom_toTopOf="@id/postsVotes"
+                    android:layout_marginBottom="4dp"
+
+
+                    android:textSize="18sp"
+                    android:fontFamily="@font/montserrat_bold"/>
+
+
+                <!--Replies Number  -->
+                <TextView
+                    android:id="@+id/repliesNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:layout_constraintStart_toStartOf="@id/postsReplies"
+                    app:layout_constraintEnd_toEndOf="@id/postsReplies"
+                    app:layout_constraintBottom_toTopOf="@id/postsReplies"
+                    android:layout_marginBottom="4dp"
+
+
+                    android:textSize="18sp"
+                    android:fontFamily="@font/montserrat_bold"/>
+
+                <!--Posts Number -->
+                <TextView
+                    android:id="@+id/postsNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:layout_constraintStart_toStartOf="@id/postsCount"
+                    app:layout_constraintEnd_toEndOf="@id/postsCount"
+                    app:layout_constraintBottom_toTopOf="@id/postsCount"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/montserrat_bold"/>
+
                 <!-- Posts Count -->
                 <TextView
                     android:id="@+id/postsCount"
@@ -109,6 +153,7 @@
                     android:layout_marginStart="12dp"
                     android:textSize="14sp"
                     android:fontFamily="@font/montserrat_bold"/>
+
 
                 <!-- Posts Replies -->
                 <TextView

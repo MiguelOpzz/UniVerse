@@ -16,10 +16,10 @@
         android:theme="@style/Theme.Universe"
         tools:targetApi="31">
         <activity
-            android:name=".ui.profile.ProfileSettingsActivity"
+            android:name=".ui.profilesettings.ProfileSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.profile.SettingsActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" /> <!-- Firebase Metadata -->
         <meta-data

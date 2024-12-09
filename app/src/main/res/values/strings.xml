@@ -51,7 +51,6 @@
     <string name="language_settings_title">Change Language</string>
     <string name="language_settings_summary">Open system language settings</string>
     <string name="sign_out">Sign Out</string>
-
     <string name="loading_replies">Loading replies…</string>
     <string name="loading_likes">Loading likes…</string>
     <string name="likes">Likes: %d</string>
@@ -73,13 +72,13 @@
     <string name="tag">TAG</string>
     <string name="tag2">TAG</string>
     <string name="title">TITLE</string>
-    <string name="bawah_title">Lorem Ipsum is simply dummy text...</string>
+    <string name="bawah_title">Lorem Ipsum is simply dummy text…</string>
     <string name="read_more">Read More</string>
     <string name="reply">Reply</string>
     <string name="Button_ai_answer">AI Answer</string>
     <string name="bagan_replies">Replies</string>
     <string name="Pengguna">USER</string>
-    <string name="comment_pengguna">Lorem Ipsum is simply dummy text...</string>
+    <string name="comment_pengguna">Lorem Ipsum is simply dummy text…</string>
     <string name="jumlah_likes">10</string>
     <string name="reply_comment">Reply</string>
     <string name="recent_posts">Recent Posts</string>
@@ -89,9 +88,13 @@
     <string name="likes_count">112 likes</string>
     <string name="replies_count">47 replies</string>
     <string name="detailTitle">View Post</string>
-    <string name="write_comments">Write your comments here...</string>
+    <string name="write_comments">Write your comments here…</string>
     <string name="ai_answer">AI Answer</string>
     <string name="repliestitle">Replies</string>
     <string name="dashboard">Dashboard</string>
     <string name="clear_filter">Clear Filter</string>
+    <string name="_0">0</string>
+    <string name="loading">Loading…</string>
+    <string name="post_count_format">%1$d</string>
+    <string name="replies_count_format">%1$d</string>
 </resources>

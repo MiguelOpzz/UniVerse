@@ -2,8 +2,7 @@
 agp = "8.7.2"
 circleimageview = "3.1.0"
 compiler = "4.15.1"
-firebaseBom = "32.2.0"
-firebaseFirestoreKtx = "24.7.0"
+firebaseBom = "33.7.0"
 glide = "4.15.1"
 glideVersion = "4.15.1"
 kotlin = "1.9.24"
@@ -38,9 +37,8 @@ circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circ
 com-github-bumptech-glide-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
-
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+google-firebase-firestore = { module = "com.google.firebase:firebase-firestore", version = "24.7.0" }
 glide = { module = "com.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -65,10 +63,7 @@ androidx-preference = { group = "androidx.preference", name = "preference", vers
 androidx-ads-adservices = { group = "androidx.privacysandbox.ads", name = "ads-adservices", version.ref = "adsAdservices" }
 retrofit2-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "retrofit2KotlinCoroutinesAdapter" }
 
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.0" }
-
-
