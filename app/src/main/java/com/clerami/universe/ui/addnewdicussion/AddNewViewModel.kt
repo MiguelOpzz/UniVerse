@@ -25,8 +25,17 @@ class AddNewViewModel(application: Application) : ViewModel() {
 
     private val apiService = ApiConfig.getApiService(application)
 
+    // Flag to prevent multiple requests
+    private var isRequestInProgress = false
+
     // Function to create topics
     fun createTopic(token: String, request: CreateTopicRequest) {
+        if (isRequestInProgress) {
+            // If a request is already in progress, don't send another one
+            return
+        }
+
+        isRequestInProgress = true // Set flag to true indicating request in progress
         _isLoading.value = true // Set loading to true
 
         val call = apiService.createTopic("Bearer $token", request)
@@ -43,17 +52,15 @@ class AddNewViewModel(application: Application) : ViewModel() {
                 } else {
                     _errorMessage.value = "Error: ${response.message()}"
                 }
+                isRequestInProgress = false // Reset the flag
                 _isLoading.value = false
             }
 
             override fun onFailure(call: Call<CreateTopicResponse>, t: Throwable) {
                 _errorMessage.value = "Network error: ${t.message}"
+                isRequestInProgress = false // Reset the flag
                 _isLoading.value = false
             }
         })
     }
 }
-
-
-
-

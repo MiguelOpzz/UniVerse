@@ -96,4 +96,5 @@
     <string name="loading">Memuat…</string>
     <string name="post_count_format">%1$d</string>
     <string name="replies_count_format">%1$d</string>
+    <string name="hint_title">Judul</string>
 </resources>

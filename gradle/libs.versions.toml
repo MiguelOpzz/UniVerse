@@ -5,6 +5,7 @@ compiler = "4.15.1"
 firebaseBom = "33.7.0"
 glide = "4.15.1"
 glideVersion = "4.15.1"
+googleMaterial = "1.8.0"
 kotlin = "1.9.24"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -53,6 +54,7 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+material-v180 = { module = "com.google.android.material:material", version.ref = "googleMaterial" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }

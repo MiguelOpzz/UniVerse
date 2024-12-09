@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FFFFFF"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.addnewdicussion.AddNewActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,28 +43,45 @@
                 android:id="@+id/titleInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
+                android:hint="@string/hint_title"
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:background="#FFF"
                 android:padding="10dp"
-                android:layout_marginTop="20dp" />
+                android:inputType="textMultiLine"
+                android:layout_marginTop="20dp"
+                android:scrollbars="vertical"
+                android:overScrollMode="always"
+                android:maxLines="5"
+                android:lines="3"
+                android:gravity="top|start" />
 
 
 
-            <!-- Content Input -->
+
+
+          <!-- Content Input -->
             <EditText
                 android:id="@+id/descriptionInput"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:hint="Description"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="14sp"
                 android:background="#FFF"
                 android:padding="10dp"
+                android:hint="Description"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:layout_marginTop="20dp" />
+                android:scrollbars="vertical"
+                android:overScrollMode="always"
+                android:maxHeight="200dp"
+                android:lines="5"
+                android:minHeight="100dp"/>
+
+
+
+
 
             <!-- Image Upload Icon -->
             <ImageView
@@ -117,10 +130,10 @@
             <EditText
                 android:id="@+id/tagsInput"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:hint="Tags (comma-separated)"
                 android:fontFamily="@font/montserrat_regular"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:background="#FFF"
                 android:padding="10dp"
                 android:layout_marginTop="10dp" />
@@ -140,6 +153,14 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="20dp" />
 
+            <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:indicatorColor="?attr/colorPrimary"
+                app:trackColor="?attr/colorOnPrimary"
+                android:visibility="invisible"
+                />
         </LinearLayout>
-    </ScrollView>
+
 </RelativeLayout>
