@@ -99,4 +99,11 @@
     <string name="replies_count_format">%1$d</string>
     <string name="hint_title">Title</string>
     <string name="delete_topic">Delete Topic</string>
+    <string name="edit_profile_pic">edit picture</string>
+    <string name="edit_university">University</string>
+    <string name="save_changes">save changes</string>
+    <string name="save_username">update success</string>
+    <string name="profile_settings_header">Profile</string>
+    <string name="profile_settings_summary">Change your profile</string>
+    <string name="profile_settings_title">Edit Profile</string>
 </resources>
