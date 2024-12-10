@@ -98,4 +98,11 @@
     <string name="replies_count_format">%1$d</string>
     <string name="hint_title">Judul</string>
     <string name="delete_topic">Hapus Topik</string>
+    <string name="edit_profile_pic">Pilih Foto Pengguna</string>
+    <string name="edit_university">Universitas</string>
+    <string name="save_changes">Simpan</string>
+    <string name="save_username">Berhasil</string>
+    <string name="profile_settings_header">Profil Pengguna</string>
+    <string name="profile_settings_summary">Ganti Profil</string>
+    <string name="profile_settings_title">Ubah Profil</string>
 </resources>
