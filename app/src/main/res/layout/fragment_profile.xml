@@ -169,29 +169,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corner_background">
 
-                <!-- Recent Posts Title -->
-                <TextView
-                    android:id="@+id/recentPostsTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/recent_posts"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textSize="18sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:textColor="?attr/colorOnSecondary"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="8dp"/>
-
-                <!-- RecyclerView for Recent Posts -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recentPostsRecyclerView"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/recentPostsTitle"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="8dp"/>
 
                 <!-- Saved Posts Title -->
                 <TextView
@@ -201,7 +178,7 @@
                     android:text="@string/saved_posts"
                     android:fontFamily="@font/montserrat_bold"
                     android:textSize="18sp"
-                    app:layout_constraintTop_toBottomOf="@id/recentPostsRecyclerView"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:textColor="?attr/colorOnSecondary"
                     android:layout_marginStart="12dp"
