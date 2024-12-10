@@ -2,12 +2,15 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.clerami.universe.data.local.FavoritePost
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
+import com.clerami.universe.data.remote.response.CommentRequest
+import com.clerami.universe.data.remote.response.CommentResponse
 import com.clerami.universe.data.remote.response.DeleteResponse
 import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.data.remote.response.UpdateResponse
@@ -18,6 +21,7 @@ import gen._base._base_java__assetres.srcjar.R.id.title
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class TopicDetailViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -40,6 +44,8 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     private val _tags = MutableLiveData<List<String>>()
     val tags: LiveData<List<String>> get() = _tags
+    private val _newCommentLiveData = MutableLiveData<Comment>()
+    val newCommentLiveData: LiveData<Comment> get() = _newCommentLiveData
 
     private val _attachmentsUrls = MutableLiveData<List<String>>()
     val attachmentsUrls: LiveData<List<String>> get() = _tags
@@ -85,25 +91,31 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
         })
     }
 
-    fun createComment(topicId: String, replyText: String) {
-        val token = SessionManager(getApplication()).getUserToken() ?: return
-        val authorizationHeader = "Bearer $token"
+    fun createComment(token: String, topicId: String, commentText: CommentRequest) {
+        val call = apiService.postComment("Bearer $token", topicId, commentText)
 
-        apiService.postComment(authorizationHeader, topicId, replyText).enqueue(object : Callback<Comment> {
-            override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
+        call.enqueue(object : Callback<CommentResponse> {
+            override fun onResponse(call: Call<CommentResponse>, response: Response<CommentResponse>) {
                 if (response.isSuccessful) {
-                    getComments(topicId)
-
+                    val commentResponse = response.body()
+                    val newComment = commentResponse?.comment
+                    newComment?.let {
+                        // Notify the Activity that a new comment was added
+                        _newCommentLiveData.postValue(it)
+                    }
                 } else {
-                    _errorMessage.value = "Failed to post comment: ${response.message()}"
+                    // Handle error
+                    println("Error: ${response.errorBody()?.string()}")
                 }
             }
 
-            override fun onFailure(call: Call<Comment>, t: Throwable) {
-                _errorMessage.value = "Network error: ${t.message}"
+            override fun onFailure(call: Call<CommentResponse>, t: Throwable) {
+                // Handle failure
+                println("Request failed: ${t.message}")
             }
         })
     }
+
 
 
     suspend fun isFavorite(topicId: String): Boolean {

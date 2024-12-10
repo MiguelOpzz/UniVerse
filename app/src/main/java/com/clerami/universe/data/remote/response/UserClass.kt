@@ -86,13 +86,24 @@ data class Timestamp(
 
 data class Comment(
     val commentId: String,
-    val userId: String,
+    val username: String,
     val commentText: String,
     val createdAt: Timestamp,
     val updatedAt: Timestamp,
     val upvotes: Int = 0,
     val downvotes: Int = 0,
     val userVotes: Map<String, String> = emptyMap()
+)
+
+data class CommentResponse(
+    val status: String,
+    val message: String,
+    val commentId: String,
+    val comment : Comment
+)
+
+data class CommentRequest(
+    val commentText: String
 )
 
 data class CommentVoteRequest(

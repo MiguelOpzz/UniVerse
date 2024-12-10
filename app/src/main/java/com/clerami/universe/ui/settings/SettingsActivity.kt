@@ -30,6 +30,7 @@ class SettingsActivity : AppCompatActivity() {
             fragment.setLanguageClickListener {
                 val intent = Intent(Settings.ACTION_LOCALE_SETTINGS)
                 startActivity(intent)
+                recreate()
             }
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

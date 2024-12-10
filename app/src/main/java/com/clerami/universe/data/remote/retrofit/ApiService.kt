@@ -1,6 +1,8 @@
 package com.clerami.universe.data.remote.retrofit
 
 import com.clerami.universe.data.remote.response.Comment
+import com.clerami.universe.data.remote.response.CommentRequest
+import com.clerami.universe.data.remote.response.CommentResponse
 import com.clerami.universe.data.remote.response.CommentVoteRequest
 import com.clerami.universe.data.remote.response.CreateTopicRequest
 import com.clerami.universe.data.remote.response.CreateTopicResponse
@@ -71,12 +73,12 @@ interface ApiService {
     @GET("api/topics/{topicId}/comments")
     fun getComments(@Path("topicId") topicId: String): Call<List<Comment>>
 
-    @POST("comments")
+    @POST("api/topics/{topicId}/comments")
     fun postComment(
         @Header("Authorization") token: String,
-        @Query("topicId") topicId: String,
-        @Body commentText: String
-    ): Call<Comment>
+        @Path("topicId") topicId: String,
+        @Body commentText: CommentRequest
+    ): Call<CommentResponse>
 
 
     @POST("api/topics/{topicId}/comments/{commentId}/upvote")

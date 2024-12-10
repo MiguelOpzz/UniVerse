@@ -25,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.response.Comment
+import com.clerami.universe.data.remote.response.CommentRequest
 import com.clerami.universe.databinding.ActivityTopicDetailBinding
 import com.clerami.universe.ui.editTopic.EditTopicActivity
 
@@ -50,7 +51,7 @@ class TopicDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sessionManager = SessionManager(this)
-
+        val token = sessionManager.getUserToken()
         val topicId = intent.getStringExtra("topicId") ?: return
         val title = intent.getStringExtra("title") ?: ""
         val description = intent.getStringExtra("description") ?: ""
@@ -92,6 +93,13 @@ class TopicDetailActivity : AppCompatActivity() {
         }
         isLiked = viewModel.isLiked(topicId)
 
+        viewModel.newCommentLiveData.observe(this, Observer { newComment ->
+            // Ensure null checks and proceed to add new comment
+            newComment?.let {
+                addNewCommentToUI(it)
+            }
+        })
+
         updateLikeIcon()
 
         binding.postTitle.text = title
@@ -113,10 +121,15 @@ class TopicDetailActivity : AppCompatActivity() {
         binding.replyButton.setOnClickListener {
             val replyText = binding.replyInput.text.toString().trim()
 
+            val commentText = CommentRequest(
+                commentText = replyText
+            )
             if (replyText.isNotEmpty()) {
-                viewModel.createComment(topicId, replyText) // Posting the comment
+                if (token != null) {
+                    viewModel.createComment(token,topicId, commentText)
+                } // Posting the comment
                 binding.replyInput.text.clear()
-                showToast("Your reply has been posted.")
+
                 hideKeyboard()
             } else {
                 showToast("Please write a reply.")
@@ -152,23 +165,6 @@ class TopicDetailActivity : AppCompatActivity() {
             viewModel.setLiked(topicId, isLiked)
         }
 
-        binding.replyButton.setOnClickListener {
-            val replyText = binding.replyInput.text.toString().trim()
-
-            if (replyText.isNotEmpty()) {
-                viewModel.createComment(topicId, replyText)
-
-                binding.replyInput.text.clear()
-
-                showToast("Your reply has been posted.")
-
-                hideKeyboard()
-
-                updateRepliesUI(replyText)
-            } else {
-                showToast("Please write a reply.")
-            }
-        }
 
     }
 
@@ -275,6 +271,23 @@ class TopicDetailActivity : AppCompatActivity() {
     }
 
 
+    private fun addNewCommentToUI(newComment: Comment) {
+        // Inflate the layout for the new comment
+        val newCommentView = layoutInflater.inflate(R.layout.item_reply, binding.repliesContainer, false)
+
+        // Find the UI elements in the inflated layout
+        val replyUsername = newCommentView.findViewById<TextView>(R.id.replyUsername)
+        val replyText = newCommentView.findViewById<TextView>(R.id.replyText)
+        val likeCount = newCommentView.findViewById<TextView>(R.id.likeCount)
+
+        // Set the values for the new comment
+        replyUsername.text = newComment.username  // Assuming userId is the username
+        replyText.text = newComment.commentText
+        likeCount.text = newComment.upvotes.toString()
+
+        // Add the new comment view to the container
+        binding.repliesContainer.addView(newCommentView)
+    }
 
     // Show confirmation dialog before deletion
     private fun showDeleteConfirmationDialog(topicId: String) {
@@ -295,18 +308,22 @@ class TopicDetailActivity : AppCompatActivity() {
 
 
     private fun populateReplies(replies: List<Comment>) {
-        binding.repliesContainer.removeAllViews()
-        for (reply in replies) {
-            val replyView = layoutInflater.inflate(R.layout.item_reply, binding.repliesContainer, false)
-            val replyUsername = replyView.findViewById<TextView>(R.id.replyUsername)
-            val replyText = replyView.findViewById<TextView>(R.id.replyText)
-            val likeCount = replyView.findViewById<TextView>(R.id.likeCount)
+        // Ensure this is done on the main thread
+        runOnUiThread {
+            binding.repliesContainer.removeAllViews()
+            for (reply in replies) {
+                val replyView = layoutInflater.inflate(R.layout.item_reply, binding.repliesContainer, false)
+                val replyUsername = replyView.findViewById<TextView>(R.id.replyUsername)
+                val replyText = replyView.findViewById<TextView>(R.id.replyText)
+                val likeCount = replyView.findViewById<TextView>(R.id.likeCount)
 
-            replyUsername.text = reply.userId
-            replyText.text = reply.commentText
-            likeCount.text = reply.upvotes.toString()
+                // You might need to fetch the actual username here if `userId` isn't the username
+                replyUsername.text = reply.username // Assuming this is a user ID, replace with actual username if needed
+                replyText.text = reply.commentText
+                likeCount.text = reply.upvotes.toString()
 
-            binding.repliesContainer.addView(replyView)
+                binding.repliesContainer.addView(replyView)
+            }
         }
     }
 

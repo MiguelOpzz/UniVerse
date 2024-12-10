@@ -41,7 +41,7 @@
     <string name="create_post">create</string>
     <string name="text_create_post">Create Post</string>
     <string name="votes">Votes</string>
-    <string name="asal_universitas">Asal Universitas</string>
+    <string name="asal_universitas">State your College</string>
     <string name="settings_icon">Settings Icon</string>
     <string name="profile_settings">Profile Settings</string>
     <string name="title_activity_settings">SettingsActivity</string>

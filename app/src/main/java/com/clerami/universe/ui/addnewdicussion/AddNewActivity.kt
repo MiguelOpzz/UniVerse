@@ -85,7 +85,7 @@ class AddNewActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            binding.loading.visibility = View.VISIBLE
+
 
             if (uploadedImages == imageCount) {
                 val request = CreateTopicRequest(
@@ -94,6 +94,7 @@ class AddNewActivity : AppCompatActivity() {
                     tags = tags,
                     attachmentUrls = attachmentUrls
                 )
+                binding.loading.visibility = View.VISIBLE
                 addNewViewModel.createTopic(token, request)
             } else {
                 Toast.makeText(this, "Please wait until images are uploaded.", Toast.LENGTH_SHORT)
