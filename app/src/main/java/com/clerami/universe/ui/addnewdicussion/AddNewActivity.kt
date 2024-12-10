@@ -3,6 +3,7 @@ package com.clerami.universe.ui.addnewdicussion
 import AddNewViewModelFactory
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +17,11 @@ import com.clerami.universe.data.remote.response.CreateTopicRequest
 import com.clerami.universe.data.remote.response.CreateTopicResponse
 import com.clerami.universe.databinding.ActivityAddNewBinding
 import com.clerami.universe.utils.SessionManager
-import com.google.gson.Gson
+import com.clerami.universe.utils.compressAndResizeImage
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.io.ByteArrayOutputStream
+import java.util.UUID
 
 
 class AddNewActivity : AppCompatActivity() {
@@ -26,8 +31,11 @@ class AddNewActivity : AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
 
     private var imageCount = 0
+    private var uploadedImages = 0
     private val attachmentUrls = mutableListOf<String>()
-    private val maxImages = 2
+    private val maxImages = 1
+    private val storageRef: StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://myproject-441712.firebasestorage.app")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,32 +65,40 @@ class AddNewActivity : AppCompatActivity() {
         binding.sendButton.setOnClickListener {
             val title = binding.titleInput.text.toString()
             val description = binding.descriptionInput.text.toString()
-            val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }.filter { it.isNotEmpty() }
+            val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }
+                .filter { it.isNotEmpty() }
 
             if (title.isEmpty() || description.isEmpty()) {
-                Toast.makeText(this, "Title and description cannot be empty.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Title and description cannot be empty.", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
             val token = sessionManager.getUserToken()
 
             if (token.isNullOrEmpty()) {
-                Toast.makeText(this, "Authentication token is missing. Please log in again.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Authentication token is missing. Please log in again.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 finish()
                 return@setOnClickListener
             }
 
             binding.loading.visibility = View.VISIBLE
 
-            val request = CreateTopicRequest(
-                title = title,
-                description = description,
-                tags = tags,
-                attachmentUrls = attachmentUrls
-                // Include additional fields if necessary
-            )
-
-            addNewViewModel.createTopic(token, request)
-
+            if (uploadedImages == imageCount) {
+                val request = CreateTopicRequest(
+                    title = title,
+                    description = description,
+                    tags = tags,
+                    attachmentUrls = attachmentUrls
+                )
+                addNewViewModel.createTopic(token, request)
+            } else {
+                Toast.makeText(this, "Please wait until images are uploaded.", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
     }
@@ -154,10 +170,72 @@ class AddNewActivity : AppCompatActivity() {
                         binding.imagePreview2.visibility = ImageView.VISIBLE
                     }
                 }
-                attachmentUrls.add(it.toString())
+
+                // Compress and upload the image
+                compressAndUploadImage(it)
             }
         }
     }
+
+    private fun compressAndUploadImage(uri: Uri) {
+        compressAndResizeImage(uri, contentResolver)?.let { compressedBitmap ->
+            uploadImageToStorage(compressedBitmap) { imageUrl ->
+                imageUrl?.let { url ->
+                    attachmentUrls.add(url)
+                }
+                uploadedImages++
+
+                // Check if all images are uploaded
+                if (uploadedImages == imageCount) {
+                    val title = binding.titleInput.text.toString()
+                    val description = binding.descriptionInput.text.toString()
+                    val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }.filter { it.isNotEmpty() }
+
+                    val token = sessionManager.getUserToken()
+
+                    if (token.isNullOrEmpty()) {
+                        Toast.makeText(this, "Authentication token is missing. Please log in again.", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        binding.loading.visibility = View.VISIBLE
+
+                        val request = CreateTopicRequest(
+                            title = title,
+                            description = description,
+                            tags = tags,
+                            attachmentUrls = attachmentUrls
+                        )
+
+                        addNewViewModel.createTopic(token, request)
+                    }
+                }
+            }
+        } ?: run {
+            Toast.makeText(this, "Error compressing image", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun uploadImageToStorage(bitmap: Bitmap, onComplete: (String?) -> Unit) {
+        val storageRef = FirebaseStorage.getInstance().reference
+        val imageRef = storageRef.child("topics/images/${UUID.randomUUID()}.jpg")
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream)
+        val imageData = byteArrayOutputStream.toByteArray()
+
+        imageRef.putBytes(imageData)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    val imageUrl = uri.toString()
+                    onComplete(imageUrl)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Upload Error", "Error uploading image", exception)
+                onComplete(null)
+            }
+    }
+
 
     companion object {
         private const val IMAGE_PICK_CODE = 1000
