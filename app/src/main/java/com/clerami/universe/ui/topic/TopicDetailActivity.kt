@@ -241,44 +241,48 @@ class TopicDetailActivity : AppCompatActivity() {
         // Create a PopupMenu
         val popupMenu = PopupMenu(this, view)
         val menu = popupMenu.menu
+        val currentUserName = sessionManager.getUserName()
+        viewModel.topicDetails.observe(this, Observer { topic ->
+            val topicCreator = topic.createdBy
 
-        // Add menu items (Delete and Edit)
-        menu.add(Menu.NONE, R.id.menu_delete, Menu.NONE, "Delete Topic")
-        menu.add(Menu.NONE, R.id.menu_edit, Menu.NONE, "Edit Topic")
 
-        // Set item click listeners
-        popupMenu.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menu_delete -> {
-                    showDeleteConfirmationDialog(topicId)
-                    true
-                }
-                R.id.menu_edit -> {
-                    // Handle edit logic here (e.g., open edit screen)
-                    val intent = Intent(this, EditTopicActivity::class.java)
-                    intent.putExtra("topicId", topicId)
-                    intent.putExtra("title", title)
-                    intent.putExtra("description", description)
+            if (currentUserName == topicCreator) {
 
-                    if (tags != null && tags.isNotEmpty()) {
-                        Log.d("TopicDetailActivity", "Tags being passed: $tags")  // Check tags before passing
-                        intent.putStringArrayListExtra("tags", ArrayList(tags)) // Pass as ArrayList
-                    } else {
-                        Log.d("TopicDetailActivity", "Tags are null or empty")
-                    }
-
-                    // Pass attachmentsUrls as ArrayList if available
-                    if (attachmentUrls != null && attachmentUrls.isNotEmpty()) {
-                        intent.putStringArrayListExtra("attachments", ArrayList(attachmentUrls))
-                    }
-                    startActivity(intent)
-                    true
-                }
-                else -> false
+                menu.add(Menu.NONE, R.id.menu_edit, Menu.NONE, "Edit Topic")
             }
-        }
+            menu.add(Menu.NONE, R.id.menu_delete, Menu.NONE, "Delete Topic")
 
-        // Show the menu
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_delete -> {
+                        showDeleteConfirmationDialog(topicId)
+                        true
+                    }
+                    R.id.menu_edit -> {
+                        // Handle edit logic here (e.g., open edit screen)
+                        val intent = Intent(this, EditTopicActivity::class.java)
+                        intent.putExtra("topicId", topicId)
+                        intent.putExtra("title", title)
+                        intent.putExtra("description", description)
+
+                        if (tags != null && tags.isNotEmpty()) {
+                            Log.d("TopicDetailActivity", "Tags being passed: $tags")
+                            intent.putStringArrayListExtra("tags", ArrayList(tags)) // Pass as ArrayList
+                        }
+
+                        if (attachmentUrls != null && attachmentUrls.isNotEmpty()) {
+                            intent.putStringArrayListExtra("attachments", ArrayList(attachmentUrls))
+                        }
+                        startActivity(intent)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        })
+
+
         popupMenu.show()
     }
 
