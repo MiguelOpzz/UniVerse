@@ -36,6 +36,7 @@ class SavedPostsAdapter(private val posts: List<FavoritePost>) : RecyclerView.Ad
     inner class PostViewHolder(val binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(post: FavoritePost) {
             binding.savedTitle.text = post.title
+            binding.savedDescription.text = post.description
         }
     }
 }

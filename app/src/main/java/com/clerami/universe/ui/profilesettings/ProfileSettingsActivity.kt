@@ -25,7 +25,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
 
     private var imageUri: Uri? = null
-    private val storageRef: StorageReference = FirebaseStorage.getInstance().reference
+    private val storageRef: StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://myproject-441712.firebasestorage.app")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

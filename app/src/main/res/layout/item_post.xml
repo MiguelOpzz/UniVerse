@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:layout_height="120dp"
+    android:minHeight="120dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="12dp"
     android:layout_margin="8dp"
@@ -13,19 +15,31 @@
         android:id="@+id/savedTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Post Title"
+        android:text="Title"
         android:textSize="16sp"
         android:textColor="@android:color/black"
         android:fontFamily="@font/montserrat_bold"
-        android:layout_marginBottom="4dp"/>
+        android:maxLines="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        android:ellipsize="end"
+        android:layout_marginTop="12dp"
+        />
 
     <!-- Post Description (below the title) -->
     <TextView
         android:id="@+id/savedDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Post Description"
+        android:text="Description"
         android:textSize="14sp"
+        android:maxLines="2"
         android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/savedTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:ellipsize="end"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/montserrat_regular"/>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
