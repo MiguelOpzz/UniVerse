@@ -81,6 +81,7 @@ dependencies {
     implementation (libs.material.v180)
     implementation (libs.google.firebase.firestore)
     annotationProcessor (libs.androidx.room.compiler)
+    implementation (libs.firebase.storage.ktx)
 
 
 }

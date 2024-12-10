@@ -43,6 +43,7 @@ com-github-bumptech-glide-glide = { module = "com.github.bumptech.glide:glide", 
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-storage-ktx = { module = "com.google.firebase:firebase-storage-ktx" }
 google-firebase-firestore = { module = "com.google.firebase:firebase-firestore", version = "24.7.0" }
 glide = { module = "com.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

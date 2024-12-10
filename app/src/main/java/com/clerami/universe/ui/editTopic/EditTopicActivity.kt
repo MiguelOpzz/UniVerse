@@ -127,17 +127,17 @@ class EditTopicActivity : AppCompatActivity() {
         }
     }
 
-    // Populate the tags field with comma-separated tags
+
     private fun populateTags(tags: List<String>) {
         binding.editTags.setText(tags.joinToString(", "))
     }
 
-    // Show loading indicator (progress bar)
+
     private fun showLoading() {
         binding.loading.visibility = android.view.View.VISIBLE
     }
 
-    // Hide loading indicator (progress bar)
+
     private fun hideLoading() {
         binding.loading.visibility = android.view.View.GONE
     }
