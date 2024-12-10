@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.response.Comment
@@ -28,6 +29,7 @@ import com.clerami.universe.databinding.ActivityTopicDetailBinding
 import com.clerami.universe.ui.editTopic.EditTopicActivity
 
 import com.clerami.universe.utils.SessionManager
+import kotlinx.coroutines.launch
 
 class TopicDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTopicDetailBinding
@@ -49,19 +51,12 @@ class TopicDetailActivity : AppCompatActivity() {
 
         sessionManager = SessionManager(this)
 
-
-
-
-
-
         val topicId = intent.getStringExtra("topicId") ?: return
         val title = intent.getStringExtra("title") ?: ""
         val description = intent.getStringExtra("description") ?: ""
 
         refreshReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                // Trigger the data refresh when the broadcast is received
-                // Assuming you have a method to fetch topic details in your ViewModel
                 viewModel.getTopicDetails(topicId)
             }
         }
@@ -91,10 +86,12 @@ class TopicDetailActivity : AppCompatActivity() {
             populateReplies(comments)
         })
 
-        isFavorite = viewModel.isFavorite(topicId)
+        lifecycleScope.launch {
+            isFavorite = viewModel.isFavorite(topicId)
+            updateFavoriteIcon()
+        }
         isLiked = viewModel.isLiked(topicId)
 
-        updateFavoriteIcon()
         updateLikeIcon()
 
         binding.postTitle.text = title
@@ -102,11 +99,9 @@ class TopicDetailActivity : AppCompatActivity() {
 
         viewModel.deleteResponse.observe(this, Observer { success ->
             if (success) {
-                // Handle success
                 Toast.makeText(this, "Topic deleted successfully", Toast.LENGTH_SHORT).show()
-                finish()  // Close the activity or navigate back
+                finish()
             } else {
-                // Handle failure (e.g., show error message)
                 Toast.makeText(this, "Failed to delete topic", Toast.LENGTH_SHORT).show()
             }
         })
@@ -146,12 +141,8 @@ class TopicDetailActivity : AppCompatActivity() {
         binding.favButton.setOnClickListener {
             isFavorite = !isFavorite
             updateFavoriteIcon()
-            viewModel.setFavorite(topicId, isFavorite)
-
-            if (isFavorite) {
-                addToSavedTopics(topicId)
-            } else {
-                removeFromSavedTopics(topicId)
+            lifecycleScope.launch {
+                viewModel.setFavorite(topicId, isFavorite)
             }
         }
 
@@ -180,9 +171,6 @@ class TopicDetailActivity : AppCompatActivity() {
         }
 
     }
-
-
-
 
     private fun updateFavoriteIcon() {
         if (isFavorite) {

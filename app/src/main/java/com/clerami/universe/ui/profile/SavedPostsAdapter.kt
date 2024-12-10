@@ -3,10 +3,11 @@ package com.clerami.universe.ui.profile
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.clerami.universe.data.local.FavoritePost
 import com.clerami.universe.databinding.ItemPostBinding
 
 
-class SavedPostsAdapter(private val posts: List<String>) : RecyclerView.Adapter<SavedPostsAdapter.PostViewHolder>() {
+class SavedPostsAdapter(private val posts: List<FavoritePost>) : RecyclerView.Adapter<SavedPostsAdapter.PostViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,8 +22,8 @@ class SavedPostsAdapter(private val posts: List<String>) : RecyclerView.Adapter<
     override fun getItemCount(): Int = posts.size
 
     inner class PostViewHolder(private val binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: String) {
-            binding.savedTitle.text = post
+        fun bind(post: FavoritePost) {
+            binding.savedTitle.text = post.title
         }
     }
 }

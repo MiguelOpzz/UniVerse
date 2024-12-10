@@ -5,18 +5,23 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.clerami.universe.data.local.FavoritePost
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.data.remote.response.DeleteResponse
 import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.data.remote.response.UpdateResponse
 import com.clerami.universe.data.remote.response.UpdateTopicRequest
+import com.clerami.universe.data.repository.FavoriteRepository
 import com.clerami.universe.utils.SessionManager
+import gen._base._base_java__assetres.srcjar.R.id.title
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class TopicDetailViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val favoriteRepository = FavoriteRepository(application.applicationContext)
 
     private val _topicDetails = MutableLiveData<Topic>()
     val topicDetails: LiveData<Topic> get() = _topicDetails
@@ -101,14 +106,22 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
     }
 
 
-    fun isFavorite(topicId: String): Boolean {
-        return sharedPreferences.getBoolean("isFavorite_$topicId", false)
+    suspend fun isFavorite(topicId: String): Boolean {
+        return favoriteRepository.getFavoritePostByTopicId(topicId) != null
     }
 
-    fun setFavorite(topicId: String, isFavorite: Boolean) {
-        val editor = sharedPreferences.edit()
-        editor.putBoolean("isFavorite_$topicId", isFavorite)
-        editor.apply()
+    suspend fun setFavorite(topicId: String, isFavorite: Boolean) {
+        val topicDetails = topicDetails.value ?: return
+        val favoritePost = FavoritePost(
+            topicId = topicId,
+            title = topicDetails.title,
+            description = topicDetails.description ?: ""
+        )
+        if (isFavorite) {
+            favoriteRepository.insertFavoritePost(favoritePost)
+        } else {
+            favoriteRepository.deleteFavoritePost(topicId)
+        }
     }
 
     fun isLiked(topicId: String): Boolean {

@@ -1,19 +1,28 @@
 package com.clerami.universe.ui.profile
 
+import TopicDetailViewModel
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.clerami.universe.R
 import com.clerami.universe.ui.settings.SettingsActivity
 import com.clerami.universe.databinding.FragmentProfileBinding
 import com.clerami.universe.ui.profilesettings.ProfileSettingsActivity
+import com.clerami.universe.ui.topic.TopicDetailViewModelFactory
 import com.clerami.universe.utils.SessionManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
@@ -22,6 +31,8 @@ class ProfileFragment : Fragment() {
 
     private lateinit var sessionManager: SessionManager
     private val db = FirebaseFirestore.getInstance()
+
+    private val viewModel: ProfileViewModel by viewModels { ProfileViewModelFactory(requireActivity().application) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,18 +55,22 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
-        binding.UserProfile.setOnClickListener{
+        binding.UserProfile.setOnClickListener {
             val intent = Intent(requireContext(), ProfileSettingsActivity::class.java)
             startActivity(intent)
         }
 
         // Handle saved posts
-        val savedPosts = getSavedPosts()
-        if (savedPosts.isEmpty()) {
-            binding.savedPostsRecyclerView.visibility = View.GONE
-        } else {
-            binding.savedPostsRecyclerView.visibility = View.VISIBLE
-            binding.savedPostsRecyclerView.adapter = SavedPostsAdapter(savedPosts)
+        lifecycleScope.launch {
+            viewModel.favoritePosts.collectLatest { posts ->
+                if (posts.isEmpty()) {
+                    binding.savedPostsRecyclerView.visibility = View.GONE
+                } else {
+                    binding.savedPostsRecyclerView.visibility = View.VISIBLE
+                    binding.savedPostsRecyclerView.adapter = SavedPostsAdapter(posts)
+                    binding.savedPostsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                }
+            }
         }
         return binding.root
     }
@@ -108,7 +123,8 @@ class ProfileFragment : Fragment() {
                         val document = documents.documents.first()
                         val commentCount = document.getLong("commentCount") ?: 0
 
-                        binding.repliesNumber.text = getString(R.string.replies_count_format, commentCount)
+                        binding.repliesNumber.text =
+                            getString(R.string.replies_count_format, commentCount)
                     } else {
 
                         binding.repliesNumber.text = getString(R.string.replies_count_format, 0)
@@ -140,7 +156,8 @@ class ProfileFragment : Fragment() {
                         val document = documents.documents.first()
                         val commentCount = document.getLong("commentCount") ?: 0
 
-                        binding.repliesNumber.text = getString(R.string.replies_count_format, commentCount)
+                        binding.repliesNumber.text =
+                            getString(R.string.replies_count_format, commentCount)
                     } else {
 
                         binding.repliesNumber.text = getString(R.string.replies_count_format, 0)
@@ -157,10 +174,9 @@ class ProfileFragment : Fragment() {
     }
 
 
-
-
     private fun getSavedPosts(): List<String> {
-        val sharedPreferences = requireContext().getSharedPreferences("TopicPreferences", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("TopicPreferences", Context.MODE_PRIVATE)
         return sharedPreferences.all.filter { it.key.startsWith("isFavorite_") && it.value == true }
             .map { it.key.removePrefix("isFavorite_") }
     }
