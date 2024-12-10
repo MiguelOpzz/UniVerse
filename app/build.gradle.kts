@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+    kotlin("kapt")
 }
 
 android {
@@ -20,17 +21,17 @@ android {
 
 
     buildTypes {
-            debug {
-                buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
-            }
-            release {
-                buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
-                isMinifyEnabled = true
-                proguardFiles (
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    ("proguard-rules.pro")
-                )
-            }
+        debug {
+            buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
+        }
+        release {
+            buildConfigField ("String", "BASE_URL", "\"https://backend-dot-myproject-441712.et.r.appspot.com/\"")
+            isMinifyEnabled = true
+            proguardFiles (
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                ("proguard-rules.pro")
+            )
+        }
     }
 
     compileOptions {
@@ -76,11 +77,11 @@ dependencies {
     implementation (platform(libs.firebase.bom))
     implementation (libs.circleimageview)
     implementation (libs.com.github.bumptech.glide.glide)
-    annotationProcessor (libs.compiler)
+    kapt(libs.compiler)
     implementation (libs.retrofit2.kotlin.coroutines.adapter)
     implementation (libs.material.v180)
     implementation (libs.google.firebase.firestore)
-    annotationProcessor (libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
     implementation (libs.firebase.storage.ktx)
 
 

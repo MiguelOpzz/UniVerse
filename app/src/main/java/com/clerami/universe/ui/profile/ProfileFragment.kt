@@ -68,7 +68,8 @@ class ProfileFragment : Fragment() {
                 } else {
                     binding.savedPostsRecyclerView.visibility = View.VISIBLE
                     binding.savedPostsRecyclerView.adapter = SavedPostsAdapter(posts)
-                    binding.savedPostsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    binding.savedPostsRecyclerView.layoutManager =
+                        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 }
             }
         }

@@ -32,7 +32,7 @@ preference = "1.2.1"
 adsAdservices = "1.1.0-beta11"
 retrofit2KotlinCoroutinesAdapter = "0.9.2"
 roomCommon = "2.6.1"
-roomCompiler = "2.5.1"
+roomCompiler = "2.6.1"
 roomKtx = "2.6.1"
 
 [libraries]
