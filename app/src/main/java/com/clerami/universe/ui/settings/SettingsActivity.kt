@@ -20,14 +20,13 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
-            val fragment = SettingsFragment()
             supportFragmentManager
                 .beginTransaction()
-                .replace(binding.settings.id, fragment)
+                .replace(binding.settings.id, SettingsFragment())
                 .commit()
 
             // Pass logic to the fragment after attaching
-            fragment.setLanguageClickListener {
+            SettingsFragment().setLanguageClickListener {
                 val intent = Intent(Settings.ACTION_LOCALE_SETTINGS)
                 startActivity(intent)
                 recreate()

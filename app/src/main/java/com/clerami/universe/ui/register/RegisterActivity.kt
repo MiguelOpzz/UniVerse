@@ -160,29 +160,40 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setUpClickableSpan() {
+        // Get the dynamic text (which will change based on language)
         val text = binding.alreadyHaveAccount.text.toString()
-        val spannableString = SpannableString(text)
-        val loginText = "Login"
+
+        // Retrieve the translated text for "Login" based on current language
+        val loginText = getString(R.string.i_already_have_an_account)  // Assuming you have a string resource for "Login"
         val startIndex = text.indexOf(loginText)
+        if (startIndex == -1) return // If the "Login" text isn't found, don't continue
+
         val endIndex = startIndex + loginText.length
 
+        // Create the clickable span
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
+                // Navigate to the LoginActivity when the "Login" text is clicked
                 val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                 startActivity(intent)
             }
 
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
-                ds.color = resources.getColor(R.color.blue_four, theme)
-                ds.isUnderlineText = true
+                ds.color = resources.getColor(R.color.blue_four, theme) // Set color
+                ds.isUnderlineText = true // Make the text underlined
             }
         }
 
+        // Create a SpannableString and apply the clickable span
+        val spannableString = SpannableString(text)
         spannableString.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        // Set the spannable string to the TextView
         binding.alreadyHaveAccount.text = spannableString
-        binding.alreadyHaveAccount.movementMethod = LinkMovementMethod.getInstance()
+        binding.alreadyHaveAccount.movementMethod = LinkMovementMethod.getInstance() // Allow click events
     }
+
 
     private fun addEmailTextWatcher() {
         binding.email.addTextChangedListener(object : TextWatcher {

@@ -154,12 +154,17 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupSignUpClickableSpan() {
+        // Get the string from resources dynamically, handling both languages
         val text = binding.dontHaveAccount.text.toString()
-        val spannableString = SpannableString(text)
-        val signUpText = "Sign up"
+
+        // The text to search for, depending on the current language
+        val signUpText = getString(R.string.dont_have_account)
         val startIndex = text.indexOf(signUpText)
+        if (startIndex == -1) return // If "Sign up" or its translation isn't found, don't continue
+
         val endIndex = startIndex + signUpText.length
 
+        // Create the clickable span
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
@@ -173,10 +178,15 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        // Apply the span to the text
+        val spannableString = SpannableString(text)
         spannableString.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        // Set the spannable string to the TextView
         binding.dontHaveAccount.text = spannableString
         binding.dontHaveAccount.movementMethod = android.text.method.LinkMovementMethod.getInstance()
     }
+
 
     private fun fadeIn(view: TextView) {
         view.visibility = View.VISIBLE
