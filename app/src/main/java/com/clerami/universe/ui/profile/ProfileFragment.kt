@@ -67,7 +67,8 @@ class ProfileFragment : Fragment() {
                     binding.savedPostsRecyclerView.visibility = View.GONE
                 } else {
                     binding.savedPostsRecyclerView.visibility = View.VISIBLE
-                    binding.savedPostsRecyclerView.adapter = SavedPostsAdapter(posts)
+                    val adapter = SavedPostsAdapter(posts)
+                    binding.savedPostsRecyclerView.adapter = adapter
                     binding.savedPostsRecyclerView.layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 }
