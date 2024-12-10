@@ -62,8 +62,10 @@ class HomeFragment : Fragment() {
 
         homeViewModel.topics.observe(viewLifecycleOwner) { topics ->
             Log.d("HomeFragment", "Observed topics: $topics")
-            binding.dynamicTopicsContainer.removeAllViews()
+
+            // Only update views if there are topics to display
             if (topics.isNotEmpty()) {
+                // This will add new views, and not replace existing ones
                 topics.forEach { topic ->
                     val discussionView = createDiscussionView(topic, inflater)
                     binding.dynamicTopicsContainer.addView(discussionView)
@@ -72,6 +74,20 @@ class HomeFragment : Fragment() {
                 Log.d("HomeFragment", "No topics found to display.")
             }
         }
+
+// Scroll detection logic
+        binding.dynamicTopicsContainer.viewTreeObserver.addOnScrollChangedListener {
+            val container = binding.dynamicTopicsContainer
+            val lastVisibleItem = container.getChildAt(container.childCount - 1)
+
+            if (lastVisibleItem != null && isViewVisible(container, lastVisibleItem)) {
+                // Trigger next fetch when user scrolls to the bottom
+                homeViewModel.fetchTopics(requireContext())
+            }
+        }
+
+        // Check if the view is visible in the container
+
 
         binding.btnAddDiscussion.setOnClickListener {
             val intent = Intent(requireContext(), AddNewActivity::class.java)
@@ -146,7 +162,11 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
+    private fun isViewVisible(container: ViewGroup, view: View): Boolean {
+        val containerHeight = container.height
+        val viewBottom = view.bottom
+        return viewBottom >= containerHeight
+    }
 
     override fun onResume() {
         super.onResume()

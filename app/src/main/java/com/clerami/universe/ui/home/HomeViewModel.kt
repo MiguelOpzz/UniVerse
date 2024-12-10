@@ -16,41 +16,56 @@ class HomeViewModel : ViewModel() {
     private val _topics = MutableLiveData<List<Topic>>()
     val topics: LiveData<List<Topic>> get() = _topics
 
-    private var allTopics: List<Topic> = emptyList()
+    private var allTopics: MutableList<Topic> = mutableListOf()
+    private var currentPage = 1
+    private val pageSize = 10  // Fetch 10 topics per request
 
     private val _tags = MutableLiveData<List<String>>()
     val tags: LiveData<List<String>> get() = _tags
 
-    // Fetch topics from the API
+    // Fetch topics from the API with pagination
     fun fetchTopics(context: Context) {
-        ApiConfig.getApiService(context).getAllTopics().enqueue(object : Callback<List<Topic>> {
-            override fun onResponse(call: Call<List<Topic>>, response: Response<List<Topic>>) {
-                if (response.isSuccessful) {
-                    allTopics = response.body() ?: emptyList()
-                    _topics.value = allTopics
+        ApiConfig.getApiService(context)
+            .getAllTopics(page = currentPage, pageSize = pageSize)
+            .enqueue(object : Callback<List<Topic>> {
+                override fun onResponse(call: Call<List<Topic>>, response: Response<List<Topic>>) {
+                    if (response.isSuccessful) {
+                        val newTopics = response.body() ?: emptyList()
 
-                    // Extract unique tags from the topics
-                    val uniqueTags = allTopics.flatMap { it.tags ?: emptyList() }.distinct()
-                    _tags.value = uniqueTags
-                } else {
-                    Log.e("HomeViewModel", "Error fetching topics: ${response.errorBody()?.string()}")
+                        // Append new topics to the existing list
+                        allTopics.addAll(newTopics)
+                        _topics.value = allTopics
+
+                        // Extract unique tags from the topics
+                        val uniqueTags = allTopics.flatMap { it.tags ?: emptyList() }.distinct()
+                        _tags.value = uniqueTags
+
+                        // Increment the page number for the next fetch
+                        currentPage++
+                    } else {
+                        Log.e("HomeViewModel", "Error fetching topics: ${response.errorBody()?.string()}")
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<List<Topic>>, t: Throwable) {
-                Log.e("HomeViewModel", "Failed to fetch topics: ${t.message}")
-            }
-        })
+                override fun onFailure(call: Call<List<Topic>>, t: Throwable) {
+                    Log.e("HomeViewModel", "Failed to fetch topics: ${t.message}")
+                }
+            })
+    }
+
+    // Reset the pagination and topics
+    fun resetPagination() {
+        allTopics.clear()
+        currentPage = 1
     }
 
     fun filterTopics(query: String) {
         val filteredTopics = allTopics.filter { topic ->
-            topic.title.contains(query) ||
-                    (topic.tags?.any { it.contains(query) } == true)
+            topic.title.contains(query, ignoreCase = true) ||
+                    (topic.tags?.any { it.contains(query, ignoreCase = true) } == true)
         }
         _topics.value = filteredTopics
     }
-
 
     fun filterTopicsByTag(tag: String) {
         val filteredTopics = allTopics.filter { topic ->

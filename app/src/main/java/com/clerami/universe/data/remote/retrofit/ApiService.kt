@@ -50,7 +50,10 @@ interface ApiService {
 
 
     @GET("api/topics")
-    fun getAllTopics(): Call<List<Topic>>
+    fun getAllTopics(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int
+    ): Call<List<Topic>>
 
     @GET("topics")
     fun getTopics(): Call<List<Topic>>

@@ -19,21 +19,36 @@ class DashboardViewModel : ViewModel() {
     private val _filteredTopics = MutableLiveData<List<Topic>>()
     val filteredTopics: LiveData<List<Topic>> get() = _filteredTopics
 
-    fun fetchTopics(context: Context) {
-        ApiConfig.getApiService(context).getAllTopics().enqueue(object : Callback<List<Topic>> {
-            override fun onResponse(call: Call<List<Topic>>, response: Response<List<Topic>>) {
-                if (response.isSuccessful) {
-                    _topics.value = response.body() ?: emptyList()
-                    _filteredTopics.value = _topics.value
-                } else {
-                    Log.e("DashboardViewModel", "Error fetching topics: ${response.errorBody()?.string()}")
-                }
-            }
+    private var allTopics: MutableList<Topic> = mutableListOf()
+    private var currentPage = 1
+    private val pageSize = 10  // Fetch 10 topics per request
 
-            override fun onFailure(call: Call<List<Topic>>, t: Throwable) {
-                Log.e("DashboardViewModel", "Failed to fetch topics: ${t.message}")
-            }
-        })
+
+
+    // Fetch topics from the API with pagination
+    fun fetchTopics(context: Context) {
+        ApiConfig.getApiService(context)
+            .getAllTopics(page = currentPage, pageSize = pageSize)
+            .enqueue(object : Callback<List<Topic>> {
+                override fun onResponse(call: Call<List<Topic>>, response: Response<List<Topic>>) {
+                    if (response.isSuccessful) {
+                        val newTopics = response.body() ?: emptyList()
+
+                        // Append new topics to the existing list
+                        allTopics.addAll(newTopics)
+                        _topics.value = allTopics
+
+                        // Increment the page number for the next fetch
+                        currentPage++
+                    } else {
+                        Log.e("HomeViewModel", "Error fetching topics: ${response.errorBody()?.string()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Topic>>, t: Throwable) {
+                    Log.e("HomeViewModel", "Failed to fetch topics: ${t.message}")
+                }
+            })
     }
 
     fun filterTopics(query: String) {
