@@ -42,17 +42,11 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by viewModels()
 
     private var selectedTag: String? = null
-    private val tagViews = mutableMapOf<String, TextView>()
 
     private val handler = android.os.Handler(Looper.getMainLooper())
-    private val debounceRunnable = Runnable {
-        val query = binding.searchEditText.text.toString().lowercase()
-        homeViewModel.filterTopics(query)
-    }
 
     private val refreshReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // Trigger topics refresh when the broadcast is received
             homeViewModel.fetchTopics(requireContext())
         }
     }
@@ -64,11 +58,8 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        // Fetch topics
         homeViewModel.fetchTopics(requireContext())
 
-
-        // Observe topics LiveData
         homeViewModel.topics.observe(viewLifecycleOwner) { topics ->
             Log.d("HomeFragment", "Observed topics: $topics")
             binding.dynamicTopicsContainer.removeAllViews()
@@ -82,30 +73,10 @@ class HomeFragment : Fragment() {
             }
         }
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                handler.removeCallbacks(debounceRunnable)
-                handler.postDelayed(debounceRunnable, 500)
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Not needed for filtering
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Not needed for filtering, but required to override
-            }
-        })
-
         binding.btnAddDiscussion.setOnClickListener {
             val intent = Intent(requireContext(), AddNewActivity::class.java)
             startActivity(intent)
         }
-
-        fun Int.dpToPx(context: Context): Int {
-            return (this * context.resources.displayMetrics.density).toInt()
-        }
-        fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
 
 
         homeViewModel.tags.observe(viewLifecycleOwner) { tags ->
@@ -116,7 +87,6 @@ class HomeFragment : Fragment() {
                     text = tag
                     setPadding(32, 8, 32, 8)
 
-                    // Set the initial background color
                     background = if (tag == selectedTag) {
                         ContextCompat.getDrawable(requireContext(), R.drawable.selected_topic_bg)
                     } else {
@@ -150,22 +120,16 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
-
                 binding.topicContainer.addView(tagView)
             }
         }
-
-
 
         if (!isReceiverRegistered) {
             val intentFilter = IntentFilter("com.clerami.universe.ACTION_REFRESH_TOPICS")
             ContextCompat.registerReceiver(requireContext(), refreshReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED)
             isReceiverRegistered = true
         }
-
         return binding.root
-
-
     }
 
     private fun updateTagBackgrounds() {

@@ -64,18 +64,6 @@
                     android:src="@drawable/image" />
             </RelativeLayout>
 
-            <!-- Expanded Search EditText -->
-            <EditText
-                android:id="@+id/searchEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:hint="@string/searchEditText"
-                android:padding="8dp"
-                android:background="@color/blue_three"
-                android:textSize="16sp" />
-
             <!-- Trending Topics -->
             <HorizontalScrollView
                 android:layout_width="match_parent"

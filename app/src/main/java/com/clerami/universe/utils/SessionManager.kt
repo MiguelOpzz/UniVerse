@@ -57,6 +57,28 @@ class SessionManager(context: Context) {
         return prefs.getBoolean(KEY_IS_LOGGED_IN, false)
     }
 
+    fun saveUserUniversity(university: String) {
+        prefs.edit().putString("userUniversity", university).apply()
+    }
+
+    fun getUserUniversity(): String? {
+        return prefs.getString("userUniversity", null)
+    }
+
+    fun saveUserName(username: String) {
+        prefs.edit().putString(KEY_USER_NAME, username).apply()
+    }
+
+    fun saveProfileImageUrl(imageUrl: String) {
+        val editor = prefs.edit()
+        editor.putString("profile_image_url", imageUrl)
+        editor.apply()
+    }
+
+    fun getProfileImageUrl(): String? {
+        return prefs.getString("profile_image_url", null)
+    }
+
     fun clearSession() {
         val editor = prefs.edit()
         editor.clear()

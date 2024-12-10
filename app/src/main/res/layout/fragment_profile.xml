@@ -169,7 +169,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corner_background">
 
-
                 <!-- Saved Posts Title -->
                 <TextView
                     android:id="@+id/savedPostsTitle"
