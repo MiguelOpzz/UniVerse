@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -39,6 +40,9 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
+
+    private var selectedTag: String? = null
+    private val tagViews = mutableMapOf<String, TextView>()
 
     private val handler = android.os.Handler(Looper.getMainLooper())
     private val debounceRunnable = Runnable {
@@ -78,10 +82,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Implement search functionality with debounce
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                // Trigger search after typing
                 handler.removeCallbacks(debounceRunnable)
                 handler.postDelayed(debounceRunnable, 500)
             }
@@ -109,12 +111,18 @@ class HomeFragment : Fragment() {
         homeViewModel.tags.observe(viewLifecycleOwner) { tags ->
             binding.topicContainer.removeAllViews()
             val inflater = LayoutInflater.from(requireContext())
-
             tags.forEach { tag ->
                 val tagView = TextView(requireContext()).apply {
                     text = tag
                     setPadding(32, 8, 32, 8)
-                    background = ContextCompat.getDrawable(requireContext(), R.drawable.topic_background)
+
+                    // Set the initial background color
+                    background = if (tag == selectedTag) {
+                        ContextCompat.getDrawable(requireContext(), R.drawable.selected_topic_bg)
+                    } else {
+                        ContextCompat.getDrawable(requireContext(), R.drawable.topic_background)
+                    }
+
                     textSize = 14f
                     setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                     minimumWidth = (100 * resources.displayMetrics.density).toInt()
@@ -127,12 +135,27 @@ class HomeFragment : Fragment() {
                     }
 
                     setOnClickListener {
-                        homeViewModel.filterTopicsByTag(tag)
+                        selectedTag = if (selectedTag == tag) {
+                            null
+                        } else {
+                            tag
+                        }
+
+                        updateTagBackgrounds()
+
+                        if (selectedTag != null) {
+                            homeViewModel.filterTopicsByTag(selectedTag!!)
+                        } else {
+                            homeViewModel.clearFilters()
+                        }
                     }
                 }
+
                 binding.topicContainer.addView(tagView)
             }
         }
+
+
 
         if (!isReceiverRegistered) {
             val intentFilter = IntentFilter("com.clerami.universe.ACTION_REFRESH_TOPICS")
@@ -145,10 +168,24 @@ class HomeFragment : Fragment() {
 
     }
 
-    // Manually trigger the data fetch when the fragment is resumed
+    private fun updateTagBackgrounds() {
+        val tagViews = binding.topicContainer.children.toList()
+
+        tagViews.forEach { tagView ->
+            if (tagView is TextView) {
+                val tag = tagView.text.toString()
+                tagView.background = if (tag == selectedTag) {
+                    ContextCompat.getDrawable(requireContext(), R.drawable.selected_topic_bg)
+                } else {
+                    ContextCompat.getDrawable(requireContext(), R.drawable.topic_background)
+                }
+            }
+        }
+    }
+
+
     override fun onResume() {
         super.onResume()
-        // Ensure data is fetched immediately when returning to this fragment
         homeViewModel.fetchTopics(requireContext())
     }
 

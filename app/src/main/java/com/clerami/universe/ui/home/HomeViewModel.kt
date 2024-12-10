@@ -75,7 +75,6 @@ class HomeViewModel : ViewModel() {
         })
     }
 
-
     fun clearFilters() {
         _topics.value = allTopics
     }
