@@ -302,7 +302,7 @@ class TopicDetailActivity : AppCompatActivity() {
             val replyText = replyView.findViewById<TextView>(R.id.replyText)
             val likeCount = replyView.findViewById<TextView>(R.id.likeCount)
 
-            replyUsername.text = reply.userId
+            replyUsername.text = getUserName()
             replyText.text = reply.commentText
             likeCount.text = reply.upvotes.toString()
 
