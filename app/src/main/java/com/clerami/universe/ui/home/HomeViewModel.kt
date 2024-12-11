@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Topic
+import com.clerami.universe.data.remote.response.TopicsResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,31 +28,36 @@ class HomeViewModel : ViewModel() {
     fun fetchTopics(context: Context) {
         ApiConfig.getApiService(context)
             .getAllTopics(page = currentPage, pageSize = pageSize)
-            .enqueue(object : Callback<List<Topic>> {
-                override fun onResponse(call: Call<List<Topic>>, response: Response<List<Topic>>) {
+            .enqueue(object : Callback<TopicsResponse> {  // Change the expected response type to TopicsResponse
+                override fun onResponse(call: Call<TopicsResponse>, response: Response<TopicsResponse>) {
                     if (response.isSuccessful) {
-                        val newTopics = response.body() ?: emptyList()
+                        val topicsResponse = response.body()
 
-                        // Append new topics to the existing list
-                        allTopics.addAll(newTopics)
-                        _topics.value = allTopics
+                        topicsResponse?.let {
+                            val newTopics = it.topics  // Extract topics list
 
-                        // Extract unique tags from the topics
-                        val uniqueTags = allTopics.flatMap { it.tags ?: emptyList() }.distinct()
-                        _tags.value = uniqueTags
+                            // Append new topics to the existing list
+                            allTopics.addAll(newTopics)
+                            _topics.value = allTopics
 
-                        // Increment the page number for the next fetch
-                        currentPage++
+
+                            if (it.nextCursor != null) {
+                                currentPage++
+                            }
+                        } ?: run {
+                            Log.e("HomeViewModel", "No topics found in response")
+                        }
                     } else {
                         Log.e("HomeViewModel", "Error fetching topics: ${response.errorBody()?.string()}")
                     }
                 }
 
-                override fun onFailure(call: Call<List<Topic>>, t: Throwable) {
+                override fun onFailure(call: Call<TopicsResponse>, t: Throwable) {
                     Log.e("HomeViewModel", "Failed to fetch topics: ${t.message}")
                 }
             })
     }
+
 
     // Reset the pagination and topics
     fun resetPagination() {

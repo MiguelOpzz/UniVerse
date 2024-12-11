@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.clerami.universe.data.remote.response.Topic
+import com.clerami.universe.data.remote.response.TopicsResponse
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,27 +30,37 @@ class DashboardViewModel : ViewModel() {
     fun fetchTopics(context: Context) {
         ApiConfig.getApiService(context)
             .getAllTopics(page = currentPage, pageSize = pageSize)
-            .enqueue(object : Callback<List<Topic>> {
-                override fun onResponse(call: Call<List<Topic>>, response: Response<List<Topic>>) {
+            .enqueue(object : Callback<TopicsResponse> {  // Change the expected response type to TopicsResponse
+                override fun onResponse(call: Call<TopicsResponse>, response: Response<TopicsResponse>) {
                     if (response.isSuccessful) {
-                        val newTopics = response.body() ?: emptyList()
+                        val topicsResponse = response.body() // The response will now contain TopicsResponse
 
-                        // Append new topics to the existing list
-                        allTopics.addAll(newTopics)
-                        _topics.value = allTopics
+                        // If topicsResponse is not null, extract topics and handle pagination
+                        topicsResponse?.let {
+                            val newTopics = it.topics  // Extract topics list
 
-                        // Increment the page number for the next fetch
-                        currentPage++
+                            // Append new topics to the existing list
+                            allTopics.addAll(newTopics)
+                            _topics.value = allTopics
+
+                            // Handle pagination, increment currentPage only if there is a nextCursor
+                            if (it.nextCursor != null) {
+                                currentPage++  // Increment page number for the next fetch if there's a nextCursor
+                            }
+                        } ?: run {
+                            Log.e("Dasboard", "No topics found in response")
+                        }
                     } else {
-                        Log.e("HomeViewModel", "Error fetching topics: ${response.errorBody()?.string()}")
+                        Log.e("Dashboard", "Error fetching topics: ${response.errorBody()?.string()}")
                     }
                 }
 
-                override fun onFailure(call: Call<List<Topic>>, t: Throwable) {
-                    Log.e("HomeViewModel", "Failed to fetch topics: ${t.message}")
+                override fun onFailure(call: Call<TopicsResponse>, t: Throwable) {
+                    Log.e("Dashboard", "Failed to fetch topics: ${t.message}")
                 }
             })
     }
+
 
     fun filterTopics(query: String) {
         val currentTopics = _topics.value ?: emptyList()

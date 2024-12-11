@@ -71,6 +71,11 @@ data class Topic(
     val updatedAt:  Timestamp
 )
 
+data class TopicsResponse(
+    val topics: List<Topic>,
+    val nextCursor: String?
+)
+
 
 data class Timestamp(
     val _seconds: Long,

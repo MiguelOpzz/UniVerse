@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Looper
@@ -44,7 +45,8 @@ class HomeFragment : Fragment() {
     private var selectedTag: String? = null
 
     private val handler = android.os.Handler(Looper.getMainLooper())
-
+    private var isLoading = false // To prevent multiple fetches
+    private var nextCursor: String? = null
     private val refreshReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             homeViewModel.fetchTopics(requireContext())
@@ -65,26 +67,36 @@ class HomeFragment : Fragment() {
 
             // Only update views if there are topics to display
             if (topics.isNotEmpty()) {
-                // This will add new views, and not replace existing ones
                 topics.forEach { topic ->
-                    val discussionView = createDiscussionView(topic, inflater)
+                    val discussionView = createDiscussionView(topic, layoutInflater)
                     binding.dynamicTopicsContainer.addView(discussionView)
                 }
             } else {
                 Log.d("HomeFragment", "No topics found to display.")
             }
+
+            // Hide the loading indicator if data is loaded
+            isLoading = false
         }
 
-// Scroll detection logic
+        // Scroll detection logic for lazy loading
         binding.dynamicTopicsContainer.viewTreeObserver.addOnScrollChangedListener {
             val container = binding.dynamicTopicsContainer
             val lastVisibleItem = container.getChildAt(container.childCount - 1)
 
+            // Check if we reached the bottom of the container
             if (lastVisibleItem != null && isViewVisible(container, lastVisibleItem)) {
-                // Trigger next fetch when user scrolls to the bottom
-                homeViewModel.fetchTopics(requireContext())
+                if (!isLoading && nextCursor != null) {
+                    // Start fetching the next set of topics if not loading
+                    isLoading = true
+                    homeViewModel.fetchTopics(requireContext())
+                }
             }
         }
+
+        // Initial fetch
+        homeViewModel.fetchTopics(requireContext())
+
 
         // Check if the view is visible in the container
 
@@ -181,22 +193,23 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun isViewVisible(container: View, view: View): Boolean {
+        val visibleBounds = Rect()
+        container.getHitRect(visibleBounds)
+        return view.getLocalVisibleRect(visibleBounds)
+    }
+
+    // Helper method to create the view for each topic
+
     private fun createDiscussionView(topic: Topic, inflater: LayoutInflater): View {
-        val topicBinding =
-            DynamicTopicBinding.inflate(inflater, binding.dynamicTopicsContainer, false)
+        // Inflate the layout without attaching to the parent directly
+        val topicBinding = DynamicTopicBinding.inflate(inflater)
 
         topicBinding.discussionTitle.text = topic.title
         topicBinding.discussionSubtitle.text = topic.description ?: "No description available"
 
         topicBinding.likesCount.visibility = View.GONE
         topicBinding.commentsCount.visibility = View.GONE
-
-        fetchCommentsForTopic(
-            requireContext(),
-            topic.topicId,
-            topicBinding.commentsCount,
-            topicBinding.likesCount
-        )
 
         topicBinding.root.setOnClickListener {
             val intent = Intent(requireContext(), TopicDetailActivity::class.java).apply {
@@ -207,70 +220,9 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
-        return topicBinding.root
+        return topicBinding.root  // Return the root view, not the whole binding
     }
 
 
-    private fun fetchCommentsForTopic(
-        context: Context,
-        topicId: String,
-        commentsCountTextView: TextView,
-        likesCountTextView: TextView
-    ) {
-        ApiConfig.getApiService(context).getComments(topicId)
-            .enqueue(object : Callback<List<Comment>> {
-                override fun onResponse(
-                    call: Call<List<Comment>>,
-                    response: Response<List<Comment>>
-                ) {
-                    if (response.isSuccessful) {
-                        val comments = response.body()
-                        if (comments != null && comments.isNotEmpty()) {
-                            val likesCount = comments.sumOf { it.upvotes }
-                            commentsCountTextView.text =
-                                context.getString(R.string.error_loading_replies)
 
-
-                            commentsCountTextView.visibility = if (comments.isNotEmpty()) {
-                                View.GONE
-                            } else {
-                                View.GONE
-                            }
-
-                            // Handle likes count visibility
-                            likesCountTextView.visibility = if (likesCount > 0) {
-                                likesCountTextView.text =
-                                    context.getString(R.string.likes, likesCount)
-                                View.VISIBLE
-                            } else {
-                                View.GONE
-                            }
-                        } else {
-                            commentsCountTextView.text = context.getString(R.string.no_replies_yet)
-
-                            commentsCountTextView.visibility = View.GONE
-
-                            likesCountTextView.text = context.getString(R.string.no_likes_yet)
-
-                            likesCountTextView.visibility = View.GONE
-                        }
-
-                    } else {
-                        commentsCountTextView.text =
-                            context.getString(R.string.error_loading_replies)
-                        likesCountTextView.text = context.getString(R.string.error_loading_likes)
-                        Log.e(
-                            "HomeFragment",
-                            "Error fetching comments: ${response.errorBody()?.string()}"
-                        )
-                    }
-                }
-
-                override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                    commentsCountTextView.text = context.getString(R.string.error_loading_replies)
-                    likesCountTextView.text = context.getString(R.string.error_loading_likes)
-                    Log.e("HomeFragment", "Failed to fetch comments", t)
-                }
-            })
-    }
 }

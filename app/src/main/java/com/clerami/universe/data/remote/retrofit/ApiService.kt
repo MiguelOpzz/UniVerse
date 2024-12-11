@@ -12,6 +12,7 @@ import com.clerami.universe.data.remote.response.LoginRequest
 import com.clerami.universe.data.remote.response.LoginResponse
 import com.clerami.universe.data.remote.response.RegisterRequest
 import com.clerami.universe.data.remote.response.Topic
+import com.clerami.universe.data.remote.response.TopicsResponse
 import com.clerami.universe.data.remote.response.UpdateResponse
 import com.clerami.universe.data.remote.response.UpdateTopicRequest
 import retrofit2.Call
@@ -53,7 +54,7 @@ interface ApiService {
     fun getAllTopics(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int
-    ): Call<List<Topic>>
+    ): Call<TopicsResponse>
 
     @GET("topics")
     fun getTopics(): Call<List<Topic>>
