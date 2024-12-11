@@ -186,30 +186,6 @@ class AddNewActivity : AppCompatActivity() {
                 }
                 uploadedImages++
 
-                // Check if all images are uploaded
-                if (uploadedImages == imageCount) {
-                    val title = binding.titleInput.text.toString()
-                    val description = binding.descriptionInput.text.toString()
-                    val tags = binding.tagsInput.text.toString().split(",").map { it.trim() }.filter { it.isNotEmpty() }
-
-                    val token = sessionManager.getUserToken()
-
-                    if (token.isNullOrEmpty()) {
-                        Toast.makeText(this, "Authentication token is missing. Please log in again.", Toast.LENGTH_SHORT).show()
-                        finish()
-                    } else {
-                        binding.loading.visibility = View.VISIBLE
-
-                        val request = CreateTopicRequest(
-                            title = title,
-                            description = description,
-                            tags = tags,
-                            attachmentUrls = attachmentUrls
-                        )
-
-                        addNewViewModel.createTopic(token, request)
-                    }
-                }
             }
         } ?: run {
             Toast.makeText(this, "Error compressing image", Toast.LENGTH_SHORT).show()

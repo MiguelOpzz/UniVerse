@@ -15,6 +15,8 @@ import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.data.remote.response.TopicsResponse
 import com.clerami.universe.data.remote.response.UpdateResponse
 import com.clerami.universe.data.remote.response.UpdateTopicRequest
+import com.clerami.universe.data.remote.response.UpdateUser
+import com.clerami.universe.data.remote.response.UpdateUserResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -47,7 +49,10 @@ interface ApiService {
         @Body request: CreateTopicRequest
     ):Call<CreateTopicResponse>
 
-
+    @GET("api/topics/{topicId}/recommend")
+    fun getRecommended(
+        @Path("topicId") topicId: String
+    ): Call<Topic>
 
 
     @GET("api/topics")
@@ -68,6 +73,13 @@ interface ApiService {
         @Path("topicId") topicId: String,
         @Body request: UpdateTopicRequest
     ): Call<UpdateResponse>
+
+    @PUT("api/users/{username}/edit")
+    fun updateProfile(
+        @Header("Authorization") token: String,
+        @Path("username") username: String,
+        @Body request: UpdateUser
+    ): Call<UpdateUserResponse>
 
     @DELETE("api/topics/{topicId}")
     fun deleteTopic(

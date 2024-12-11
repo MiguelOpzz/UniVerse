@@ -1,18 +1,24 @@
 package com.clerami.universe.ui.profile
 
 import TopicDetailViewModel
+import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.clerami.universe.R
 import com.clerami.universe.ui.settings.SettingsActivity
 import com.clerami.universe.databinding.FragmentProfileBinding
@@ -32,6 +38,8 @@ class ProfileFragment : Fragment() {
     private lateinit var sessionManager: SessionManager
     private val db = FirebaseFirestore.getInstance()
 
+    private var universityName: String? = null
+    private var profilePictureUrl: String? = null
     private val viewModel: ProfileViewModel by viewModels { ProfileViewModelFactory(requireActivity().application) }
 
     override fun onCreateView(
@@ -42,12 +50,14 @@ class ProfileFragment : Fragment() {
 
         sessionManager = SessionManager(requireContext())
 
-        // Set username
-        binding.userName.text = sessionManager.getUserName()
 
-        // Profile picture setup
-        // Add code to load the image if needed
+
+        binding.userName.text = sessionManager.getUserName()
+        fetchUniversity()
+        fetchProfilePicture()
+
         fetchPostCount()
+
         fetchRepliesCount()
         // Handle to Settings button click
         binding.toSettings.setOnClickListener {
@@ -56,9 +66,16 @@ class ProfileFragment : Fragment() {
         }
 
         binding.UserProfile.setOnClickListener {
+            // Check if both university and profile picture data are available
             val intent = Intent(requireContext(), ProfileSettingsActivity::class.java)
-            startActivity(intent)
+            intent.putExtra("universityName", universityName)
+            intent.putExtra("profilePictureUrl", profilePictureUrl)
+            profileSettingsLauncher.launch(intent)
+
+
+
         }
+
 
         // Handle saved posts
         lifecycleScope.launch {
@@ -76,6 +93,8 @@ class ProfileFragment : Fragment() {
         }
         return binding.root
     }
+
+
 
     private fun fetchPostCount() {
         binding.postsNumber.text = getString(R.string.loading)
@@ -109,40 +128,9 @@ class ProfileFragment : Fragment() {
         }
     }
 
+
+
     private fun fetchRepliesCount() {
-        binding.postsNumber.text = getString(R.string.loading)
-        val username = sessionManager.getUserName()
-        if (username != null) {
-
-            val userRef = db.collection("users")
-                .whereEqualTo("username", username)
-
-            userRef.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val documents = task.result
-                    if (documents != null && !documents.isEmpty) {
-
-                        val document = documents.documents.first()
-                        val commentCount = document.getLong("commentCount") ?: 0
-
-                        binding.repliesNumber.text =
-                            getString(R.string.replies_count_format, commentCount)
-                    } else {
-
-                        binding.repliesNumber.text = getString(R.string.replies_count_format, 0)
-                    }
-                } else {
-
-                    binding.repliesNumber.text = getString(R.string.replies_count_format, 0)
-                }
-            }
-        } else {
-            // Handle case where the user is not logged in or has no username
-            binding.repliesNumber.text = getString(R.string.replies_count_format, 0)
-        }
-    }
-
-    private fun fetchVotesCount() {
         binding.postsNumber.text = getString(R.string.loading)
         val username = sessionManager.getUserName()
         if (username != null) {
@@ -184,8 +172,107 @@ class ProfileFragment : Fragment() {
     }
 
 
+
+    override fun onResume() {
+        super.onResume()
+        fetchUniversity()
+        fetchProfilePicture()
+    }
+
+
+    private val profileSettingsLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val updatedUniversityName = result.data?.getStringExtra("universityName")
+                val updatedProfilePictureUrl = result.data?.getStringExtra("profilePictureUrl")
+
+                // Update the UI directly with the updated values
+                if (updatedUniversityName != null) {
+                    universityName = updatedUniversityName
+                    binding.university.text = updatedUniversityName
+                }
+                if (updatedProfilePictureUrl != null) {
+                    profilePictureUrl = updatedProfilePictureUrl
+                    Glide.with(this)
+                        .load(updatedProfilePictureUrl)
+                        .placeholder(R.drawable.baseline_person_24)
+                        .into(binding.profilePic)
+                }
+
+                // Call the fetch methods again to ensure the data is reloaded
+                fetchUniversity()
+                fetchProfilePicture()
+                fetchPostCount()
+                fetchRepliesCount()
+            }
+        }
+
+
+    private fun fetchUniversity() {
+        binding.university.text = getString(R.string.loading) // Show loading initially
+        val username = sessionManager.getUserName()
+
+        if (username != null) {
+            val userRef = db.collection("users").document(username)
+
+            userRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document != null && document.exists()) {
+                        universityName = document.getString("university") // Store fetched value
+                        // Update UI with the fetched value
+                        binding.university.text = universityName ?: getString(R.string.no_university)
+                        Log.d("ProfileFragment", "Fetched university: $universityName")
+                    } else {
+                        binding.university.text = getString(R.string.no_university)
+                        Log.d("ProfileFragment", "No university found for the user.")
+                    }
+                } else {
+                    binding.university.text = getString(R.string.no_university)
+                    Log.d("ProfileFragment", "Error fetching university.")
+                }
+            }
+        } else {
+            binding.university.text = getString(R.string.no_university)
+        }
+    }
+
+
+
+    private fun fetchProfilePicture() {
+        Glide.with(this)
+            .load(R.drawable.baseline_person_24) // Show placeholder
+            .into(binding.profilePic)
+
+        val username = sessionManager.getUserName()
+
+        if (username != null) {
+            val userRef = db.collection("users").document(username)
+
+            userRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document != null && document.exists()) {
+                        profilePictureUrl = document.getString("profilePicture") // Store fetched URL
+                        Log.d("ProfileFragment", "Fetched profile picture URL: $profilePictureUrl")
+                        if (profilePictureUrl != null) {
+                            Glide.with(this)
+                                .load(profilePictureUrl) // Load the image
+                                .placeholder(R.drawable.baseline_person_24)
+                                .into(binding.profilePic)
+                        }
+                    } else {
+                        Log.d("ProfileFragment", "No profile picture found for the user.")
+                    }
+                } else {
+                    Log.d("ProfileFragment", "Error fetching profile picture.")
+                }
+            }
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+

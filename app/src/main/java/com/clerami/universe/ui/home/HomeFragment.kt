@@ -63,12 +63,9 @@ class HomeFragment : Fragment() {
         homeViewModel.fetchTopics(requireContext())
 
         homeViewModel.topics.observe(viewLifecycleOwner) { topics ->
-            Log.d("HomeFragment", "Observed topics: ${topics.size}")
 
-            // Log the tags of each topic to ensure they match
-            topics.forEach { topic ->
-                Log.d("HomeFragment", "Topic tags: ${topic.tags}")
-            }
+
+
 
             // Clear the container before adding new topics
             binding.dynamicTopicsContainer.removeAllViews()
@@ -155,10 +152,10 @@ class HomeFragment : Fragment() {
 
                         // Call the ViewModel method to filter or clear filters
                         if (selectedTag != null) {
-                            Log.d("HomeFragment", "Filtering by tag: $selectedTag")
+
                             homeViewModel.filterTopicsByTag(selectedTag!!)
                         } else {
-                            Log.d("HomeFragment", "Clearing filters")
+
                             homeViewModel.clearFilters()  // Show all topics
                         }
                     }

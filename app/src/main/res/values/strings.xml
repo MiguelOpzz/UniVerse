@@ -106,4 +106,6 @@
     <string name="profile_settings_header">Profile</string>
     <string name="profile_settings_summary">Change your profile</string>
     <string name="profile_settings_title">Edit Profile</string>
+    <string name="no_university">Empty</string>
+
 </resources>

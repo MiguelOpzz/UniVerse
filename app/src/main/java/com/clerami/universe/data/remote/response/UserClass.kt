@@ -42,6 +42,17 @@ data class CreateTopicResponse(
 
 )
 
+data class UpdateUser(
+    val university:String,
+    val profilePicture:String
+
+)
+
+data class UpdateUserResponse(
+    val message: String,
+    val updatedFields:UpdateUser
+)
+
 data class DeleteResponse(
     val message: String
 )

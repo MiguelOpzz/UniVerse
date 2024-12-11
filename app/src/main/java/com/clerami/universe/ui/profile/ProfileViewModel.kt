@@ -16,4 +16,6 @@ class ProfileViewModel(
     private val favoriteRepository = FavoriteRepository(application.applicationContext)
 
     val favoritePosts = favoriteRepository.getFavoritePosts()
+
+
 }

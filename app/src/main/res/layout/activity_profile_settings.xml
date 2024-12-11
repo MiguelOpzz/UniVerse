@@ -30,17 +30,7 @@
         android:layout_marginTop="16dp" />
 
     <!-- Username Input -->
-    <EditText
-        android:id="@+id/editUsername"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/username"
-        app:layout_constraintTop_toBottomOf="@id/changePictureButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp" />
+
 
     <!-- University Input -->
     <EditText
@@ -48,10 +38,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/edit_university"
-        app:layout_constraintTop_toBottomOf="@id/editUsername"
+        app:layout_constraintTop_toBottomOf="@id/changePictureButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp" />
 
@@ -72,8 +62,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sign_out"
-        app:layout_constraintTop_toBottomOf="@id/saveChangesButton"
+
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginBottom="24dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

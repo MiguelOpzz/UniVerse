@@ -105,4 +105,5 @@
     <string name="profile_settings_header">Profil Pengguna</string>
     <string name="profile_settings_summary">Ganti Profil</string>
     <string name="profile_settings_title">Ubah Profil</string>
+    <string name="no_university">Kosong</string>
 </resources>
