@@ -63,9 +63,17 @@ class HomeFragment : Fragment() {
         homeViewModel.fetchTopics(requireContext())
 
         homeViewModel.topics.observe(viewLifecycleOwner) { topics ->
-            Log.d("HomeFragment", "Observed topics: $topics")
+            Log.d("HomeFragment", "Observed topics: ${topics.size}")
 
-            // Only update views if there are topics to display
+            // Log the tags of each topic to ensure they match
+            topics.forEach { topic ->
+                Log.d("HomeFragment", "Topic tags: ${topic.tags}")
+            }
+
+            // Clear the container before adding new topics
+            binding.dynamicTopicsContainer.removeAllViews()
+
+            // If there are topics to display, create views for each topic
             if (topics.isNotEmpty()) {
                 topics.forEach { topic ->
                     val discussionView = createDiscussionView(topic, layoutInflater)
@@ -108,7 +116,10 @@ class HomeFragment : Fragment() {
 
 
         homeViewModel.tags.observe(viewLifecycleOwner) { tags ->
+            // Clear the previous tags views
             binding.topicContainer.removeAllViews()
+
+            // Create the new tag views
             val inflater = LayoutInflater.from(requireContext())
             tags.forEach { tag ->
                 val tagView = TextView(requireContext()).apply {
@@ -132,25 +143,30 @@ class HomeFragment : Fragment() {
                         marginEnd = 8
                     }
 
+                    // When a tag is clicked, toggle it
                     setOnClickListener {
                         selectedTag = if (selectedTag == tag) {
-                            null
+                            null  // If the tag is already selected, deselect it
                         } else {
-                            tag
+                            tag  // Otherwise, select this tag
                         }
 
-                        updateTagBackgrounds()
+                        updateTagBackgrounds()  // Update the tag backgrounds based on selection
 
+                        // Call the ViewModel method to filter or clear filters
                         if (selectedTag != null) {
+                            Log.d("HomeFragment", "Filtering by tag: $selectedTag")
                             homeViewModel.filterTopicsByTag(selectedTag!!)
                         } else {
-                            homeViewModel.clearFilters()
+                            Log.d("HomeFragment", "Clearing filters")
+                            homeViewModel.clearFilters()  // Show all topics
                         }
                     }
                 }
                 binding.topicContainer.addView(tagView)
             }
         }
+
 
         if (!isReceiverRegistered) {
             val intentFilter = IntentFilter("com.clerami.universe.ACTION_REFRESH_TOPICS")

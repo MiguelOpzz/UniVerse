@@ -40,6 +40,9 @@ class HomeViewModel : ViewModel() {
                             allTopics.addAll(newTopics)
                             _topics.value = allTopics
 
+                            // Extract tags from the topics and set it
+                            val allTags = allTopics.flatMap { topic -> topic.tags.orEmpty() }.distinct()
+                            _tags.value = allTags
 
                             if (it.nextCursor != null) {
                                 currentPage++
@@ -51,7 +54,6 @@ class HomeViewModel : ViewModel() {
                         Log.e("HomeViewModel", "Error fetching topics: ${response.errorBody()?.string()}")
                     }
                 }
-
                 override fun onFailure(call: Call<TopicsResponse>, t: Throwable) {
                     Log.e("HomeViewModel", "Failed to fetch topics: ${t.message}")
                 }
@@ -75,11 +77,18 @@ class HomeViewModel : ViewModel() {
 
     fun filterTopicsByTag(tag: String) {
         val filteredTopics = allTopics.filter { topic ->
+            // Filter topics that contain the selected tag
             topic.tags?.contains(tag) == true
-        }
-        _topics.value = filteredTopics
+        }.distinctBy { it.topicId } // Ensure uniqueness by topicId
+
+        _topics.value = filteredTopics  // Update the topics LiveData with filtered results
+        Log.d("HomeViewModel", "Filtered topics by tag: $tag. Total topics: ${filteredTopics.size}")
     }
 
+
+    fun clearFilters() {
+        _topics.value = allTopics // Clear the filter and show all topics
+    }
     fun fetchTopicById(context: Context, topicId: String) {
         ApiConfig.getApiService(context).getTopicById(topicId).enqueue(object : Callback<Topic> {
             override fun onResponse(call: Call<Topic>, response: Response<Topic>) {
@@ -96,7 +105,4 @@ class HomeViewModel : ViewModel() {
         })
     }
 
-    fun clearFilters() {
-        _topics.value = allTopics
-    }
 }
