@@ -35,12 +35,99 @@ In the Handlers folder there is 3 main API that we make for the app
 
 The handler for Topic handler consist
 - add Topic ( for adding a new topic )
+  - method : 
+    POST
+  - endpoint : 
+    http://< url >/api/topics
+  - header :
+    Authorization  Bearer < token-key >
+  - body request :
+    {"title": "What are the advantages of using Flutter for mobile app development?",
+    "description": "I have heard a lot about Flutter. What makes it a good choice for mobile development?",
+    "tags": ["mobile development", "Flutter", "cross-platform", "advantages"],"attachmentUrls":[]}
+  - response :
+    201 Created: Topic created successfully.
+    400 Bad Request: Validation error or offensive content.
+
 - edit Topic ( for editing a created topic )
+  - method : 
+    PUT
+  - endpoint : 
+    http://< url >/api/topics/:topicId
+  - header :
+    Authorization  Bearer < token-key >
+  - body request :
+  {"title": "What are the advantages of using Flutter for mobile app development?",
+  "description": "I have heard a lot about Flutter. What makes it a good choice for mobile development?",
+  "tags": ["mobile development", "Flutter", "cross-platform", "advantages"],"attachmentUrls":[]}
+  - Response:
+    200 OK: Topic updated successfully.
+    403 Forbidden: Not the creator.
+    404 Not Found: Topic not found.
+
 - delete Topic ( for deleteing created topic )
+  - method : 
+    DELETE
+  - endpoint : 
+    http://< url >/api/topics/:topicId
+  - header :
+    Authorization  Bearer < token-key >
+  - body request :
+  {}
+  - Response:
+    200 OK: Topic deleted successfully.
+    403 Forbidden: Not the creator.
+    404 Not Found: Topic not found.
+
 - get all Topic ( to show all topic thats has been created )
+  - method : 
+    GET
+  - endpoint : 
+    http://< url >/api/topics
+  - header :
+  - body request :
+  {}
+  - Response:
+    200 OK: Topic deleted successfully.
+    403 Forbidden: Not the creator.
+    404 Not Found: Topic not found.
 - get Topic by id ( to show a detailed topic )
+  - method : 
+    GET
+  - endpoint : 
+    http://< url >/api/topics
+  - header :
+  - body request :
+  {}
+  - Response:
+    200 OK: Topic details.
+    404 Not Found: Topic not found.
+    
 - recommend Topic ( to show recommended topic from the topic has been selected )
-- Toggle like ( to give like to a topic )
+  - method : 
+    GET
+  - endpoint : 
+    http://< url >/api/topics/:topicId/recommend
+  - header :
+    Authorization  Bearer < token-key >
+  - body request :
+  {}
+  - Response:
+    200 OK: Array of recommendations.
+    404 Not Found: Topic not found.
+    
+- Toggle like ( to give like to a topic 
+  - method : 
+    POST
+  - endpoint : 
+    http://< url >/api/topics/:topicId/like
+  - header :
+    Authorization  Bearer < token-key >
+  - body request :
+  {}
+  - Response:
+    200 OK: Like/unlike toggled.
+    404 Not Found: Topic not found.
 
 
 
