@@ -6,18 +6,21 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.clerami.universe.data.local.FavoritePost
 import com.clerami.universe.data.remote.retrofit.ApiConfig
 import com.clerami.universe.data.remote.response.Comment
 import com.clerami.universe.data.remote.response.CommentRequest
 import com.clerami.universe.data.remote.response.CommentResponse
 import com.clerami.universe.data.remote.response.DeleteResponse
+import com.clerami.universe.data.remote.response.RecommendResponse
 import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.data.remote.response.UpdateResponse
 import com.clerami.universe.data.remote.response.UpdateTopicRequest
 import com.clerami.universe.data.repository.FavoriteRepository
 import com.clerami.universe.utils.SessionManager
 import gen._base._base_java__assetres.srcjar.R.id.title
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,6 +53,8 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
     private val _attachmentsUrls = MutableLiveData<List<String>>()
     val attachmentsUrls: LiveData<List<String>> get() = _tags
 
+    private val _recommendedTopics = MutableLiveData<List<RecommendResponse>>()
+    val recommendedTopics: LiveData<List<RecommendResponse>> get() = _recommendedTopics
 
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("TopicPreferences", Context.MODE_PRIVATE)
@@ -165,4 +170,14 @@ class TopicDetailViewModel(application: Application) : AndroidViewModel(applicat
         })
     }
 
+    fun fetchRecommendedTopics(topicId: String) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getRecommended(topicId)
+                _recommendedTopics.postValue(response.recommendations)
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error fetching data: $e")
+            }
+        }
+    }
 }

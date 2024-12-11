@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -18,10 +17,10 @@ import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.clerami.universe.R
 import com.clerami.universe.data.remote.response.Comment
@@ -43,7 +42,7 @@ class TopicDetailActivity : AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
     private lateinit var refreshReceiver: BroadcastReceiver
     private var isReceiverRegistered = false
-
+    private lateinit var recommendedTopicsAdapter: TopicRecommendAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,16 +139,7 @@ class TopicDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.closeAiButton.setOnClickListener {
-            binding.aiAnswerLayout.visibility = View.GONE
-            binding.aiAnswerButton.visibility = View.VISIBLE
-        }
 
-        binding.aiAnswerButton.setOnClickListener {
-            // Show the expanded AI answer and summary
-            binding.aiAnswerLayout.visibility = View.VISIBLE
-            binding.aiAnswerButton.visibility = View.GONE
-        }
 
         binding.favButton.setOnClickListener {
             isFavorite = !isFavorite
@@ -166,7 +156,33 @@ class TopicDetailActivity : AppCompatActivity() {
         }
 
 
+        binding.recommendedTopicsRecyclerView.layoutManager = LinearLayoutManager(this)
+
+// Fetch recommended topics
+        viewModel.fetchRecommendedTopics(topicId)
+
+// Observe the recommended topics from the ViewModel
+        viewModel.recommendedTopics.observe(this, Observer { recommendedTopics ->
+            recommendedTopics?.let {
+                Log.d("TopicDetailActivity", "Received recommended topics: $it")
+
+                // Ensure updateList() is being triggered
+                if (::recommendedTopicsAdapter.isInitialized) {
+                    recommendedTopicsAdapter.updateList(it)
+                    Log.d("TopicDetailActivity", "Adapter updated with new topics")
+                } else {
+                    recommendedTopicsAdapter = TopicRecommendAdapter(this, it)
+                    binding.recommendedTopicsRecyclerView.layoutManager = LinearLayoutManager(this)
+                    binding.recommendedTopicsRecyclerView.adapter = recommendedTopicsAdapter
+                    Log.d("TopicDetailActivity", "Adapter initialized and set")
+                }
+            }
+        })
+
+        // Fetch the recommended topics
+
     }
+
 
     private fun updateFavoriteIcon() {
         if (isFavorite) {
@@ -210,6 +226,7 @@ class TopicDetailActivity : AppCompatActivity() {
             isReceiverRegistered = false
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

@@ -1,7 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:padding="16dp"
     android:background="@color/white">
 
@@ -283,16 +283,6 @@
                 android:lineSpacingExtra="4dp" />
         </LinearLayout>
 
-        <!-- Toggle Button to show/hide AI Answer -->
-        <Button
-            android:id="@+id/aiAnswerButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="AI Answer"
-            android:textSize="16sp"
-            android:backgroundTint="@color/blue_four"
-            android:textColor="@color/white"
-            android:fontFamily="@font/montserrat_bold" />
 
         <!-- Reply Input Section -->
         <LinearLayout
@@ -352,6 +342,22 @@
                 android:orientation="horizontal"
                 android:paddingBottom="8dp">
             </LinearLayout>
+
+
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recommended Topics"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="?attr/colorOnSecondary"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommendedTopicsRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
+
 </ScrollView>

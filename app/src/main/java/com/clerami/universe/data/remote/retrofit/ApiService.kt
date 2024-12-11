@@ -10,6 +10,8 @@ import com.clerami.universe.data.remote.response.DeleteResponse
 import com.clerami.universe.data.remote.response.GuestResponse
 import com.clerami.universe.data.remote.response.LoginRequest
 import com.clerami.universe.data.remote.response.LoginResponse
+import com.clerami.universe.data.remote.response.RecommendResponse
+import com.clerami.universe.data.remote.response.RecommendationResponse
 import com.clerami.universe.data.remote.response.RegisterRequest
 import com.clerami.universe.data.remote.response.Topic
 import com.clerami.universe.data.remote.response.TopicsResponse
@@ -50,9 +52,9 @@ interface ApiService {
     ):Call<CreateTopicResponse>
 
     @GET("api/topics/{topicId}/recommend")
-    fun getRecommended(
+    suspend fun getRecommended(
         @Path("topicId") topicId: String
-    ): Call<Topic>
+    ): RecommendationResponse
 
 
     @GET("api/topics")

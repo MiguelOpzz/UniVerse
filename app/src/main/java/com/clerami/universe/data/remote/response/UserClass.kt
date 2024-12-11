@@ -53,6 +53,15 @@ data class UpdateUserResponse(
     val updatedFields:UpdateUser
 )
 
+data class RecommendResponse(
+    val similarity:Double,
+    val title: String
+)
+
+data class RecommendationResponse(
+    val recommendations: List<RecommendResponse>
+)
+
 data class DeleteResponse(
     val message: String
 )
