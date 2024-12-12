@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/language_header">
+
+        <Preference
+            app:key="language_settings"
+            app:title="@string/language_settings_title"
+            app:summary="@string/language_settings_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/profile_settings_header">
+        <Preference
+            app:key="profile_settings"
+            app:title="@string/profile_settings_title"
+            app:summary="@string/profile_settings_summary" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

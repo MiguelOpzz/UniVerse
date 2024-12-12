@@ -1,0 +1,363 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header Section -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="15dp">
+
+            <!-- Close Button -->
+            <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/close"
+                android:layout_alignParentEnd="true" />
+
+
+
+            <!-- Post Title -->
+            <TextView
+                android:id="@+id/viewPost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detailTitle"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <ImageView
+                android:id="@+id/threeDots"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/baseline_format_list_bulleted_24"
+                android:layout_marginEnd="44dp"
+                android:layout_alignParentEnd="true"
+
+                />
+
+            <!-- Delete button, initially hidden -->
+            <Button
+                android:id="@+id/deleteTopicButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_topic"
+                android:background="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                android:layout_below="@id/threeDots"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <!-- Post Content Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp">
+
+            <!-- Tags, Profile Picture, and Favorite Button -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <!-- Horizontal Scroll for Tags Container -->
+                <HorizontalScrollView
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="32dp"
+
+
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true">
+
+                    <!-- Tags Container -->
+                    <LinearLayout
+                        android:id="@+id/tagsContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_alignParentStart="true"
+                        android:weightSum="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:padding="4dp"
+                            android:background="#989DA4"
+                            android:text="@string/tag"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/montserrat_regular" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:padding="4dp"
+                            android:background="#989DA4"
+                            android:text="@string/tag2"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/montserrat_regular" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <!-- Profile Picture -->
+                <ImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/image"
+                    android:contentDescription="Profile Picture"
+                    android:layout_marginEnd="8dp" />
+
+                <!-- Favorite Button -->
+                <ImageView
+                    android:id="@+id/favButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_toStartOf="@id/profilePicture"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/fav"
+                    android:contentDescription="Favorite Button" />
+            </RelativeLayout>
+
+
+            <!-- Post Description -->
+            <TextView
+                android:id="@+id/postTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TITLE"
+                android:textSize="17sp"
+                android:lineSpacingExtra="4dp"
+                android:maxLines="4"
+                android:textColor="@color/black"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:id="@+id/postDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lorem Ipsum is simply dummy text..."
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:fontFamily="@font/montserrat_regular" />
+
+            <TextView
+                android:id="@+id/readMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read More"
+                android:textColor="@color/blue_three"
+                android:textSize="12sp"
+                android:paddingTop="4dp"
+                android:fontFamily="@font/montserrat_regular" />
+
+            <!-- Media -->
+            <ImageView
+                android:id="@+id/postMedia"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sample_media" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp">
+
+            <!-- Reply Button on the Left -->
+            <TextView
+                android:id="@+id/reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reply"
+                android:textSize="13sp"
+                android:textColor="@color/blue_two"
+                android:fontFamily="@font/montserrat_regular"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
+
+            <!-- Like Button -->
+            <ImageView
+                android:id="@+id/reportIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/report"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
+                android:layout_centerVertical="true" />
+
+            <!-- Report Button -->
+            <ImageView
+                android:id="@+id/likeIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/thumbs_up_outline"
+                android:layout_toStartOf="@id/reportIcon"
+                android:layout_marginEnd="8dp"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/aiAnswerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/blue_four"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/closeAiButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/close"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/aiAnswerTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI Answer"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/montserrat_bold"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:id="@+id/aiAnswerText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lorem Ipsum is simply dummy text Lorem Ipsum is simply dummy text Lorem Ipsum is simply dummy text"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/montserrat_regular"
+                android:lineSpacingExtra="4dp" />
+
+            <!-- AI Summary -->
+            <TextView
+                android:id="@+id/aiSummaryTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AI Summary"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/montserrat_bold"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:id="@+id/aiSummaryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lorem Ipsum is simply dummy text Lorem Ipsum is simply dummy text Lorem Ipsum is simply dummy text"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/montserrat_regular"
+                android:lineSpacingExtra="4dp" />
+        </LinearLayout>
+
+
+        <!-- Reply Input Section -->
+        <LinearLayout
+            android:id="@+id/replyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:visibility="gone"
+        >
+
+        <EditText
+            android:id="@+id/replyInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write a reply..."
+            android:inputType="text"
+            android:padding="12dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/replyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post Reply"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/blue_four"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold"/>
+    </LinearLayout>
+
+
+        <!-- Replies Section -->
+        <TextView
+            android:id="@+id/repliesTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/repliestitle"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_bold" />
+
+        <LinearLayout
+            android:id="@+id/repliesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
+
+            <!-- Each Reply Item -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recommended Topics"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="?attr/colorOnSecondary"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommendedTopicsRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</ScrollView>

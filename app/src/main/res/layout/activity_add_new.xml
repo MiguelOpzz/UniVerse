@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.addnewdicussion.AddNewActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="#E4F6FF"
+            android:padding="20dp"
+            android:orientation="vertical"
+            android:elevation="4dp">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_create_post"
+                    android:textSize="20sp"
+                    android:textColor="#000"
+                    android:fontFamily="@font/montserrat_bold" />
+
+                <ImageView
+                    android:id="@+id/closeButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/close"
+                    android:contentDescription="Close Button"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+
+            <!-- Title Input -->
+            <EditText
+                android:id="@+id/titleInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_title"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="14sp"
+                android:background="#FFF"
+                android:padding="10dp"
+                android:inputType="textMultiLine"
+                android:layout_marginTop="20dp"
+                android:scrollbars="vertical"
+                android:overScrollMode="always"
+                android:maxLines="5"
+                android:lines="3"
+                android:gravity="top|start" />
+
+
+
+
+
+          <!-- Content Input -->
+            <EditText
+                android:id="@+id/descriptionInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="14sp"
+                android:background="#FFF"
+                android:padding="10dp"
+                android:hint="Description"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:scrollbars="vertical"
+                android:overScrollMode="always"
+                android:maxHeight="200dp"
+                android:lines="5"
+                android:minHeight="100dp"/>
+
+
+
+
+
+            <!-- Image Upload Icon -->
+            <ImageView
+                android:id="@+id/imageUploadIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/addimage"
+                android:contentDescription="Upload Image"
+                android:layout_gravity="end"
+                android:layout_marginVertical="10dp" />
+
+            <LinearLayout
+                android:id="@+id/imagePreviewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/imagePreview1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="10dp"
+                    android:contentDescription="Image Preview 1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/imagePreview2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="10dp"
+                    android:contentDescription="Image Preview 2"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/extraImagesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/more_images"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <!-- Tags Input -->
+            <EditText
+                android:id="@+id/tagsInput"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="Tags (comma-separated)"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
+                android:background="#FFF"
+                android:padding="10dp"
+                android:layout_marginTop="10dp" />
+
+            <!-- Create Button -->
+            <Button
+                android:id="@+id/sendButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_post"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/montserrat_bold"
+                android:backgroundTint="#3396BA"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="20dp" />
+
+            <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:indicatorColor="?attr/colorPrimary"
+                app:trackColor="?attr/colorOnPrimary"
+                android:visibility="invisible"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

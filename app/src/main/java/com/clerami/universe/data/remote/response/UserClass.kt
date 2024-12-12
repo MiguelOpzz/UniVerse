@@ -1,0 +1,137 @@
+package com.clerami.universe.data.remote.response
+
+import java.sql.Time
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
+data class RegisterRequest(
+    val email: String,
+    val username: String,
+    val password: String
+)
+
+data class GuestResponse(
+    val success: Boolean,
+    val message: String
+)
+
+data class LoginRequest(
+    val usernameOrEmail: String,
+    val password: String
+)
+
+data class LoginResponse(
+    val message: String,
+    val token: String,
+    val username:String
+)
+
+
+data class CreateTopicRequest(
+    val title: String,
+    val description: String,
+    val tags: List<String>,
+    val attachmentUrls: List<String>,
+    )
+
+data class CreateTopicResponse(
+    val status: String,
+    val message: String,
+    val reason: String,
+
+)
+
+data class UpdateUser(
+    val university:String,
+    val profilePicture:String
+
+)
+
+data class UpdateUserResponse(
+    val message: String,
+    val updatedFields:UpdateUser
+)
+
+data class RecommendResponse(
+    val similarity:Double,
+    val title: String
+)
+
+data class RecommendationResponse(
+    val recommendations: List<RecommendResponse>
+)
+
+data class DeleteResponse(
+    val message: String
+)
+
+data class UpdateResponse(
+    val message: String
+)
+
+data class UpdateTopicRequest(
+    val title: String,
+    val description: String,
+    val tags: List<String>,
+    val attachmentUrls: List<String>
+
+)
+
+data class Topic(
+    val topicId: String,
+    val attachmentUrls: List<Any>,
+    val title: String,
+    val description: String?,
+    val createdBy: String,
+    val tags: List<String>,
+    val isNSFW: Boolean,
+    val postCount: Int,
+    val createdAt: Timestamp,
+    val updatedAt:  Timestamp
+)
+
+data class TopicsResponse(
+    val topics: List<Topic>,
+    val nextCursor: String?
+)
+
+
+data class Timestamp(
+    val _seconds: Long,
+    val _nanoseconds: Long
+) {
+    fun toReadableDate(): String {
+        val instant = Instant.ofEpochSecond(_seconds, _nanoseconds.toLong())
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            .withZone(ZoneId.systemDefault())
+            .format(instant)
+    }
+}
+
+data class Comment(
+    val commentId: String,
+    val username: String,
+    val commentText: String,
+    val createdAt: Timestamp,
+    val updatedAt: Timestamp,
+    val upvotes: Int = 0,
+    val downvotes: Int = 0,
+    val userVotes: Map<String, String> = emptyMap()
+)
+
+data class CommentResponse(
+    val status: String,
+    val message: String,
+    val commentId: String,
+    val comment : Comment
+)
+
+data class CommentRequest(
+    val commentText: String
+)
+
+data class CommentVoteRequest(
+    val userId: String,
+    val voteType: String
+)
