@@ -291,7 +291,6 @@ const deleteTopicsByIdHandler = (db, admin) => async (req, res) => {
 
 const recommendTopicsHandler = (db) => async (req, res) => {
   try {
-    // Extract topicId from the request parameters
     const { topicId } = req.params;
 
     if (!topicId) {
@@ -300,16 +299,12 @@ const recommendTopicsHandler = (db) => async (req, res) => {
 
     console.log(`Fetching topic by ID: ${topicId}`);
 
-    // Fetch topic details from Firestore
     const topicDoc = await db.collection('topic').doc(topicId).get();
-
     if (!topicDoc.exists) {
       return res.status(404).json({ message: 'Topic not found.' });
     }
 
     const topicData = topicDoc.data();
-
-    // Ensure the topic has a valid title
     const forumTitle = topicData?.title?.trim();
     if (!forumTitle) {
       return res.status(400).json({ message: 'The topic does not have a valid title.' });
@@ -317,43 +312,38 @@ const recommendTopicsHandler = (db) => async (req, res) => {
 
     console.log(`Processing recommendation for topic title: "${forumTitle}"`);
 
-    // Flask service URL for recommendations
     const modelUrl = 'https://recommendation-service-dot-myproject-441712.et.r.appspot.com/api';
-
-    // Send the normalized title to the Flask service
-    const response = await axios.post(modelUrl, { forum_title: forumTitle.toLowerCase() });
+    const response = await axios.post(modelUrl, { forum_title: forumTitle });
 
     console.log('Response Status:', response.status);
     console.log('Response Data:', response.data);
 
-    // Validate the response data
-    if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+    // Extract recommendations from the Flask service response
+    const { recommendations } = response.data;
+
+    if (!recommendations || !Array.isArray(recommendations) || recommendations.length === 0) {
       return res.status(404).json({ message: 'No recommendations found.' });
     }
 
     // Return recommendations to the client
-    return res.status(200).json({ recommendations: response.data });
+    return res.status(200).json({ recommendations });
 
   } catch (error) {
     console.error('Error fetching recommendations:', error.message);
 
-    // Handle Axios errors separately for more informative error messages
     if (error.response) {
-      // Server responded with a status other than 2xx
       return res.status(error.response.status).json({
         message: error.response.data?.message || 'Error from recommendation service.',
         error: error.response.data || error.message,
       });
     }
 
-    // General server error
     return res.status(500).json({
       message: 'Internal server error.',
       error: error.message,
     });
   }
 };
-
 
 const toggleLikeTopicHandler = (db, admin) => async (req, res) => {
   try {
