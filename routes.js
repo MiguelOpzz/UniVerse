@@ -24,6 +24,7 @@ const {
   oauthLoginHandler,
   oauthCallbackHandler,
   guestHandler,
+  editUserHandler,
 } = require('./handlers/authHandler');
 const { authenticateToken } = require('./middleware/authmiddleware'); // Import the middleware
 
@@ -51,6 +52,7 @@ module.exports = ({ db, admin }) => {
   router.post('/login', loginHandler(db));
   router.post('/oauth', oauthLoginHandler(admin));
   router.get('/callback', oauthCallbackHandler(admin));
+  router.put('/users/:username/edit', editUserHandler(db));
 
   return router;
 };
