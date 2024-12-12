@@ -171,7 +171,151 @@ In the Handlers folder there is 3 main API that we make for the app
         "updatedAt": "<timestamp>"
       }
     ]
+    
+- Get a Comment by ID
 
+  - GET /topics/:topicId/comments/:commentId
+  - Responses :
+200 OK
+{
+  "commentId": "<commentId>",
+  "username": "<username>",
+  "commentText": "Your comment here.",
+  "createdBy": "<username>",
+  "upvotes": 0,
+  "downvotes": 0,
+  "userVotes": {},
+  "createdAt": "<timestamp>",
+  "updatedAt": "<timestamp>"
+}
+
+- Upvote or Downvote a Comment
+
+    - POST /topics/:topicId/comments/:commentId/upvote
+
+    - Headers : 
+      Authorization: Bearer <token> (Required)
+    - Request Body :
+{
+  "voteType": "upvote" | "downvote"
+}
+    - Responses : 
+200 OK
+{
+  "message": "Vote updated successfully!"
+}
+
+- Edit a Comment
+
+  - PUT /topics/:topicId/comments/:commentId
+  - Headers :
+    Authorization: Bearer <token> (Required)
+  - Request Body :
+{
+  "commentText": "Updated comment text."
+}
+
+- Responses :
+200 OK
+{
+  "status": "success",
+  "message": "Comment updated successfully!"
+}
+
+- Delete a Comment
+
+  - DELETE /topics/:topicId/comments/:commentId
+
+  - Headers :
+    Authorization: Bearer <token> (Required)
+
+  - Responses :
+    200 OK
+    {
+      "message": "Comment deleted successfully!"
+    }
+    
+##### The handler for auth handler consist
+- Sign Up
+
+  - Endpoint: POST /signup
+
+  - Request Body :
+{
+  "username": "string",
+  "email": "string",
+  "password": "string"
+}
+
+  - Response :
+201 Created:
+{
+  "message": "User registered successfully!"
+}
+
+- Login
+
+  - Endpoint: POST /login
+
+  - Request Body
+    {
+      "usernameOrEmail": "string",
+      "password": "string"
+    }
+  - Response
+    200 OK:
+    {
+      "message": "Welcome back, {username}!",
+      "username": "string",
+      "token": "JWT_TOKEN"
+    }
+
+- Guest Access
+
+  - Endpoint: POST /guest
+
+  - Response
+    200 OK:
+    {
+      "message": "Welcome as Guest!",
+      "userId": "string",
+      "username": "string"
+    }
+
+- Edit User Profile
+
+  - Endpoint: PUT /users/:username/edit
+
+  - Headers
+  {
+    "Authorization": "Bearer JWT_TOKEN"
+  }
+  - Request Body 
+  {
+    "university": "string",
+    "profilePicture": "string (URL)"
+  }
+
+  - Response
+  200 OK:
+    {
+  "message": "User information updated successfully.",
+  "updatedFields": {
+    "university": "string",
+    "profilePicture": "string"
+  }
+
+}
+
+- Token Authentication
+  All endpoints requiring authentication use a token-based system. Include the token in the Authorization header as follows:
+  Authorization: Bearer JWT_TOKEN
+  Tokens are generated upon login and include the following payload:
+  {
+    "userId": "string",
+    "username": "string"
+  }
+  The secret for signing tokens is stored in the .env file as JWT_SECRET.
 
 # Mobile Development
 ### Tools and Software
