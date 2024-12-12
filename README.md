@@ -1,6 +1,10 @@
 # UniVerse
 UniVerse is a disccusion app made simmilar to Brainly and Quora but it has more specific topic where more include in collage student problem, Unlike brainly, quora, and reddit where the app have a broad disccusion topic.
 
+This is the Documentation from all learning path 
+- CLOUD COMPUTING
+- MOBILE DEVELOPMENT
+- MACHINE LEARNING
 # Cloud Computing
 
 ### Architecture
