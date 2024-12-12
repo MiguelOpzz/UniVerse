@@ -15,6 +15,8 @@ const {
   deleteTopicsByIdHandler,
   toggleLikeTopicHandler,
   recommendTopicsHandler,
+  processDescriptionHandler,
+  getProcessedDescriptionHandler,
 } = require('./handlers/topicHandler');
 const {
   signUpHandler,
@@ -33,8 +35,9 @@ module.exports = ({ db, admin }) => {
   router.put('/topics/:topicId', authenticateToken, editTopicsByIdHandler(db, admin));
   router.delete('/topics/:topicId', authenticateToken, deleteTopicsByIdHandler(db, admin));
   router.post('/topics/:topicId/like',authenticateToken ,toggleLikeTopicHandler (db, admin));
-  router.post('/topics/:topicId/like',authenticateToken ,toggleLikeTopicHandler (db, admin));
-  router.post('/recommend',recommendTopicsHandler );
+  router.get('/topics/:topicId/recommend',recommendTopicsHandler (db));
+  router.post('/topics/:topicId/process-description', processDescriptionHandler (db, admin));
+  router.get('/topics/:topicId/process-description', getProcessedDescriptionHandler (db, admin))
 
   router.post('/topics/:topicId/comments', authenticateToken, addCommentHandler(db, admin));
   router.post('/topics/:topicId/comments/:commentId/upvote',authenticateToken, upvoteCommentHandler(db, admin));

@@ -48,6 +48,18 @@ const addTopicsHandler = (db, admin) => async (req, res) => {
       });
     }
 
+    // Fetch response from Gemini API
+    let geminiResponse;
+    try {
+      const geminiResult = await axios.post('http://127.0.0.1:5000/generate', {
+        question: description,
+      });
+      geminiResponse = geminiResult.data.response;
+    } catch (error) {
+      console.error('Gemini API Error:', error.message);
+      geminiResponse = "Unable to fetch response from Gemini.";
+    }
+
     // Create new topic data
     const newTopic = {
       title,
@@ -57,6 +69,7 @@ const addTopicsHandler = (db, admin) => async (req, res) => {
       attachmentUrls,
       postCount: 0,
       likeCount: 0,
+      geminiResponse, // Add Gemini's response to the topic data
       createdAt: admin.firestore.Timestamp.now(),
       updatedAt: admin.firestore.Timestamp.now(),
     };
@@ -89,6 +102,7 @@ const addTopicsHandler = (db, admin) => async (req, res) => {
       status: 'success',
       message: 'Topic created successfully.',
       topicId: docRef.id,
+      geminiResponse, // Include Gemini's response in the API response
     });
   } catch (error) {
     console.error('Error creating topic:', error.message);
@@ -99,6 +113,7 @@ const addTopicsHandler = (db, admin) => async (req, res) => {
     });
   }
 };
+
 
 
 const getAllTopicsHandler = (db) => async (req, res) => {
@@ -274,39 +289,71 @@ const deleteTopicsByIdHandler = (db, admin) => async (req, res) => {
   }
 };
 
-const recommendTopicsHandler = async (req, res) => {
+const recommendTopicsHandler = (db) => async (req, res) => {
   try {
-    console.log('Request Body:', req.body); // Log the request body to see its contents
-    const { forum_title } = req.body;
-    if (!forum_title) {
-      return res.status(400).json({ message: 'Forum title is required.' });
+    // Extract topicId from the request parameters
+    const { topicId } = req.params;
+
+    if (!topicId) {
+      return res.status(400).json({ message: 'Topic ID is required.' });
     }
 
-    // Pre-processing logic (logging the forum title)
-    console.log(`Processing recommendation for forum: ${forum_title}`);
+    console.log(`Fetching topic by ID: ${topicId}`);
 
-    // Sending the forum title to the model (Flask service)
-    const modelUrl = 'http://127.0.0.1:8080/api'; // Flask recommendation URL
+    // Fetch topic details from Firestore
+    const topicDoc = await db.collection('topic').doc(topicId).get();
 
-    const response = await axios.post(modelUrl, { forum_title });
-
-    // Check if the response data exists
-    if (!response.data) {
-      return res.status(500).json({ message: 'Failed to get recommendations.' });
+    if (!topicDoc.exists) {
+      return res.status(404).json({ message: 'Topic not found.' });
     }
 
-    // Send the successful response back to the client
-    return res.status(200).json(response.data);
+    const topicData = topicDoc.data();
+
+    // Ensure the topic has a valid title
+    const forumTitle = topicData?.title?.trim();
+    if (!forumTitle) {
+      return res.status(400).json({ message: 'The topic does not have a valid title.' });
+    }
+
+    console.log(`Processing recommendation for topic title: "${forumTitle}"`);
+
+    // Flask service URL for recommendations
+    const modelUrl = 'https://recommendation-service-dot-myproject-441712.et.r.appspot.com/api';
+
+    // Send the normalized title to the Flask service
+    const response = await axios.post(modelUrl, { forum_title: forumTitle.toLowerCase() });
+
+    console.log('Response Status:', response.status);
+    console.log('Response Data:', response.data);
+
+    // Validate the response data
+    if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+      return res.status(404).json({ message: 'No recommendations found.' });
+    }
+
+    // Return recommendations to the client
+    return res.status(200).json({ recommendations: response.data });
+
   } catch (error) {
     console.error('Error fetching recommendations:', error.message);
 
-    // Handle any errors that might occur
+    // Handle Axios errors separately for more informative error messages
+    if (error.response) {
+      // Server responded with a status other than 2xx
+      return res.status(error.response.status).json({
+        message: error.response.data?.message || 'Error from recommendation service.',
+        error: error.response.data || error.message,
+      });
+    }
+
+    // General server error
     return res.status(500).json({
       message: 'Internal server error.',
       error: error.message,
     });
   }
 };
+
 
 const toggleLikeTopicHandler = (db, admin) => async (req, res) => {
   try {
@@ -353,6 +400,113 @@ const toggleLikeTopicHandler = (db, admin) => async (req, res) => {
   }
 };
 
+const processDescriptionHandler = (db) => async (req, res) => {
+  try {
+    // Extract topicId from the request parameters
+    const { topicId } = req.params;
+
+    if (!topicId) {
+      return res.status(400).json({ message: 'Topic ID is required.' });
+    }
+
+    console.log(`Fetching topic by ID: ${topicId}`);
+
+    // Fetch topic details from Firestore
+    const topicDoc = await db.collection('topic').doc(topicId).get();
+
+    if (!topicDoc.exists) {
+      return res.status(404).json({ message: 'Topic not found.' });
+    }
+
+    const topicData = topicDoc.data();
+
+    // Ensure the topic has a valid description
+    const description = topicData?.description?.trim();
+    if (!description) {
+      return res.status(400).json({ message: 'The topic does not have a valid description.' });
+    }
+
+    console.log(`Processing description for topic: "${description}"`);
+
+    // URL of the Python service
+    const pythonServiceUrl = 'http://<your-python-service-url>/process_description';
+
+    // Call the Python API
+    const response = await axios.post(pythonServiceUrl, { description });
+
+    console.log('Response from Python API:', response.data);
+
+    // Extract the processed description
+    const processedDescription = response.data.response;
+
+    // Update Firestore with the processed description
+    await db.collection('topic').doc(topicId).update({
+      processedDescription,
+      updatedAt: new Date().toISOString(), // Optionally track update time
+    });
+
+    console.log(`Processed description saved for topic ID: ${topicId}`);
+
+    // Return the processed description
+    return res.status(200).json({ processedDescription });
+  } catch (error) {
+    console.error('Error processing description:', error.message);
+
+    // Handle Axios errors separately for more informative error messages
+    if (error.response) {
+      return res.status(error.response.status).json({
+        message: error.response.data?.error || 'Error from processing service.',
+        error: error.response.data || error.message,
+      });
+    }
+
+    // General server error
+    return res.status(500).json({
+      message: 'Internal server error.',
+      error: error.message,
+    });
+  }
+};
+
+// Handler to get the processed description
+const getProcessedDescriptionHandler = (db) => async (req, res) => {
+  try {
+    // Extract topicId from the request parameters
+    const { topicId } = req.params;
+
+    if (!topicId) {
+      return res.status(400).json({ message: 'Topic ID is required.' });
+    }
+
+    console.log(`Fetching processed description for topic ID: ${topicId}`);
+
+    // Fetch topic details from Firestore
+    const topicDoc = await db.collection('topic').doc(topicId).get();
+
+    if (!topicDoc.exists) {
+      return res.status(404).json({ message: 'Topic not found.' });
+    }
+
+    const topicData = topicDoc.data();
+
+    // Check if processed description exists
+    if (!topicData?.processedDescription) {
+      return res.status(404).json({ message: 'Processed description not found for this topic.' });
+    }
+
+    // Return the processed description
+    return res.status(200).json({
+      processedDescription: topicData.processedDescription,
+    });
+  } catch (error) {
+    console.error('Error fetching processed description:', error.message);
+
+    return res.status(500).json({
+      message: 'Internal server error.',
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   addTopicsHandler,
@@ -362,4 +516,6 @@ module.exports = {
   deleteTopicsByIdHandler,
   toggleLikeTopicHandler,
   recommendTopicsHandler,
+  processDescriptionHandler, 
+  getProcessedDescriptionHandler,
 };
