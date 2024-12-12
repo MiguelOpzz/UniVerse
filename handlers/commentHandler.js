@@ -1,5 +1,3 @@
-//const { predictSentiment } = require('./predictSentiment.js');
-
 const addCommentHandler = (db, admin) => async (req, res) => {
   try {
     const { topicId } = req.params;
@@ -17,14 +15,9 @@ const addCommentHandler = (db, admin) => async (req, res) => {
       return res.status(400).json({ message: 'Comment text is required.' });
     }
 
-    // Step 1: Predict sentiment of the comment
-    //const sentiment = await predictSentiment(commentText);  // Predict sentiment here
-
-    // Step 2: Store the sentiment alongside the comment in Firestore
     const newComment = {
       username,
       commentText,
-      //sentiment,  // Store sentiment prediction (e.g., 'positive', 'negative')
       createdBy: username,
       upvotes: 0,
       downvotes: 0,
