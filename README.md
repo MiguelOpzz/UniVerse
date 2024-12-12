@@ -460,3 +460,48 @@ Project Structure
 
 
 # Machine Learning
+### Overview
+There are 2 ML model in this project:
+Recommendation System: Recommends forums based on user-defined tags using a content-based filtering approach.
+Text Filtering System: Identifies offensive or inappropriate words in forum submissions to maintain community standards.
+### Features
+- Recommendation System
+  - Dynamic Data Loading: Forums are stored in a database (Firebase) and dynamically loaded for model training.
+  - Content-Based Filtering: Recommends forums based on cosine similarity of forum tags.
+  - User Forum Addition: Users can add new forums, which are automatically included in the recommendation system.
+  - Efficient Model Handling: The model and vectorizer are saved in a serialized format using Pickle for efficient loading and updating.
+
+- Text Filtering System
+  - Offensive Word Detection: Detects and flags offensive words in user input.
+  - Customizable Word List: Maintains a list of offensive words that can be updated as needed.
+  - Real-Time Filtering: Operates seamlessly within the backend to ensure only appropriate content is added to the forum.
+### Technologies Used
+Technologies Used
+- Python: Core programming language.
+- Firebase Firestore: Database to store and retrieve forum data.
+- Scikit-learn: Used for vectorization (CountVectorizer) and similarity computation (Cosine Similarity).
+- Flask: Backend framework to handle API requests for adding forums and generating recommendations.
+- Pickle: Serialization tool for saving and loading models.
+### Tools and Software
+- Jupyter Notebook: Development environment.
+- Git: Version control.
+- Firebase Firestore: Database for storing forum data.
+### Dependencies and Libraries
+firebase-admin: For Firebase integration.
+pandas: Data manipulation.
+scikit-learn: Machine learning utilities.
+flask: API development.
+pickle: Model serialization.
+### Setup Instructions
+1. Prerequisites
+- Python 3.8+
+- Firebase Admin SDK key (JSON file)
+- Required libraries
+2. Installation
+- Clone the repository.
+- Install dependencies.
+- Add Firebase key JSON file.
+3. Run the Backend
+- Start the Flask server
+- Test endpoints
+
