@@ -12,22 +12,38 @@ const generateToken = (user) => {
 };
 
 const signUpHandler = (db, admin) => async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, university, profilePicture } = req.body;
 
-  if (!username || !email || !password ) {
-    return res.status(400).json({ message: 'All fields are required.' });
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: 'Username, email, and password are required.' });
   }
-  const userExists = await db.collection('users')
-  .where('email', '==', email)
-  .get();
 
-  if (!userExists.empty) {
-    return res.status(400).json({ message: 'Email already in use.' });
+  // Make sure the university and profilePicture fields are not provided during signup
+  if (university || profilePicture) {
+    return res.status(400).json({ message: 'University and Profile Picture can only be set through the edit user endpoint.' });
   }
 
   try {
+    // Check if the username is already taken
+    const usernameDoc = await db.collection('users').doc(username).get();
+    if (usernameDoc.exists) {
+      return res.status(400).json({ message: 'Username already in use.' });
+    }
+
+    // Check if the email is already in use
+    const emailExists = await db
+      .collection('users')
+      .where('email', '==', email)
+      .get();
+
+    if (!emailExists.empty) {
+      return res.status(400).json({ message: 'Email already in use.' });
+    }
+
+    // Hash the password
     const hashedPassword = bcrypt.hashSync(password, 10);
 
+    // Prepare the user object
     const newUser = {
       username,
       email,
@@ -35,14 +51,17 @@ const signUpHandler = (db, admin) => async (req, res) => {
       topicCount: 0,
       commentCount: 0,
       createdAt: admin.firestore.Timestamp.now(),
+      // Initially, set university and profilePicture to null or undefined
+      university: null,
+      profilePicture: null,
     };
 
-    const docRef = await db.collection('users').add(newUser);
+    // Set the document with the username as the ID
+    await db.collection('users').doc(username).set(newUser);
 
     res.status(201).json({
-      message: 'User registered successfully!'
+      message: 'User registered successfully!',
     });
-
   } catch (error) {
     console.error('Error creating user:', error.message);
     res.status(500).json({
@@ -51,6 +70,7 @@ const signUpHandler = (db, admin) => async (req, res) => {
     });
   }
 };
+
 
 const guestHandler = (db, admin) => async (req, res) => {
   try {
@@ -186,10 +206,68 @@ const oauthCallbackHandler = (admin) => async (req, res) => {
   }
 };
 
+const editUserHandler = (db) => async (req, res) => {
+  const { username } = req.params; // Assuming the username is passed in the URL as a parameter
+  const { university, profilePicture } = req.body;
+
+  // Extract the token from the headers
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'Authorization token is required.' });
+  }
+
+  try {
+    // Verify the token and extract the payload
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const tokenUsername = decodedToken.username;
+
+    // Check if the token's username matches the username in the request
+    if (tokenUsername !== username) {
+      return res.status(403).json({ message: 'You are not authorized to edit this user profile.' });
+    }
+
+    // Check if at least one field is provided
+    if (!university && !profilePicture) {
+      return res.status(400).json({ message: 'At least one field (university or profile picture) must be provided.' });
+    }
+
+    // Get the current user's document
+    const userDoc = await db.collection('users').doc(username).get();
+    if (!userDoc.exists) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Prepare the update object, only including fields that were provided
+    const updateData = {};
+    if (university) updateData.university = university;
+    if (profilePicture) updateData.profilePicture = profilePicture;
+
+    // Update the user's document
+    await db.collection('users').doc(username).update(updateData);
+
+    res.status(200).json({
+      message: 'User information updated successfully.',
+      updatedFields: updateData,
+    });
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token.' });
+    }
+
+    console.error('Error updating user information:', error.message);
+    res.status(500).json({
+      message: 'Error updating user information.',
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   signUpHandler,
   loginHandler,
   guestHandler,
   oauthLoginHandler,
   oauthCallbackHandler,
+  editUserHandler
 };
