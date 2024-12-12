@@ -487,11 +487,11 @@ Technologies Used
 - Git: Version control.
 - Firebase Firestore: Database for storing forum data.
 ### Dependencies and Libraries
-firebase-admin: For Firebase integration.
-pandas: Data manipulation.
-scikit-learn: Machine learning utilities.
-flask: API development.
-pickle: Model serialization.
+- firebase-admin: For Firebase integration.
+- pandas: Data manipulation.
+- scikit-learn: Machine learning utilities.
+- flask: API development.
+- pickle: Model serialization.
 ### Setup Instructions
 1. Prerequisites
 - Python 3.8+
